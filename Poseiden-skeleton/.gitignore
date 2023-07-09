@@ -1,0 +1,90 @@
+# Created by https://www.toptal.com/developers/gitignore/api/intellij,java,maven
+# Edit at https://www.toptal.com/developers/gitignore?templates=intellij,java,maven
+
+### Intellij ###
+
+# User-specific stuff
+.idea
+*.iml
+*.ipr
+*.iws
+
+# CMake
+cmake-build-*/
+
+# IntelliJ
+out/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+### Intellij Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+# modules.xml
+
+
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Java annotation processor (APT)
+.factorypath
+
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+### Eclipse Patch ###
+# Spring Boot Tooling
+.sts4-cache/
+
+### Maven ###
+target/
+
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Eclipse m2e generated files
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# JavaDoc
+#  doc/
+
+# Work files
+/src/main/resources/work/*
+/src/test/resources/work/*
+
+# Empty file
+!.gitkeep
+
+# End of https://www.toptal.com/developers/gitignore/api/intellij,java,maven

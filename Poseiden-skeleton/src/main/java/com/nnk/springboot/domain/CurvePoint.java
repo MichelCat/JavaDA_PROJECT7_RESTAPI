@@ -1,15 +1,38 @@
 package com.nnk.springboot.domain;
 
-import org.hibernate.validator.constraints.Length;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 
 @Entity
+@DynamicUpdate
 @Table(name = "curvepoint")
+@Data
+@FieldDefaults(level= AccessLevel.PRIVATE)
+@Builder
 public class CurvePoint {
-    // TODO: Map columns in data table CURVEPOINT with corresponding java fields
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id;
+
+    @NotNull(message = "Curve Id cannot be null")
+    Integer curveId;
+
+    Timestamp asOfDate;
+
+    @NotNull(message = "Term cannot be null")
+    Double term;
+
+    @NotNull(message = "Value cannot be null")
+    Double value;
+
+    Timestamp creationDate;
 }
