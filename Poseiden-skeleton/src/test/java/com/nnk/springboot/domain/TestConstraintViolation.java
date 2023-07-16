@@ -15,16 +15,14 @@ public class TestConstraintViolation<T> {
     }
 
     public void noConstraintViolation(T object) {
-        // WHEN
-        Set<ConstraintViolation<T>> violations = validator.validate(object);
         // THEN
+        Set<ConstraintViolation<T>> violations = validator.validate(object);
         assertThat(violations.size()).isEqualTo(0);
     }
 
     public void oneConstraintViolation(T object, String attribute, String message) {
-        // WHEN
-        Set<ConstraintViolation<T>> violations = validator.validate(object);
         // THEN
+        Set<ConstraintViolation<T>> violations = validator.validate(object);
         assertThat(violations.size()).isEqualTo(1);
         assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo(attribute);
         assertThat(violations.iterator().next().getMessage()).isEqualTo(message);

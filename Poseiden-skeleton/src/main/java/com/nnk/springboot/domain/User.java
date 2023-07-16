@@ -1,6 +1,7 @@
 package com.nnk.springboot.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Size;
 @Table(name = "users")
 @Data
 @FieldDefaults(level= AccessLevel.PRIVATE)
+@Builder
 public class User {
 
     @Id

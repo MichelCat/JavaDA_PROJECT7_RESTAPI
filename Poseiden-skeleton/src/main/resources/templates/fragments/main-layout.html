@@ -1,0 +1,36 @@
+<!--
+/**
+ * main-layout
+ * @description Main layout
+ */
+-->
+
+<!DOCTYPE html>
+<html lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!--
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+-->
+
+	<head th:insert="fragments/head">
+		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Pay My Buddy</title>
+	</head>
+	
+<body>
+	
+	<div class="container-fluid">
+		<header>
+			<!-- Menu -->
+		    <div th:replace="~{fragments/menu}"></div>
+		</header>
+	</div>    
+    
+    <main class="container" id="mainContent">
+        <div layout:fragment="content"></div>
+    </main>
+    
+    <div th:replace="~{fragments/footer}"></div>
+	
+</body>
+</html>

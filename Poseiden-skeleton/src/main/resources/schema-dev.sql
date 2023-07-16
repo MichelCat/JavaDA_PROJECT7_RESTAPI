@@ -1,13 +1,13 @@
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
--- Setting up PoseidonProd DB
+-- Setting up PoseidonDev DB
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
 
-drop database if exists PoseidonProd;
+drop database if exists PoseidonDev;
 
-create database PoseidonProd;
-use PoseidonProd;
+create database PoseidonDev;
+use PoseidonDev;
 
 CREATE TABLE BidList (
   BidListId tinyint(4) NOT NULL AUTO_INCREMENT,

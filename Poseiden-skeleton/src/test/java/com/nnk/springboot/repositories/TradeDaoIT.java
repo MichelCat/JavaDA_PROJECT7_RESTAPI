@@ -1,10 +1,14 @@
 package com.nnk.springboot.repositories;
 
+import com.nnk.springboot.data.BidData;
+import com.nnk.springboot.data.TradeData;
 import com.nnk.springboot.domain.Trade;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
@@ -16,45 +20,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class TradeIT {
+@ActiveProfiles("test")
+public class TradeDaoIT {
 
 	@Autowired
 	private TradeRepository tradeRepository;
 
 	@Test
+	@Sql(scripts = BidData.scriptClearDataBase)
 	public void tradeTest() {
-		Trade trade = Trade.builder()
-				.account("Trade Account")
-				.type("Type")
-				.buyQuantity(0d)
-				.build();
+		Trade oldTrade;
+		Trade trade = TradeData.getTradeSource();
 
 		// Save
+		oldTrade = trade;
 		trade = tradeRepository.save(trade);
-//		Assert.assertNotNull(trade.getTradeId());
-//		Assert.assertTrue(trade.getAccount().equals("Trade Account"));
 		assertThat(trade).isNotNull();
-		assertThat(trade.getTradeId()).isNotNull();
-		assertThat(trade.getAccount()).isEqualTo("Trade Account");
+		assertThat(trade).usingRecursiveComparison().ignoringFields("id").isEqualTo(oldTrade);
+		assertThat(trade.getTradeId()).isEqualTo(1);
 
 		// Update
 		trade.setAccount("Trade Account Update");
+		oldTrade = trade;
 		trade = tradeRepository.save(trade);
-//		Assert.assertTrue(trade.getAccount().equals("Trade Account Update"));
 		assertThat(trade).isNotNull();
-		assertThat(trade.getAccount()).isEqualTo("Trade Account Update");
+		assertThat(trade).usingRecursiveComparison().isEqualTo(oldTrade);
 
 		// Find
 		List<Trade> listResult = tradeRepository.findAll();
-//		Assert.assertTrue(listResult.size() > 0);
 		assertThat(listResult).isNotNull();
 		assertThat(listResult).hasSize(1);
+		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(trade);
 
 		// Delete
 		Integer id = trade.getTradeId();
 		tradeRepository.delete(trade);
-		Optional<Trade> tradeList = tradeRepository.findById(id);
-//		Assert.assertFalse(tradeList.isPresent());
-		assertThat(tradeList).isEmpty();
+		Optional<Trade> optTrade = tradeRepository.findById(id);
+		assertThat(optTrade).isEmpty();
 	}
 }
