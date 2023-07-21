@@ -2,6 +2,7 @@ package com.nnk.springboot.domain;
 
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.data.GlobalData;
+import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,13 +12,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.Validator;
-
 import java.sql.Timestamp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+/**
+ * BidListTest is the unit test class managing the BidList
+ *
+ * @author MC
+ * @version 1.0
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -38,6 +43,20 @@ public class BidListTest {
         testConstraintViolation = new TestConstraintViolation<>(validator);
 
         bidList = BidData.getBidSource();
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Id attribute
+    // -----------------------------------------------------------------------------------------------
+    @Test
+    public void id_TestBuildAndNew_thenEqual() {
+        // GIVEN
+        // WHEN
+        BidList objBuild = BidList.builder()
+                            .build();
+        BidList objNew = new BidList();
+        // THEN
+        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
     }
 
     // -----------------------------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.Exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
+import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,14 +14,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
+/**
+ * BidListBusinessIT is a class of integration tests on bids.
+ *
+ * @author MC
+ * @version 1.0
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional

@@ -1,7 +1,15 @@
 package com.nnk.springboot.data;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.mapper.MultiValueMapMapper;
+import org.springframework.util.MultiValueMap;
 
+/**
+ * BidData is the class containing the bid test set
+ *
+ * @author MC
+ * @version 1.0
+ */
 public class BidData {
 
     public static BidList getBidSource() {
@@ -57,6 +65,25 @@ public class BidData {
                 .build();
     }
 
-    public final static String scriptClearDataBase = "/data-test/clearDataBase.sql";
-    public final static String scriptCreateBid = "/data-test/createBid.sql";
+    public static MultiValueMap<String, String> getBidSourceController() {
+        BidList bid = BidList.builder()
+                .account("Account Test")
+                .type("Type Test")
+                .bidQuantity(10d)
+                .build();
+        return MultiValueMapMapper.convert(bid);
+    }
+
+    public static MultiValueMap<String, String> getBidSaveController() {
+        BidList bid = BidList.builder()
+                .BidListId(1)
+                .account("Account Test")
+                .type("Type Test")
+                .bidQuantity(10d)
+                .build();
+        return MultiValueMapMapper.convert(bid);
+    }
+
+    public final static String scriptClearDataBase = "/data/clearDataBase.sql";
+    public final static String scriptCreateBid = "/data/createBid.sql";
 }

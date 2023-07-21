@@ -2,6 +2,7 @@ package com.nnk.springboot.repositories;
 
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
+import jakarta.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +27,12 @@ public class BidListDaoIT {
 	@Autowired
 	private BidListRepository bidListRepository;
 
+	/**
+	 * bidListTest is the integration test class handling BidList
+	 *
+	 * @author MC
+	 * @version 1.0
+	 */
 	@Test
 	@Sql(scripts = BidData.scriptClearDataBase)
 	public void bidListTest() {

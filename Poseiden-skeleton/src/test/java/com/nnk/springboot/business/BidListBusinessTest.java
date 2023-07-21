@@ -26,6 +26,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
+/**
+ * BidListBusinessTest is a class of unit tests on bids.
+ *
+ * @author MC
+ * @version 1.0
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -89,10 +95,10 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void createBid_nullBidParameter_returnBadRequest() {
+    public void createBid_nullBidParameter_returnNullPointer() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(null));
+        assertThrows(NullPointerException.class, () -> bidListBusiness.createBid(null));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
@@ -154,28 +160,28 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void updateBid_nullIdParameter_returnBadRequest() {
+    public void updateBid_nullIdParameter_returnNotFound() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.updateBid(null, bidSource));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(null, bidSource));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
 
     @Test
-    public void updateBid_zeroIdParameter_returnBadRequest() {
+    public void updateBid_zeroIdParameter_returnNotFound() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.updateBid(0, bidSource));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(0, bidSource));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
 
     @Test
-    public void updateBid_nullBidParameter_returnBadRequest() {
+    public void updateBid_nullBidParameter_returnNotFound() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.updateBid(1, null));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(1, null));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
@@ -205,19 +211,19 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void deleteBid_nullIdParameter_returnBadRequest() {
+    public void deleteBid_nullIdParameter_returnNotFound() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.deleteBid(null));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(null));
         // THEN
         verify(bidListRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    public void deleteBid_zeroIdParameter_returnBadRequest() {
+    public void deleteBid_zeroIdParameter_returnNotFound() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.deleteBid(0));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(0));
         // THEN
         verify(bidListRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
