@@ -4,7 +4,6 @@ import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.Exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
-import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

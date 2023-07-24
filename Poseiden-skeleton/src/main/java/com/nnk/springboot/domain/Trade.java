@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Trade {
 
     @Id

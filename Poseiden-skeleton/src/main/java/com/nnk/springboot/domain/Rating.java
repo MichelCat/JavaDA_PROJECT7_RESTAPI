@@ -16,6 +16,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Rating {
 
     @Id

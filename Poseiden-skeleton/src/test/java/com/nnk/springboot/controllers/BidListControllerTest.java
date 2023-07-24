@@ -72,7 +72,7 @@ public class BidListControllerTest {
     // Home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void home_getBids_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
@@ -92,7 +92,7 @@ public class BidListControllerTest {
     // AddBidForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void addBidForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -110,7 +110,7 @@ public class BidListControllerTest {
     // Validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void validate_bidNotExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.createBid(BidData.getBidSource())).thenReturn(BidData.getBidSave());
@@ -131,7 +131,7 @@ public class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void validate_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -151,7 +151,7 @@ public class BidListControllerTest {
     // ShowUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void showUpdateForm_bidExist_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidById(1)).thenReturn(BidData.getBidSave());
@@ -171,7 +171,7 @@ public class BidListControllerTest {
     // UpdateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void updateBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.updateBid(1, BidData.getBidSave())).thenReturn(BidData.getBidSave());
@@ -192,7 +192,7 @@ public class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -213,7 +213,7 @@ public class BidListControllerTest {
     // DeleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void deleteBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
@@ -232,7 +232,7 @@ public class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     public void deleteBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN

@@ -63,7 +63,7 @@ public class BidListControllerIT {
     // Home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void home_getBids_return200() throws Exception {
@@ -85,7 +85,7 @@ public class BidListControllerIT {
     // AddBidForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     public void addBidForm_return200() throws Exception {
         // GIVEN
@@ -105,7 +105,7 @@ public class BidListControllerIT {
     // Validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     public void validate_bidNotExist_return302() throws Exception {
         // GIVEN
@@ -124,7 +124,7 @@ public class BidListControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void validate_bidExist_return400() throws Exception {
@@ -145,7 +145,7 @@ public class BidListControllerIT {
     // ShowUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void showUpdateForm_bidExist_return200() throws Exception {
@@ -168,7 +168,7 @@ public class BidListControllerIT {
     // UpdateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void updateBid_bidExist_return302() throws Exception {
@@ -188,7 +188,7 @@ public class BidListControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     public void updateBid_bidNotExist_return404() throws Exception {
         // GIVEN
@@ -208,7 +208,7 @@ public class BidListControllerIT {
     // DeleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void deleteBid_bidExist_return302() throws Exception {
@@ -226,7 +226,7 @@ public class BidListControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = "USER")
     @Sql(scripts = BidData.scriptClearDataBase)
     public void deleteBid_bidNotExist_return404() throws Exception {
         // GIVEN

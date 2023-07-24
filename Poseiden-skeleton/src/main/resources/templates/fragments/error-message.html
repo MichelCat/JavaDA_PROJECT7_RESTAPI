@@ -1,0 +1,12 @@
+<!--
+/**
+ * error-message
+ * @description Error message
+ */
+-->
+
+<div class="row">
+	<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+		<p th:text="${errorMessage}"></p>
+	</div>
+</div>

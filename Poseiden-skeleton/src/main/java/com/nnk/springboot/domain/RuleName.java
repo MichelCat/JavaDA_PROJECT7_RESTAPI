@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class RuleName {
 
     @Id
