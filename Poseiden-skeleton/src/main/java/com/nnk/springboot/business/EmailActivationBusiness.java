@@ -23,7 +23,7 @@ public class EmailActivationBusiness {
     /**
      * Account activation
      *
-     * @param validationKey Validation key for customers
+     * @param validationKey Validation key for user
      * @return New modified user record
      */
     @Transactional(rollbackFor = Exception.class)
@@ -31,13 +31,13 @@ public class EmailActivationBusiness {
 
         // User does not exist
         User userEntity = userRepository.findByEmailValidationKey(validationKey)
-                .orElseThrow(() -> new MyException("throw.CustomerNotExist"));
+                .orElseThrow(() -> new MyException("throw.CustomerNotExist", ""));
 
-        // Invalid email key for customers
+        // Invalid email key for user
         if (!userEntity.isValidEmailKey(validationKey)) {
             throw new MyException("throw.InvalidEmailKey");
         }
-        // Email validation for customers time exceeded
+        // Email validation for user time exceeded
         if (!userEntity.isValidEmailEndDate()) {
             throw new MyException("throw.EmailTimeExceeded");
         }

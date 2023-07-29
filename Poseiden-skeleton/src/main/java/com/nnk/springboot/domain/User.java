@@ -40,7 +40,7 @@ public class User implements UserDetails {
      * User ID
      */
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer id;
 
     /**
@@ -48,9 +48,8 @@ public class User implements UserDetails {
      */
     @NotBlank(message = "Username is mandatory")
     @Size(max = 125, message = "Maximum length of {max} characters")
-//    @Email(message = "Email should be valid")
-//    @Column(unique=true)
-    @Size(max = 254)
+    @Email(message = "Email should be valid")
+    @Column(unique=true)
     String username;
 
     /**
@@ -100,14 +99,14 @@ public class User implements UserDetails {
     Boolean enabled;
 
     /**
-     * Email validation key for customers
+     * Email validation key for user
      */
-//    @Column(unique=true)
+    @Column(unique=true)
     @Size(max = 36, message = "Maximum length of {max} characters")
     String emailValidationKey;
 
     /**
-     * Valid email end date for customers
+     * Valid email end date for user
      */
     Date validEmailEndDate;
 
@@ -158,7 +157,7 @@ public class User implements UserDetails {
     // Email validation
     // -----------------------------------------------------------------------------------------------
     /**
-     * Test valid email key for customers
+     * Test valid email key for user
      *
      * @param testKey Key to validate
      * @return Boolean Validated key
@@ -168,7 +167,7 @@ public class User implements UserDetails {
     }
 
     /**
-     * Test valid email date for customers
+     * Test valid email date for user
      *
      * @return Boolean Validated key
      */
@@ -178,16 +177,11 @@ public class User implements UserDetails {
     }
 
     /**
-     * Create valid email key for customers
+     * Create valid email key and valid email end date for user
      */
-    public void createValidEmailKey() {
+    public void createValidationEmail() {
         this.emailValidationKey = UUID.randomUUID().toString();
-    }
 
-    /**
-     * Create valid email end date for customers
-     */
-    public void createValidEndDate() {
         // Today's date plus 24 hours
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();

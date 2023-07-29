@@ -3,15 +3,16 @@ package com.nnk.springboot.business;
 import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.Exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
+import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.domain.BidList;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author MC
  * @version 1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
@@ -39,7 +40,7 @@ public class BidListBusinessIT {
     private BidList bidSave;
 
 
-    @Before
+    @BeforeEach
     public void setUpBefore() {
         bidSource = BidData.getBidSource();
         bidSave = BidData.getBidSave();
@@ -49,7 +50,7 @@ public class BidListBusinessIT {
     // GetBidsList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void getBidsList_findAllNormal() {
         // GIVEN
@@ -61,7 +62,7 @@ public class BidListBusinessIT {
     }
 
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void getBidsList_findAllEmpty() {
         // GIVEN
         // WHEN
@@ -74,7 +75,7 @@ public class BidListBusinessIT {
     // CreateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void createBid_bidNotExist() {
         // GIVEN
         // WHEN
@@ -86,7 +87,7 @@ public class BidListBusinessIT {
     }
 
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void createBid_bidExist() {
         // GIVEN
@@ -99,7 +100,7 @@ public class BidListBusinessIT {
     // GetBidById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void getBidById_bidExist() {
         // GIVEN
@@ -109,7 +110,7 @@ public class BidListBusinessIT {
     }
 
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void getBidById_bidNotExist() {
         // GIVEN
         // WHEN
@@ -121,7 +122,7 @@ public class BidListBusinessIT {
     // UpdateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void updateBid_bidExist() {
         // GIVEN
@@ -134,7 +135,7 @@ public class BidListBusinessIT {
     }
 
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void updateBid_bidNotExist() {
         // GIVEN
         // WHEN
@@ -146,7 +147,7 @@ public class BidListBusinessIT {
     // DeleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void deleteBid_bidExist() {
         // GIVEN
@@ -157,7 +158,7 @@ public class BidListBusinessIT {
     }
 
     @Test
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void deleteBid_bidNotExist() {
         // GIVEN
         // WHEN

@@ -36,14 +36,22 @@ public class PoseidonSecurityConfiguration {
             );
 
     http
-            .formLogin(a -> a.loginPage("/login")
-                    .loginProcessingUrl("/login")
+            .formLogin(a -> a.loginPage("/app/login")
+                    .loginProcessingUrl("/app/login")
                     .successHandler(successHandler())
-                    .failureUrl("/login?error=true")
+                    .failureUrl("/app/login?error=true")
                     .permitAll());
 
     http
-            .logout(withDefaults());
+//            .logout(withDefaults());
+            .logout()
+            .logoutUrl("/app/logout")
+            .logoutSuccessUrl("/app/login")
+            .invalidateHttpSession(true);
+
+    http
+            .exceptionHandling()
+            .accessDeniedPage("/app/error");
 
     http
             .rememberMe()

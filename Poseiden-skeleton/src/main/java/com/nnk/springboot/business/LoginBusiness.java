@@ -10,6 +10,7 @@ import com.nnk.springboot.domain.AppUserPrincipal;
 import com.nnk.springboot.utils.EmailBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * LoginBusiness is the login page processing service
+ *
+ * @author MC
+ * @version 1.0
+ */
 @Slf4j
 @Service
 public class LoginBusiness implements UserDetailsService
@@ -78,7 +85,7 @@ public class LoginBusiness implements UserDetailsService
      * @throws MyException Exception message
      */
     @Transactional(rollbackFor = Exception.class)
-    public void addCustomer(Register register) throws MyException {
+    public void addUser(Register register) throws MyException {
         Optional<User> optUser = userRepository.findByUsername(register.getEmail());
         if (optUser.isEmpty() == false) {
             throw new MyException("throw.EmailAccountAlreadyeExists", register.getEmail());
@@ -92,14 +99,17 @@ public class LoginBusiness implements UserDetailsService
                 .role(Role.USER.name())
                 .build();
         newUserEntity.createAuthorization();
-        newUserEntity.createValidEmailKey();
-        newUserEntity.createValidEndDate();
+        newUserEntity.createValidationEmail();
         newUserEntity = userRepository.save(newUserEntity);
 
         // Send activation email contact
         String subject = "Activation Email";
         String message = "You can activate your account using the link : "
-                + "http://localhost:8080/register/" + newUserEntity.getEmailValidationKey();
-        emailBusiness.sendEmail("contact@gmail.com", register.getEmail(), subject, message);
+                + "http://localhost:8080/app/register/" + newUserEntity.getEmailValidationKey();
+        try {
+            emailBusiness.sendEmail("contact@gmail.com", register.getEmail(), subject, message);
+        } catch (MailException e) {
+            throw new MyException("throw.ErrorSendEmail", register.getEmail());
+        }
     }
 }

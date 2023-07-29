@@ -11,6 +11,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
+/**
+ * LoginController is the Endpoint of for login page
+ *
+ * @author MC
+ * @version 1.0
+ */
 @Controller
 //@RequestMapping("app")
 public class LoginController {
@@ -53,7 +59,7 @@ public class LoginController {
      * @param params Parameter list
      * @return View
      */
-    @GetMapping("/login")
+    @GetMapping("/app/login")
     public String getLogin(Model model
             , RedirectAttributes redirectAttributes
             , @RequestParam Map<String,String> params) {
@@ -76,7 +82,7 @@ public class LoginController {
      * @param redirectAttributes RedirectAttributes object
      * @return View
      */
-    @GetMapping("/register")
+    @GetMapping("/app/register")
     public String getRegister(Model model
             , RedirectAttributes redirectAttributes) {
         // New user record
@@ -94,18 +100,18 @@ public class LoginController {
      *
      * @return View
      */
-    @PostMapping("/register")
+    @PostMapping("/app/register")
     public String postRegister(@ModelAttribute Register register
             , Model model
             , RedirectAttributes redirectAttributes) {
         try {
             // Adding the new user
-            loginBusiness.addCustomer(register);
+            loginBusiness.addUser(register);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/register";
+            return "redirect:/app/register";
         }
-        return "redirect:/login";
+        return "redirect:/app/login";
     }
 
 }

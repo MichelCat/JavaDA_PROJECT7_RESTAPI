@@ -29,7 +29,7 @@ public class EmailActivationController {
      *
      * @return View
      */
-    @GetMapping("/register/{key}")
+    @GetMapping("/app/register/{key}")
     public String patchAccountActivation(@PathVariable("key") final String validationKey
             , Model model
             , RedirectAttributes redirectAttributes) {
@@ -39,6 +39,6 @@ public class EmailActivationController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/login";
+        return "redirect:/app/login";
     }
 }

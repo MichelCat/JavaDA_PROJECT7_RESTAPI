@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"
-		xmlns="http://www.w3.org/1999/xhtml"
 		xmlns:th="http://www.thymeleaf.org"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		layout:decorate="fragments/main-layout">
@@ -16,36 +15,45 @@
 <div class="container">
 	<div class="row"><h2>Bid List</h2></div>
 	<div class="row">
-		<a th:href="@{/bidList/add}" class="btn btn-primary btn-sm">Add New</a>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>Account</th>
-					<th>Type</th>
-					<th>Bid Quantity</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="bid : ${bidList}">
-<!--
-					<td style="width: 10%" th:text="${bid.BidListId}"></td>
--->
-					<td th:text="${bid.BidListId}"></td>
-					<td th:text="${bid.account}"></td>
-					<td th:text="${bid.type}"></td>
-					<td th:text="${bid.bidQuantity}"></td>
-<!--
-					<td style="width: 15%" class="text-center">
--->
-					<td class="text-center">
-						<a th:href="@{/bidList/update/{id}(id=${bid.BidListId})}">Edit</a>&nbsp;|&nbsp;
-						<a th:href="@{/bidList/delete/{id}(id=${bid.BidListId})}">Delete</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<!-- Add New -->
+		<div class="row">
+			<div class="col-2">
+				<a th:href="@{/bidList/add}" class="btn btn-primary btn-sm">Add New</a>
+			</div>
+		</div>
+
+		<!-- Bid table -->
+		<div class="table-responsive">
+			<table class="table table-striped table-sm table-hover table-bordered">
+				<!-- Bid title -->
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Account</th>
+						<th>Type</th>
+						<th>Bid Quantity</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<!-- Bid detail -->
+				<tbody>
+					<tr th:each="bid : ${bidList}">
+						<td style="width: 10%" th:text="${bid.BidListId}"></td>
+						<td th:text="${bid.account}"></td>
+						<td th:text="${bid.type}"></td>
+						<td th:text="${bid.bidQuantity}"></td>
+						<td style="width: 15%" class="text-center">
+							<a class="btn btn-info btn-sm mx-1"
+								th:href="@{/bidList/update/{id}(id=${bid.BidListId})}">
+									<spam class="bi bi-pencil" /></a>
+							<a class="btn btn-danger btn-sm mx-1"
+								th:href="@{/bidList/delete/{id}(id=${bid.BidListId})}">
+									<spam class="bi bi-trash" /></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 

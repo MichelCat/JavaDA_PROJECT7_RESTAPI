@@ -4,13 +4,11 @@ import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.data.GlobalData;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author MC
  * @version 1.0
  */
-@RunWith(SpringRunner.class)
+//@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class BidListTest {
@@ -33,10 +31,9 @@ public class BidListTest {
 
     private TestConstraintViolation<BidList> testConstraintViolation;
     private BidList bidList;
-
     private Timestamp currentTimestamp;
 
-    @Before
+    @BeforeEach
     public void setUpBefore() {
         currentTimestamp = GlobalData.CURRENT_TIMESTAMP;
 
@@ -68,7 +65,8 @@ public class BidListTest {
         // WHEN
         bidList.setAccount("Account Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getAccount()).isEqualTo("Account Test");
     }
 
@@ -78,7 +76,8 @@ public class BidListTest {
         // WHEN
         bidList.setAccount(" ");
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "account", "Account is mandatory");
+        String[][] errorList = {{"account", "Account is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -87,7 +86,8 @@ public class BidListTest {
         // WHEN
         bidList.setAccount("");
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "account", "Account is mandatory");
+        String[][] errorList = {{"account", "Account is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -96,7 +96,8 @@ public class BidListTest {
         // WHEN
         bidList.setAccount(null);
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "account", "Account is mandatory");
+        String[][] errorList = {{"account", "Account is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -105,7 +106,8 @@ public class BidListTest {
         // WHEN
         bidList.setAccount(StringUtils.repeat('a', 31));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "account", "Maximum length of 30 characters");
+        String[][] errorList = {{"account", "Maximum length of 30 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -117,7 +119,8 @@ public class BidListTest {
         // WHEN
         bidList.setType("Type Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getType()).isEqualTo("Type Test");
     }
 
@@ -127,7 +130,8 @@ public class BidListTest {
         // WHEN
         bidList.setType(" ");
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "type", "Type is mandatory");
+        String[][] errorList = {{"type", "Type is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -136,7 +140,8 @@ public class BidListTest {
         // WHEN
         bidList.setType("");
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "type", "Type is mandatory");
+        String[][] errorList = {{"type", "Type is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -145,7 +150,8 @@ public class BidListTest {
         // WHEN
         bidList.setType(null);
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "type", "Type is mandatory");
+        String[][] errorList = {{"type", "Type is mandatory"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     @Test
@@ -154,7 +160,8 @@ public class BidListTest {
         // WHEN
         bidList.setType(StringUtils.repeat('a', 31));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "type", "Maximum length of 30 characters");
+        String[][] errorList = {{"type", "Maximum length of 30 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -166,7 +173,8 @@ public class BidListTest {
         // WHEN
         bidList.setBidQuantity(10d);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getBidQuantity()).isEqualTo(10d);
     }
 
@@ -176,7 +184,8 @@ public class BidListTest {
         // WHEN
         bidList.setBidQuantity(null);
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "bidQuantity", "Bid quantity cannot be null");
+        String[][] errorList = {{"bidQuantity", "Bid quantity cannot be null"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -188,7 +197,8 @@ public class BidListTest {
         // WHEN
         bidList.setAskQuantity(11d);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getAskQuantity()).isEqualTo(11d);
     }
 
@@ -201,7 +211,8 @@ public class BidListTest {
         // WHEN
         bidList.setBid(12d);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getBid()).isEqualTo(12d);
     }
 
@@ -214,7 +225,8 @@ public class BidListTest {
         // WHEN
         bidList.setAsk(13d);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getAsk()).isEqualTo(13d);
     }
 
@@ -227,7 +239,8 @@ public class BidListTest {
         // WHEN
         bidList.setBenchmark("Benchmark Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getBenchmark()).isEqualTo("Benchmark Test");
     }
 
@@ -237,7 +250,8 @@ public class BidListTest {
         // WHEN
         bidList.setBenchmark(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "benchmark", "Maximum length of 125 characters");
+        String[][] errorList = {{"benchmark", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -249,7 +263,8 @@ public class BidListTest {
         // WHEN
         bidList.setBidListDate(currentTimestamp);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getBidListDate()).isEqualTo(currentTimestamp);
     }
 
@@ -262,7 +277,8 @@ public class BidListTest {
         // WHEN
         bidList.setCommentary("Commentary Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getCommentary()).isEqualTo("Commentary Test");
     }
 
@@ -272,7 +288,8 @@ public class BidListTest {
         // WHEN
         bidList.setCommentary(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "commentary", "Maximum length of 125 characters");
+        String[][] errorList = {{"commentary", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -284,7 +301,8 @@ public class BidListTest {
         // WHEN
         bidList.setSecurity("Security Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getSecurity()).isEqualTo("Security Test");
     }
 
@@ -294,7 +312,8 @@ public class BidListTest {
         // WHEN
         bidList.setSecurity(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "security", "Maximum length of 125 characters");
+        String[][] errorList = {{"security", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -306,7 +325,8 @@ public class BidListTest {
         // WHEN
         bidList.setStatus("Status");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getStatus()).isEqualTo("Status");
     }
 
@@ -316,7 +336,8 @@ public class BidListTest {
         // WHEN
         bidList.setStatus(StringUtils.repeat('a', 11));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "status", "Maximum length of 10 characters");
+        String[][] errorList = {{"status", "Maximum length of 10 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -328,7 +349,8 @@ public class BidListTest {
         // WHEN
         bidList.setTrader("Trader Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getTrader()).isEqualTo("Trader Test");
     }
 
@@ -338,7 +360,8 @@ public class BidListTest {
         // WHEN
         bidList.setTrader(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "trader", "Maximum length of 125 characters");
+        String[][] errorList = {{"trader", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -350,7 +373,8 @@ public class BidListTest {
         // WHEN
         bidList.setBook("Book Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getBook()).isEqualTo("Book Test");
     }
 
@@ -360,7 +384,8 @@ public class BidListTest {
         // WHEN
         bidList.setBook(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "book", "Maximum length of 125 characters");
+        String[][] errorList = {{"book", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -372,7 +397,8 @@ public class BidListTest {
         // WHEN
         bidList.setCreationName("CreationName Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getCreationName()).isEqualTo("CreationName Test");
     }
 
@@ -382,7 +408,8 @@ public class BidListTest {
         // WHEN
         bidList.setCreationName(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "creationName", "Maximum length of 125 characters");
+        String[][] errorList = {{"creationName", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -394,7 +421,8 @@ public class BidListTest {
         // WHEN
         bidList.setCreationDate(currentTimestamp);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getCreationDate()).isEqualTo(currentTimestamp);
     }
 
@@ -407,7 +435,8 @@ public class BidListTest {
         // WHEN
         bidList.setRevisionName("RevisionName Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getRevisionName()).isEqualTo("RevisionName Test");
     }
 
@@ -417,7 +446,8 @@ public class BidListTest {
         // WHEN
         bidList.setRevisionName(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "revisionName", "Maximum length of 125 characters");
+        String[][] errorList = {{"revisionName", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -429,7 +459,8 @@ public class BidListTest {
         // WHEN
         bidList.setRevisionDate(currentTimestamp);
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getRevisionDate()).isEqualTo(currentTimestamp);
     }
 
@@ -442,7 +473,8 @@ public class BidListTest {
         // WHEN
         bidList.setDealName("DealName Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getDealName()).isEqualTo("DealName Test");
     }
 
@@ -452,7 +484,8 @@ public class BidListTest {
         // WHEN
         bidList.setDealName(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "dealName", "Maximum length of 125 characters");
+        String[][] errorList = {{"dealName", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -464,7 +497,8 @@ public class BidListTest {
         // WHEN
         bidList.setDealType("DealType Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getDealType()).isEqualTo("DealType Test");
     }
 
@@ -474,7 +508,8 @@ public class BidListTest {
         // WHEN
         bidList.setDealType(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "dealType", "Maximum length of 125 characters");
+        String[][] errorList = {{"dealType", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -486,7 +521,8 @@ public class BidListTest {
         // WHEN
         bidList.setSourceListId("SourceListId Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getSourceListId()).isEqualTo("SourceListId Test");
     }
 
@@ -496,7 +532,8 @@ public class BidListTest {
         // WHEN
         bidList.setSourceListId(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "sourceListId", "Maximum length of 125 characters");
+        String[][] errorList = {{"sourceListId", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -508,7 +545,8 @@ public class BidListTest {
         // WHEN
         bidList.setSide("Side Test");
         // THEN
-        testConstraintViolation.noConstraintViolation(bidList);
+        String[][] errorList = {};
+        testConstraintViolation.checking(bidList, errorList);
         assertThat(bidList.getSide()).isEqualTo("Side Test");
     }
 
@@ -518,6 +556,7 @@ public class BidListTest {
         // WHEN
         bidList.setSide(StringUtils.repeat('a', 126));
         // THEN
-        testConstraintViolation.oneConstraintViolation(bidList, "side", "Maximum length of 125 characters");
+        String[][] errorList = {{"side", "Maximum length of 125 characters"}};
+        testConstraintViolation.checking(bidList, errorList);
     }
 }

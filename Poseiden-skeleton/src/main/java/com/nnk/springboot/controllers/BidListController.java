@@ -37,14 +37,14 @@ public class BidListController {
      * @param model Model object
      * @return View
      */
-    @RequestMapping("/bidList/list")
-//    @GetMapping("/bidList/list")
+//    @RequestMapping("/bidList/list")
+    @GetMapping("/bidList/list")
     public String home(Model model)
     {
         // Call service find all bids to show to the view
         log.debug("HTTP GET, display home form.");
         model.addAttribute("bidList", bidListBusiness.getBidsList());
-        return "/bidList/list";
+        return "bidList/list";
     }
 
     /**

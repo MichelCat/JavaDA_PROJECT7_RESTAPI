@@ -4,17 +4,18 @@ import com.nnk.springboot.Application;
 import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.Exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
+import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.domain.BidList;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author MC
  * @version 1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
 public class BidListControllerIT {
@@ -48,7 +49,7 @@ public class BidListControllerIT {
 
     public List<BidList> bidsList;
 
-    @Before
+    @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
                     .webAppContextSetup(context)
@@ -64,7 +65,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void home_getBids_return200() throws Exception {
         // GIVEN
@@ -86,7 +87,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void addBidForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -106,7 +107,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void validate_bidNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
@@ -125,7 +126,7 @@ public class BidListControllerIT {
 
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void validate_bidExist_return400() throws Exception {
         // GIVEN
@@ -146,7 +147,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void showUpdateForm_bidExist_return200() throws Exception {
         // GIVEN
@@ -169,7 +170,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void updateBid_bidExist_return302() throws Exception {
         // GIVEN
@@ -189,7 +190,7 @@ public class BidListControllerIT {
 
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void updateBid_bidNotExist_return404() throws Exception {
         // GIVEN
         // WHEN
@@ -209,7 +210,7 @@ public class BidListControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
     public void deleteBid_bidExist_return302() throws Exception {
         // GIVEN
@@ -227,7 +228,7 @@ public class BidListControllerIT {
 
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = BidData.scriptClearDataBase)
+    @Sql(scripts = GlobalData.scriptClearDataBase)
     public void deleteBid_bidNotExist_return404() throws Exception {
         // GIVEN
         // WHEN

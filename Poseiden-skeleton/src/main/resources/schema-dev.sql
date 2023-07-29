@@ -96,19 +96,19 @@ CREATE TABLE RuleName (
 );
 
 CREATE TABLE Users (
-    Id int NOT NULL AUTO_INCREMENT,		        -- User ID
-    username VARCHAR(125),						-- Email used to authenticate the user
-    password VARCHAR(125),						-- Password used to authenticate the user
-    fullname VARCHAR(125),						-- Full name
-    role VARCHAR(125),							-- User role
-    expired boolean,							-- User account expired
-    locked boolean,								-- User locked
-    credentialsExpired boolean,					-- User credentials (password) expired
-    enabled boolean,								-- Activated user
-    emailValidationKey varchar(36),				-- Email validation key
-    validEmailEndDate datetime,					-- Valid email end date
+   Id int NOT NULL AUTO_INCREMENT,		        -- User ID
+   username VARCHAR(125),						-- Email used to authenticate the user
+   password VARCHAR(125),						-- Password used to authenticate the user
+   fullname VARCHAR(125),						-- Full name
+   role VARCHAR(125),							-- User role
+   expired boolean,					    		-- User account expired
+   locked boolean,								-- User locked
+   credentialsExpired boolean,					-- User credentials (password) expired
+   enabled boolean,								-- Activated user
+   emailValidationKey varchar(36),				-- Email validation key
+   validEmailEndDate datetime,					-- Valid email end date
 
-    PRIMARY KEY (Id)
---    constraint uc_users_username UNIQUE KEY (username),
---    constraint uc_users_emailValidationKey UNIQUE KEY (emailValidationKey)
+   PRIMARY KEY (Id),
+   constraint uc_users_username UNIQUE KEY (username),
+   constraint uc_users_emailValidationKey UNIQUE KEY (emailValidationKey)
 );

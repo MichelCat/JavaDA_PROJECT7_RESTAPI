@@ -1,6 +1,5 @@
 package com.nnk.springboot.domain;
 
-import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
@@ -23,28 +22,37 @@ public class TestConstraintViolation<T> {
     }
 
     /**
-     * Processing an attribute that had no constraint violations
-     *
-     * @param object Object to be tested
-     */
-    public void noConstraintViolation(T object) {
-        // THEN
-        Set<ConstraintViolation<T>> violations = validator.validate(object);
-        assertThat(violations.size()).isEqualTo(0);
-    }
-
-    /**
      * Processing an attribute that had constraint violations
      *
      * @param object Object to be tested
-     * @param attribute Attribute name
-     * @param message Error message
+     * @param errorList Error list
      */
-    public void oneConstraintViolation(T object, String attribute, String message) {
+    public void checking(T object, String[][] errorList) {
         // THEN
         Set<ConstraintViolation<T>> violations = validator.validate(object);
-        assertThat(violations.size()).isEqualTo(1);
-        assertThat(violations.iterator().next().getPropertyPath().toString()).isEqualTo(attribute);
-        assertThat(violations.iterator().next().getMessage()).isEqualTo(message);
+
+        for (ConstraintViolation violation : violations) {
+System.out.println("Property: " + violation.getPropertyPath());
+System.out.println("Message: " + violation.getMessage());
+System.out.println("Invalid value: " + violation.getInvalidValue());
+System.out.println("------------------------");
+
+            String attribute = "";
+            String message = "";
+            for (String errorElement[] : errorList) {
+                if (violation.getPropertyPath().toString().equals(errorElement[0])
+                        && violation.getMessage().toString().equals(errorElement[1])) {
+                    attribute = errorElement[0];
+                    message = errorElement[1];
+                    break;
+                }
+            }
+System.out.println(attribute);
+System.out.println(message);
+            assertThat(violation.getPropertyPath().toString()).isEqualTo(attribute);
+            assertThat(violation.getMessage()).isEqualTo(message);
+        }
+
+        assertThat(violations.size()).isEqualTo(errorList.length);
     }
 }

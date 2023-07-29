@@ -1,9 +1,10 @@
 package com.nnk.springboot.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * EmailBusiness is send email service
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author MC
  * @version 1.0
  */
-@Service
+@Component
 public class EmailBusiness {
 
     @Autowired
@@ -25,7 +26,11 @@ public class EmailBusiness {
      * @param subject Message subject
      * @param message Message detail
      */
-    public void sendEmail(String sender, String recipient, String subject, String message) {
+    public void sendEmail(String sender
+            , String recipient
+            , String subject
+            , String message)
+            throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom(sender);
         mail.setTo(recipient);

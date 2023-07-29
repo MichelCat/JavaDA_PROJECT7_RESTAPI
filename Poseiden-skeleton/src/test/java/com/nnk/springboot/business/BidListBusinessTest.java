@@ -6,15 +6,15 @@ import com.nnk.springboot.Exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
  * @author MC
  * @version 1.0
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class BidListBusinessTest {
@@ -48,7 +48,7 @@ public class BidListBusinessTest {
     public List<BidList> bidsList;
 
 
-    @Before
+    @BeforeEach
     public void setUpBefore() {
         bidSource = BidData.getBidSource();
         bidSave = BidData.getBidSave();

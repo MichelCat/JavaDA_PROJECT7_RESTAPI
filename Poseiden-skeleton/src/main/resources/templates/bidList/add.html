@@ -3,20 +3,21 @@
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head>
-	<meta charset="utf-8"/>
-	<title>Add new bid</title>
-	<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}" />
-</head>
+
+	<head>
+		<title>Poseidon - Add new bid</title>
+		<head th:replace="fragments/head">
+	</head>
+
 <body>
 <div class="container">
-
 	<div class="row">
 		<h2>Add New Bid</h2>
 	</div>
 
 	<div class="row">
 		<form th:action="@{/bidList/validate}" th:object="${bidList}" th:method="post" class="form-horizontal" style="width: 100%">
+			<!-- account -->
 			<div class="form-group">
 				<label for="account" class="col-sm-2 control-label">Account</label>
 				<div class="col-sm-10">
@@ -24,6 +25,7 @@
 					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></p>
 				</div>
 			</div>
+			<!-- type -->
 			<div class="form-group">
 				<label for="type" class="col-sm-2 control-label">Type</label>
 				<div class="col-sm-10">
@@ -31,18 +33,19 @@
 					<p class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
 				</div>
 			</div>
+			<!-- bid quantity -->
 			<div class="form-group">
 				<label for="bidQuantity" class="col-sm-2 control-label">Bid Quantity</label>
 				<div class="col-sm-10">
-					<input type="number" th:field="*{bidQuantity}" th:id="bidQuantity" placeholder="Bid Quantity" class="col-4">
+					<input type="number" th:field="*{bidQuantity}" th:id="bidQuantity" placeholder="Bid quantity" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('bidQuantity')}" th:errors="*{bidQuantity}"></p>
 				</div>
 			</div>
 
-
+			<!-- Button Cancel and Add -->
 			<div class="form-group">
 				<div class="col-sm-12">
-					<a class="btn btn-danger btn-sm" th:href="/bidList/list">Cancel</a>
+					<a class="btn btn-danger btn-sm" th:href="@{/bidList/list}">Cancel</a>
 					<input class="btn btn-primary btn-sm" type="submit" value="Add Bid List">
 				</div>
 			</div>
@@ -50,5 +53,8 @@
 	</div>
 
 </div>
+
+<div th:replace="fragments/scripts :: script"></div>
+
 </body>
 </html>
