@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.Application;
+import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.Register;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -149,10 +151,8 @@ public class LoginControllerIT {
                         .params(UserData.getRegisterController())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/app/register"))
-                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MyExceptionBadRequestException))
                 .andDo(print());
         // THEN
     }

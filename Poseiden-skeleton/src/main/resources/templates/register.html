@@ -35,32 +35,33 @@
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="bi bi-person-fill"></i></span>
 							</div>
-					   	    <input type="text" class="form-control" placeholder="First name" th:maxlength="50"
-					   	    			id="idFirstName" th:field="*{firstName}" />
-						</div>
-						
-						<div class="mb-3 input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+							<div>
+						   	    <input type="text" class="form-control" placeholder="Full name"
+					   	    			id="idFullname" th:field="*{fullname}" />
+								<p class="text-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></p>
 							</div>
-					   	    <input type="text" class="form-control" placeholder="Last name" th:maxlength="50"
-					   	    			id="idLastName" th:field="*{lastName}" />
 						</div>
-					
+
 						<div class="mb-3 input-group form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="bi bi-envelope"></i></span>
 							</div>
-					        <input type="email" class="form-control" placeholder="Email" th:maxlength="254"
-					        			id="idEmail" th:field="*{email}" />
+							<div>
+								<input type="email" class="form-control" placeholder="Email"
+									   id="idEmail" th:field="*{email}" />
+								<p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+							</div>
 						</div>
 						
 						<div class="mb-3 input-group form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="bi bi-asterisk"></i></span>
 							</div>
-					   	    <input type="password" class="form-control" placeholder="Password" th:maxlength="100"
-					   	    			id="idPassword" th:field="*{password}" />
+							<div>
+								<input type="password" class="form-control" placeholder="Password"
+									   id="idPassword" th:field="*{password}" />
+								<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+							</div>
 						</div>
 					    
 					    <div class="mt-5">

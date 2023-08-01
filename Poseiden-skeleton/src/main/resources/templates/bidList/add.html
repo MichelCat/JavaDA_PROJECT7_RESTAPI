@@ -17,6 +17,11 @@
 
 	<div class="row">
 		<form th:action="@{/bidList/validate}" th:object="${bidList}" th:method="post" class="form-horizontal" style="width: 100%">
+
+			<ul th:if="${#fields.hasErrors('*')}">
+				<li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+			</ul>
+
 			<!-- account -->
 			<div class="form-group">
 				<label for="account" class="col-sm-2 control-label">Account</label>

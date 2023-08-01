@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.Exception.MyException;
+import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.business.LoginBusiness;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.Register;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -147,7 +149,7 @@ public class LoginControllerTest {
     @WithMockUser(roles = "USER")
     public void postRegister_userExist_return302() throws Exception {
         // GIVEN
-        doThrow(new MyException("throw.EmailAccountAlreadyeExists", "user@gmail.com"))
+        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyeExists", "user@gmail.com"))
                 .when(loginBusiness).addUser(UserData.getRegisterSource());
         // WHEN
         mockMvc.perform(post("/app/register")
@@ -155,10 +157,8 @@ public class LoginControllerTest {
                         .params(UserData.getRegisterController())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/app/register"))
-                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MyExceptionBadRequestException))
                 .andDo(print());
         // THEN
     }

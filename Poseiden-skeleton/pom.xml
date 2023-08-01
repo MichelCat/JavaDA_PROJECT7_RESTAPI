@@ -135,20 +135,6 @@
 		</dependency>
 		-->
 
-		<!--
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>8.0.1.Final</version>
-		</dependency>
-		-->
-		<!--
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
-		</dependency>
-        -->
 
 		<!-- Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy -->
 		<!-- , or are considered to be so standard as to justify existence in java.lang -->
@@ -228,6 +214,27 @@
 			<version>5.2.3</version>
 		</dependency>
 
+
+		<!--
+		<!- Hibernate Validator Engine Relocation Artifact ->
+		<!- How to create custom validations in Spring Boot ->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+        -->
+
 	</dependencies>
 
 	<build>
@@ -235,6 +242,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!--
 				<configuration>
 					<excludes>
 						<exclude>
@@ -243,6 +251,7 @@
 						</exclude>
 					</excludes>
 				</configuration>
+                -->
 			</plugin>
 		</plugins>
 	</build>

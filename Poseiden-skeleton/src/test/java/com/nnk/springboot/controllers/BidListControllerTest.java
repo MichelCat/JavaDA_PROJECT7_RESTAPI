@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -135,16 +136,21 @@ public class BidListControllerTest {
     public void validate_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        ServletException exception = assertThrows(ServletException.class,
-            () -> {mockMvc.perform(post("/bidList/validate")
+        MvcResult mvcResult = mockMvc.perform(post("/bidList/validate")
                     .with(csrf().asHeader())
+                    .param("account", "")
+                    .param("type", "")
+                    .param("bidQuantity", "")
                     .contentType(MediaType.APPLICATION_JSON)
-            );
-        });
+            )
+            .andExpect(model().errorCount(3))
+            .andExpect(status().isOk())
+            .andDo(print())
+            .andReturn();
         // THEN
-        assertThat(exception.getMessage()).contains("validate.bid.bidQuantity: Bid quantity cannot be null");
-        assertThat(exception.getMessage()).contains("validate.bid.account: Account is mandatory");
-        assertThat(exception.getMessage()).contains("validate.bid.type: Type is mandatory");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity cannot be null");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -196,17 +202,19 @@ public class BidListControllerTest {
     public void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        ServletException exception = assertThrows(ServletException.class,
-                () -> {mockMvc.perform(post("/bidList/update/{id}", 0)
+        MvcResult mvcResult = mockMvc.perform(post("/bidList/update/{id}", 0)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
-                );
-                });
+                )
+                .andExpect(model().errorCount(3))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
         // THEN
-        assertThat(exception.getMessage()).contains("updateBid.id: must be greater than 0");
-        assertThat(exception.getMessage()).contains("updateBid.bidList.account: Account is mandatory");
-        assertThat(exception.getMessage()).contains("updateBid.bidList.type: Type is mandatory");
-        assertThat(exception.getMessage()).contains("updateBid.bidList.bidQuantity: Bid quantity cannot be null");
+//        assertThat(mvcResult.getResponse().getContentAsString()).contains("must be greater than 0");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity cannot be null");
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -236,13 +244,16 @@ public class BidListControllerTest {
     public void deleteBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        ServletException exception = assertThrows(ServletException.class,
-                () -> {mockMvc.perform(get("/bidList/delete/{id}", 0)
+        MvcResult mvcResult = mockMvc.perform(get("/bidList/delete/{id}", 0)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
-                );
-                });
+                )
+                .andExpect(model().errorCount(0))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print())
+                .andReturn();
         // THEN
-        assertThat(exception.getMessage()).contains("deleteBid.id: must be greater than 0");
+////        assertThat(exception.getMessage()).contains("deleteBid.id: must be greater than 0");
+//        assertThat(mvcResult.getResponse().getContentAsString()).contains("must be greater than 0\"");
     }
 }

@@ -2,6 +2,7 @@ package com.nnk.springboot.business;
 
 import com.nnk.springboot.Exception.MessagePropertieFormat;
 import com.nnk.springboot.Exception.MyException;
+import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.domain.Register;
 import com.nnk.springboot.domain.Role;
 import com.nnk.springboot.repositories.UserRepository;
@@ -85,17 +86,17 @@ public class LoginBusiness implements UserDetailsService
      * @throws MyException Exception message
      */
     @Transactional(rollbackFor = Exception.class)
-    public void addUser(Register register) throws MyException {
+    public void addUser(Register register) throws MyExceptionBadRequestException {
         Optional<User> optUser = userRepository.findByUsername(register.getEmail());
         if (optUser.isEmpty() == false) {
-            throw new MyException("throw.EmailAccountAlreadyeExists", register.getEmail());
+            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyeExists", register.getEmail());
         }
 
         //Add user
         User newUserEntity = User.builder()
                 .username(register.getEmail())
                 .password(passwordEncoder.encode(register.getPassword()))
-                .fullname(register.getFirstName() + " " + register.getLastName())
+                .fullname(register.getFullname())
                 .role(Role.USER.name())
                 .build();
         newUserEntity.createAuthorization();
@@ -109,7 +110,7 @@ public class LoginBusiness implements UserDetailsService
         try {
             emailBusiness.sendEmail("contact@gmail.com", register.getEmail(), subject, message);
         } catch (MailException e) {
-            throw new MyException("throw.ErrorSendEmail", register.getEmail());
+            throw new MyExceptionBadRequestException("throw.ErrorSendEmail", register.getEmail());
         }
     }
 }

@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 
 /**
  * BidListController is the Endpoint will perform the following actions via Get/Post/Put/Delete with HTTP on bids.
@@ -25,7 +22,7 @@ import java.util.List;
  * @version 1.0
  */
 @Slf4j
-@Validated
+//@Validated
 @Controller
 public class BidListController {
     @Autowired
@@ -125,7 +122,8 @@ public class BidListController {
      */
 //    @PatchMapping("/bidList/update/{id}")
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") @Positive Integer id
+    public String updateBid(
+                            @PathVariable("id") @Positive(message = "Bid size must be greater than 0") Integer id
                             , @Valid BidList bidList
                             , BindingResult result
                             , Model model

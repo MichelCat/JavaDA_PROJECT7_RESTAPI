@@ -2,6 +2,7 @@ package com.nnk.springboot.business;
 
 import com.nnk.springboot.Exception.MessagePropertieFormat;
 import com.nnk.springboot.Exception.MyException;
+import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.Register;
 import com.nnk.springboot.domain.User;
@@ -143,11 +144,11 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void addUser_userExist_returnMyException() {
+    public void addUser_userExist_returnBadRequestException() {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
         // WHEN
-        Throwable exception = assertThrows(MyException.class,
+        Throwable exception = assertThrows(MyExceptionBadRequestException.class,
                 () -> {loginBusiness.addUser(registerSource);});
         // THEN
         String messageError = MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyeExists", userEmail);
@@ -155,7 +156,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void addUser_sendError_returnMailSendException() throws Exception {
+    public void addUser_sendErrorMailSendException_returnBadRequestException() throws Exception {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(userSave);
@@ -163,7 +164,7 @@ public class LoginBusinessTest {
             .when(emailBusiness).sendEmail(any(String.class), any(String.class)
                 , any(String.class), any(String.class));
         // WHEN
-        assertThrows(MyException.class,
+        assertThrows(MyExceptionBadRequestException.class,
                 () -> {loginBusiness.addUser(registerSource);});
         // THEN
         verify(emailBusiness, Mockito.times(1))

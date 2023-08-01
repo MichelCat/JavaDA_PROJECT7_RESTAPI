@@ -1,8 +1,11 @@
 package com.nnk.springboot.domain;
 
+import com.nnk.springboot.validator.PasswordConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * Register is business model
@@ -10,10 +13,9 @@ import org.springframework.validation.annotation.Validated;
  * @author MC
  * @version 1.0
  */
-@Validated
+//@Validated
 @Data
 @FieldDefaults(level= AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = {"email", "password", "firstName", "lastName"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,28 +25,22 @@ public class Register {
     /**
      * User email
      */
+    @NotBlank(message = "Username is mandatory")
+    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Email(message = "Email should be valid")
     String email;
 
     /**
      * User password
      */
     @ToString.Exclude
+    @PasswordConstraint
     String password;
 
     /**
-     * User first name
+     * Full name
      */
-    String firstName;
-
-    /**
-     * User last name
-     */
-    String lastName;
-
-//    public Register() {
-//        email = "";
-//        password = "";
-//        firstName = "";
-//        lastName = "";
-//    }
+    @NotBlank(message = "FullName is mandatory")
+    @Size(max = 125, message = "Maximum length of {max} characters")
+    String fullname;
 }

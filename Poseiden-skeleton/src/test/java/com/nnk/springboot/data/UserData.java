@@ -60,9 +60,8 @@ public class UserData {
     public static Register getRegisterSource() {
         return Register.builder()
                 .email("user@gmail.com")
-                .password("$2a$10$55oEaTtOLOQZqJcu/ytTlO7bzdoo2tbRKNUsrJpU4W1wfLKw/opD.")
-                .firstName("user first")
-                .lastName("user last")
+                .password("12345678+aA")
+                .fullname("Alex")
                 .build();
     }
 

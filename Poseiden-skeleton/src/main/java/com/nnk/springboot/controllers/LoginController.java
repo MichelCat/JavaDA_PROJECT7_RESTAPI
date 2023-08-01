@@ -3,9 +3,12 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.business.LoginBusiness;
 import com.nnk.springboot.domain.Register;
 import com.nnk.springboot.domain.User;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -17,6 +20,7 @@ import java.util.Map;
  * @author MC
  * @version 1.0
  */
+@Slf4j
 @Controller
 //@RequestMapping("app")
 public class LoginController {
@@ -101,17 +105,19 @@ public class LoginController {
      * @return View
      */
     @PostMapping("/app/register")
-    public String postRegister(@ModelAttribute Register register
-            , Model model
-            , RedirectAttributes redirectAttributes) {
-        try {
-            // Adding the new user
-            loginBusiness.addUser(register);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/app/register";
-        }
-        return "redirect:/app/login";
+    public String postRegister(@ModelAttribute @Valid Register register
+                                , BindingResult result
+                                , Model model
+                                , RedirectAttributes redirectAttributes) {
+    if (result.hasErrors()) {
+//        model.addAttribute("user", register);
+        log.info("HTTP POST, Validation failed for register ({}).", register);
+        return "/app/register";
     }
 
+    // Adding the new user
+    loginBusiness.addUser(register);
+    log.info("HTTP POST, SUCCESSFUL ({}).", register);
+    return "redirect:/app/login";
+    }
 }
