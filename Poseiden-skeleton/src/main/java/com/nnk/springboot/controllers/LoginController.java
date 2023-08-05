@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Slf4j
 @Controller
-//@RequestMapping("app")
+@RequestMapping("app")
 public class LoginController {
 
 //    @Autowired
@@ -63,7 +63,7 @@ public class LoginController {
      * @param params Parameter list
      * @return View
      */
-    @GetMapping("/app/login")
+    @GetMapping("/login")
     public String getLogin(Model model
             , RedirectAttributes redirectAttributes
             , @RequestParam Map<String,String> params) {
@@ -86,7 +86,7 @@ public class LoginController {
      * @param redirectAttributes RedirectAttributes object
      * @return View
      */
-    @GetMapping("/app/register")
+    @GetMapping("/register")
     public String getRegister(Model model
             , RedirectAttributes redirectAttributes) {
         // New user record
@@ -104,20 +104,25 @@ public class LoginController {
      *
      * @return View
      */
-    @PostMapping("/app/register")
+    @PostMapping("/register")
     public String postRegister(@ModelAttribute @Valid Register register
                                 , BindingResult result
                                 , Model model
                                 , RedirectAttributes redirectAttributes) {
     if (result.hasErrors()) {
 //        model.addAttribute("user", register);
-        log.info("HTTP POST, Validation failed for register ({}).", register);
+        log.debug("HTTP POST, Validation failed for register ({}).", register);
         return "/app/register";
     }
 
-    // Adding the new user
-    loginBusiness.addUser(register);
-    log.info("HTTP POST, SUCCESSFUL ({}).", register);
+    try {
+        // Adding the new user
+        loginBusiness.addUser(register);
+        log.info("HTTP POST, SUCCESSFUL ({}).", register);
+    } catch (Exception e) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/app/register";
+    }
     return "redirect:/app/login";
     }
 }

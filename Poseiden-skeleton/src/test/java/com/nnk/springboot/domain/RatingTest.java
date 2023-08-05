@@ -32,7 +32,7 @@ public class RatingTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // MoodysRating attribute
+    // moodysRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalMoodysRating_thenNoConstraintViolation() {
@@ -80,7 +80,7 @@ public class RatingTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // SandPRating attribute
+    // sandPRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalSandPRating_thenNoConstraintViolation() {
@@ -128,7 +128,7 @@ public class RatingTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // FitchRating attribute
+    // fitchRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalFitchRating_thenNoConstraintViolation() {
@@ -176,7 +176,7 @@ public class RatingTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // OrderNumber attribute
+    // orderNumber attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalOrderNumber_thenNoConstraintViolations() {

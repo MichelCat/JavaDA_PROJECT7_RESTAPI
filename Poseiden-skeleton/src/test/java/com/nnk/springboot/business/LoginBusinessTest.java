@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -45,6 +46,8 @@ public class LoginBusinessTest {
     private UserRepository userRepository;
     @MockBean
     private EmailBusiness emailBusiness;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     private User userSource;
     private User userSave;
@@ -61,7 +64,7 @@ public class LoginBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // LoadUserByUsername method
+    // loadUserByUsername method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void loadUserByUsername_userNotExist_returnNotFound() {
@@ -128,13 +131,14 @@ public class LoginBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // AddUser method
+    // addUser method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void addUser_normal() throws Exception {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(userSave);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(userSave.getPassword());
         doNothing().when(emailBusiness).sendEmail(any(String.class), any(String.class), any(String.class), any(String.class));
         // WHEN
         loginBusiness.addUser(registerSource);
@@ -151,7 +155,7 @@ public class LoginBusinessTest {
         Throwable exception = assertThrows(MyExceptionBadRequestException.class,
                 () -> {loginBusiness.addUser(registerSource);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyeExists", userEmail);
+        String messageError = MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", userEmail);
         assertThat(exception.getMessage()).isEqualTo(messageError);
     }
 
@@ -160,6 +164,7 @@ public class LoginBusinessTest {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(userSave);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(userSave.getPassword());
         doThrow(new MailSendException("Test message"))
             .when(emailBusiness).sendEmail(any(String.class), any(String.class)
                 , any(String.class), any(String.class));

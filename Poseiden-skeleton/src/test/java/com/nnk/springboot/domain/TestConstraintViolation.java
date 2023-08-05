@@ -32,11 +32,6 @@ public class TestConstraintViolation<T> {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
 
         for (ConstraintViolation violation : violations) {
-System.out.println("Property: " + violation.getPropertyPath());
-System.out.println("Message: " + violation.getMessage());
-System.out.println("Invalid value: " + violation.getInvalidValue());
-System.out.println("------------------------");
-
             String attribute = "";
             String message = "";
             for (String errorElement[] : errorList) {
@@ -47,8 +42,6 @@ System.out.println("------------------------");
                     break;
                 }
             }
-System.out.println(attribute);
-System.out.println(message);
             assertThat(violation.getPropertyPath().toString()).isEqualTo(attribute);
             assertThat(violation.getMessage()).isEqualTo(message);
         }

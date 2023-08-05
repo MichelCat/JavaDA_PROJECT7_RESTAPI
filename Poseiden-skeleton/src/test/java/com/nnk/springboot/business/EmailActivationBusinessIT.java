@@ -15,8 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.sql.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -44,15 +42,15 @@ public class EmailActivationBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // EmailActivationBusiness method
+    // activatedUser method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void emailActivationBusiness_normal_returnUser() throws MyException {
+    public void activatedUser_normal_returnUser() throws MyException {
         // GIVEN
         // WHEN
-        User result = emailActivationBusiness.emailActivationBusiness(keyValue);
+        User result = emailActivationBusiness.activatedUser(keyValue);
         // THEN
         userSave.setEnabled(true);
         assertThat(result).usingRecursiveComparison()

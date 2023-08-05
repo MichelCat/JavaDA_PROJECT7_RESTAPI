@@ -1,7 +1,6 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.Application;
-import com.nnk.springboot.Exception.MyExceptionBadRequestException;
 import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.Register;
@@ -18,9 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -46,16 +45,20 @@ public class LoginControllerIT {
     @Autowired
     private WebApplicationContext context;
 
+    private MultiValueMap<String, String> registerController;
+
     @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+
+        registerController = UserData.getRegisterController();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetLogin method
+    // getLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -102,7 +105,7 @@ public class LoginControllerIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetRegister method
+    // getRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -119,7 +122,7 @@ public class LoginControllerIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // PostRegister method
+    // postRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -129,7 +132,7 @@ public class LoginControllerIT {
         // WHEN
         mockMvc.perform(post("/app/register")
                         .with(csrf().asHeader())
-                        .params(UserData.getRegisterController())
+                        .params(registerController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -148,17 +151,19 @@ public class LoginControllerIT {
         // WHEN
         mockMvc.perform(post("/app/register")
                         .with(csrf().asHeader())
-                        .params(UserData.getRegisterController())
+                        .params(registerController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().is4xxClientError())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MyExceptionBadRequestException))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().errorCount(0))
+                .andExpect(view().name("redirect:/app/register"))
+                .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // FormLogin method
+    // formLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")

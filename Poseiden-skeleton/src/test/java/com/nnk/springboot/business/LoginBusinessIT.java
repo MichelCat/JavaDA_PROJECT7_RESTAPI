@@ -3,7 +3,6 @@ package com.nnk.springboot.business;
 import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.AppUserPrincipal;
-import com.nnk.springboot.domain.Register;
 import com.nnk.springboot.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,20 +29,16 @@ public class LoginBusinessIT {
     @Autowired
     private LoginBusiness loginBusiness;
 
-    private User userSource;
     private User userSave;
-    private Register registerSource;
 
 
     @BeforeEach
     public void setUpBefore() {
-        userSource = UserData.getUserSource();
         userSave = UserData.getUserSave();
-        registerSource = UserData.getRegisterSource();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // LoadUserByUsername method
+    // loadUserByUsername method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
@@ -51,7 +46,7 @@ public class LoginBusinessIT {
     public void loadUserByUsername_userExist() {
         // GIVEN
         // WHEN
-        AppUserPrincipal result = (AppUserPrincipal)loginBusiness.loadUserByUsername("user@gmail.com");
+        AppUserPrincipal result = (AppUserPrincipal)loginBusiness.loadUserByUsername(userSave.getUsername());
         // THEN
         assertThat(result.getAppUser()).usingRecursiveComparison()
                 .ignoringFields("id")
@@ -60,7 +55,7 @@ public class LoginBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // AddUser method
+    // addUser method
     // -----------------------------------------------------------------------------------------------
 
 }

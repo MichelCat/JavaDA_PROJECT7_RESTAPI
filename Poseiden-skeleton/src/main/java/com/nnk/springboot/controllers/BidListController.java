@@ -1,17 +1,15 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.Exception.MessagePropertieFormat;
 import com.nnk.springboot.business.BidListBusiness;
 import com.nnk.springboot.domain.BidList;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -22,8 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @version 1.0
  */
 @Slf4j
-//@Validated
 @Controller
+@RequestMapping("bidList")
 public class BidListController {
     @Autowired
     private BidListBusiness bidListBusiness;
@@ -34,8 +32,7 @@ public class BidListController {
      * @param model Model object
      * @return View
      */
-//    @RequestMapping("/bidList/list")
-    @GetMapping("/bidList/list")
+    @GetMapping("/list")
     public String home(Model model)
     {
         // Call service find all bids to show to the view
@@ -50,7 +47,7 @@ public class BidListController {
      * @param bid The bid object
      * @return View
      */
-    @GetMapping("/bidList/add")
+    @GetMapping("/add")
     public String addBidForm(BidList bid) {
         log.debug("HTTP GET, display bid add form.");
         return "bidList/add";
@@ -66,20 +63,27 @@ public class BidListController {
      *
      * @return View
      */
-    @PostMapping("/bidList/validate")
+    @PostMapping("/validate")
     public String validate(@Valid BidList bid
                             , BindingResult result
                             , Model model
                             , RedirectAttributes redirectAttributes) {
         // Check data valid and save to db, after saving return bid list
+
+        // Bid parameter is not valid
         if (result.hasErrors()) {
-            log.info("HTTP GET, Validation failed for bid ({}).", bid);
+            log.debug("HTTP GET, Validation failed for bid ({}).", bid);
             return "bidList/add";
         }
-        BidList bidSave = bidListBusiness.createBid(bid);
-        log.info("HTTP GET, SUCCESSFUL ({}).", bidSave);
-        redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
-        model.addAttribute("bidList", bidListBusiness.getBidsList());
+        try {
+            // Save bid
+            BidList bidSave = bidListBusiness.createBid(bid);
+            log.info("HTTP GET, SUCCESSFUL ({}).", bidSave);
+            redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
+            model.addAttribute("bidList", bidListBusiness.getBidsList());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/bidList/list";
     }
 
@@ -90,22 +94,19 @@ public class BidListController {
      * @param model Model object
      * @return View
      */
-    @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") @Positive Integer id
-                                , Model model) {
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id
+                                , Model model
+                                , RedirectAttributes redirectAttributes) {
         // Get Bid by Id and to model then show to the form
-
-//        Optional<BidList> optBidList = bidListBusiness.getBidById(id);
-//        if (optBidList.isPresent() == false) {
-//            redirectAttributes.addFlashAttribute("error", "Bid (" + id + ") does not exist.");
-//            return "redirect:/bidList/list";
-//        }
-//        model.addAttribute("bidList", optBidList.get());
-//        return "bidList/update";
-
-        BidList bid = bidListBusiness.getBidById(id);
-        log.debug("HTTP GET, display bid update form ({}).", bid);
-        model.addAttribute("bidList", bid);
+        try {
+            BidList bid = bidListBusiness.getBidById(id);
+            log.debug("HTTP GET, display bid update form ({}).", bid);
+            model.addAttribute("bidList", bid);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/bidList/list";
+        }
         return "bidList/update";
     }
 
@@ -120,25 +121,34 @@ public class BidListController {
      *
      * @return View
      */
-//    @PatchMapping("/bidList/update/{id}")
-    @PostMapping("/bidList/update/{id}")
-    public String updateBid(
-                            @PathVariable("id") @Positive(message = "Bid size must be greater than 0") Integer id
+    @PatchMapping("/update/{id}")
+    public String updateBid(@PathVariable("id") Integer id
                             , @Valid BidList bidList
                             , BindingResult result
                             , Model model
                             , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Bid and return list Bid
-        if (result.hasErrors()) {
-//            bidList.setBidListId(id);
-//            model.addAttribute("bid", bidList);
-            log.info("HTTP POST, Validation failed for bid ({}).", bidList);
+
+        // Bid ID parameter is null or zero
+        if (id == null || id == 0) {
+            log.debug(MessagePropertieFormat.getMessage("bid.error.template", id));
+            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("bid.error.template", id));
             return "bidList/update";
         }
-        BidList bidSave = bidListBusiness.updateBid(id, bidList);
-        log.info("HTTP POST, SUCCESSFUL ({}).", bidSave);
-        redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
-        model.addAttribute("bidList", bidListBusiness.getBidsList());
+        // Bid parameter is not valid
+        if (result.hasErrors()) {
+            log.debug("HTTP PATCH, Validation failed for bid ({}).", bidList);
+            return "bidList/update";
+        }
+        try {
+            // Modify bid
+            BidList bidSave = bidListBusiness.updateBid(id, bidList);
+            log.info("HTTP PATCH, SUCCESSFUL ({}).", bidSave);
+            redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
+            model.addAttribute("bidList", bidListBusiness.getBidsList());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/bidList/list";
     }
 
@@ -151,24 +161,27 @@ public class BidListController {
      *
      * @return View
      */
-    @GetMapping("/bidList/delete/{id}")
-    public String deleteBid(@PathVariable("id") @Positive Integer id
+    @GetMapping("/delete/{id}")
+    public String deleteBid(@PathVariable("id") Integer id
                             , Model model
                             , RedirectAttributes redirectAttributes) {
         // Find Bid by Id and delete the bid, return to Bid list
 
-//        if (bidListBusiness.deleteBid(id) == false) {
-//            model.addAttribute("error", "Bid (" + id + ") does not exist.");
-//        } else {
-//            model.addAttribute("success", "Bid successfully deleted.");
-//        }
-//        model.addAttribute("bidList", bidListBusiness.getBidsList());
-//        return "redirect:/bidList/list";
-
-        bidListBusiness.deleteBid(id);
-        log.info("HTTP DELETE, SUCCESSFUL (Bid ID : {}).", id);
-        redirectAttributes.addFlashAttribute("success", "Bid successfully deleted.");
-        model.addAttribute("bidList", bidListBusiness.getBidsList());
+        // Bid ID parameter is null or zero
+        if (id == null || id == 0) {
+            log.debug(MessagePropertieFormat.getMessage("bid.error.template", id));
+            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("bid.error.template", id));
+            return "redirect:/bidList/list";
+        }
+        try {
+            // Delete bid
+            bidListBusiness.deleteBid(id);
+            log.info("HTTP DELETE, SUCCESSFUL (Bid ID : {}).", id);
+            redirectAttributes.addFlashAttribute("success", "Bid successfully deleted.");
+            model.addAttribute("bidList", bidListBusiness.getBidsList());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/bidList/list";
     }
 }

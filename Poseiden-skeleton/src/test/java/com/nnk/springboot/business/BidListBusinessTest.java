@@ -58,7 +58,7 @@ public class BidListBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetBidsList method
+    // getBidsList method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void getBidsList_findAllNormal() {
@@ -81,7 +81,7 @@ public class BidListBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CreateBid method
+    // createBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void createBid_saveNormal() {
@@ -98,7 +98,7 @@ public class BidListBusinessTest {
     public void createBid_nullBidParameter_returnNullPointer() {
         // GIVEN
         // WHEN
-        assertThrows(NullPointerException.class, () -> bidListBusiness.createBid(null));
+        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(null));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
@@ -114,7 +114,7 @@ public class BidListBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetBidById method
+    // getBidById method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void getBidById_findByIdNormal() {
@@ -136,7 +136,7 @@ public class BidListBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // UpdateBid method
+    // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void updateBid_updateNormal() {
@@ -180,14 +180,15 @@ public class BidListBusinessTest {
     @Test
     public void updateBid_nullBidParameter_returnNotFound() {
         // GIVEN
+        when(bidListRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(1, null));
+        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.updateBid(1, null));
         // THEN
         verify(bidListRepository, Mockito.times(0)).save(any(BidList.class));
     }
 
     // -----------------------------------------------------------------------------------------------
-    // DeleteBid method
+    // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     public void deleteBid_deleteNormal() {

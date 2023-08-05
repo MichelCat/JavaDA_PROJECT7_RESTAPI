@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,16 +54,22 @@ public class LoginControllerTest {
     @MockBean
     private LoginBusiness loginBusiness;
 
+    private Register registerSource;
+    private MultiValueMap<String, String> registerController;
+
     @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+
+        registerSource = UserData.getRegisterSource();
+        registerController = UserData.getRegisterController();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetLogin method
+    // getLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -109,7 +116,7 @@ public class LoginControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetRegister method
+    // getRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -125,7 +132,7 @@ public class LoginControllerTest {
         // THEN
     }
     // -----------------------------------------------------------------------------------------------
-    // PostRegister method
+    // postRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -135,7 +142,7 @@ public class LoginControllerTest {
         // WHEN
         mockMvc.perform(post("/app/register")
                         .with(csrf().asHeader())
-                        .params(UserData.getRegisterController())
+                        .params(registerController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -149,16 +156,18 @@ public class LoginControllerTest {
     @WithMockUser(roles = "USER")
     public void postRegister_userExist_return302() throws Exception {
         // GIVEN
-        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyeExists", "user@gmail.com"))
-                .when(loginBusiness).addUser(UserData.getRegisterSource());
+        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", registerSource.getEmail()))
+                .when(loginBusiness).addUser(registerSource);
         // WHEN
         mockMvc.perform(post("/app/register")
                         .with(csrf().asHeader())
-                        .params(UserData.getRegisterController())
+                        .params(registerController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(status().is4xxClientError())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MyExceptionBadRequestException))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().errorCount(0))
+                .andExpect(view().name("redirect:/app/register"))
+                .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
     }

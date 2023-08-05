@@ -3,7 +3,6 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.business.BidListBusiness;
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
-import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,19 +18,18 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -58,6 +56,10 @@ public class BidListControllerTest {
 
     public List<BidList> bidsList;
 
+    private BidList bidSource;
+    private BidList bidSave;
+    private MultiValueMap<String, String> bidSourceController;
+
     @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
@@ -65,12 +67,16 @@ public class BidListControllerTest {
                 .apply(springSecurity())
                 .build();
 
+        bidSource = BidData.getBidSource();
+        bidSave = BidData.getBidSave();
+        bidSourceController = BidData.getBidSourceController();
+
         bidsList = new ArrayList<>();
-        bidsList.add(BidData.getBidSave());
+        bidsList.add(bidSave);
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Home method
+    // home method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -90,7 +96,7 @@ public class BidListControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // AddBidForm method
+    // addBidForm method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -108,18 +114,18 @@ public class BidListControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Validate method
+    // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     public void validate_bidNotExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.createBid(BidData.getBidSource())).thenReturn(BidData.getBidSave());
+        when(bidListBusiness.createBid(bidSource)).thenReturn(bidSave);
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         // WHEN
         mockMvc.perform(post("/bidList/validate")
                     .with(csrf().asHeader())
-                    .params(BidData.getBidSourceController())
+                    .params(bidSourceController)
                     .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -145,28 +151,30 @@ public class BidListControllerTest {
             )
             .andExpect(model().errorCount(3))
             .andExpect(status().isOk())
+            .andExpect(view().name("bidList/add"))
             .andDo(print())
             .andReturn();
         // THEN
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity cannot be null");
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
+        verify(bidListBusiness, Mockito.times(0)).createBid(any(BidList.class));
     }
 
     // -----------------------------------------------------------------------------------------------
-    // ShowUpdateForm method
+    // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     public void showUpdateForm_bidExist_return200() throws Exception {
         // GIVEN
-        when(bidListBusiness.getBidById(1)).thenReturn(BidData.getBidSave());
+        when(bidListBusiness.getBidById(1)).thenReturn(bidSave);
         // WHEN
         mockMvc.perform(get("/bidList/update/{id}", 1)
                     .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("bidList", BidData.getBidSave()))
+                .andExpect(model().attribute("bidList", bidSave))
                 .andExpect(view().name("bidList/update"))
                 .andDo(print());
         // THEN
@@ -174,18 +182,18 @@ public class BidListControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // UpdateBid method
+    // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     public void updateBid_bidExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.updateBid(1, BidData.getBidSave())).thenReturn(BidData.getBidSave());
+        when(bidListBusiness.updateBid(1, bidSave)).thenReturn(bidSave);
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         // WHEN
-        mockMvc.perform(post("/bidList/update/{id}", 1)
+        mockMvc.perform(patch("/bidList/update/{id}", 1)
                     .with(csrf().asHeader())
-                    .params(BidData.getBidSourceController())
+                    .params(bidSourceController)
                     .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -202,23 +210,42 @@ public class BidListControllerTest {
     public void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/bidList/update/{id}", 0)
+        MvcResult mvcResult = mockMvc.perform(patch("/bidList/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(model().errorCount(3))
                 .andExpect(status().isOk())
+                .andExpect(model().errorCount(3))
+                .andExpect(view().name("bidList/update"))
                 .andDo(print())
                 .andReturn();
         // THEN
-//        assertThat(mvcResult.getResponse().getContentAsString()).contains("must be greater than 0");
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity cannot be null");
+        verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(BidList.class));
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void updateBid_idZero() throws Exception {
+        // GIVEN
+        // WHEN
+        mockMvc.perform(patch("/bidList/update/{id}", 0)
+                        .with(csrf().asHeader())
+                        .params(bidSourceController)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(0))
+                .andExpect(view().name("bidList/update"))
+                .andDo(print());
+        // THEN
+        verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(BidList.class));
     }
 
     // -----------------------------------------------------------------------------------------------
-    // DeleteBid method
+    // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
@@ -241,19 +268,18 @@ public class BidListControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteBid_bidNotValid() throws Exception {
+    public void deleteBid_idZero() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(get("/bidList/delete/{id}", 0)
+        mockMvc.perform(get("/bidList/delete/{id}", 0)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpect(model().errorCount(0))
                 .andExpect(status().is3xxRedirection())
-                .andDo(print())
-                .andReturn();
+                .andExpect(model().errorCount(0))
+                .andExpect(view().name("redirect:/bidList/list"))
+                .andDo(print());
         // THEN
-////        assertThat(exception.getMessage()).contains("deleteBid.id: must be greater than 0");
-//        assertThat(mvcResult.getResponse().getContentAsString()).contains("must be greater than 0\"");
+        verify(bidListBusiness, Mockito.times(0)).deleteBid(any(Integer.class));
     }
 }

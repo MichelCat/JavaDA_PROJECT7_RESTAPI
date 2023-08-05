@@ -57,7 +57,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Account attribute
+    // account attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void account_normal_thenNoConstraintViolation() {
@@ -111,7 +111,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Type attribute
+    // type attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void type_normal_thenNoConstraintViolation() {
@@ -165,7 +165,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Type bidQuantity
+    // bidQuantity attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void bidQuantity_normal_thenNoConstraintViolations() {
@@ -189,7 +189,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // AskQuantity attribute
+    // askQuantity attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void askQuantity_normal_thenNoConstraintViolations() {
@@ -203,7 +203,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Bid attribute
+    // bid attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void bid_normal_thenNoConstraintViolations() {
@@ -217,7 +217,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Ask attribute
+    // ask attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void ask_normal_thenNoConstraintViolations() {
@@ -231,7 +231,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Benchmark attribute
+    // benchmark attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void benchmark_normal_thenNoConstraintViolation() {
@@ -255,7 +255,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // BidListDate attribute
+    // bidListDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void bidListDate_normal() {
@@ -269,7 +269,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Commentary attribute
+    // commentary attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void commentary_normal_thenNoConstraintViolation() {
@@ -293,7 +293,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Security attribute
+    // security attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void security_normal_thenNoConstraintViolation() {
@@ -317,7 +317,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Status attribute
+    // status attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void status_normal_thenNoConstraintViolation() {
@@ -341,7 +341,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Trader attribute
+    // trader attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void trader_normal_thenNoConstraintViolation() {
@@ -365,7 +365,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Book attribute
+    // book attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void book_normal_thenNoConstraintViolation() {
@@ -389,7 +389,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CreationName attribute
+    // creationName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void creationName_normal_thenNoConstraintViolation() {
@@ -413,7 +413,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CreationDate attribute
+    // creationDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void creationDate_normal() {
@@ -427,7 +427,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // RevisionName attribute
+    // revisionName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void revisionName_normal_thenNoConstraintViolation() {
@@ -451,7 +451,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // RevisionDate attribute
+    // revisionDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void revisionDate_normal() {
@@ -465,7 +465,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // DealName attribute
+    // dealName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void dealName_normal_thenNoConstraintViolation() {
@@ -489,7 +489,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // DealType attribute
+    // dealType attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void dealType_normal_thenNoConstraintViolation() {
@@ -513,7 +513,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // SourceListId attribute
+    // sourceListId attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void sourceListId_normal_thenNoConstraintViolation() {
@@ -537,7 +537,7 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Side attribute
+    // side attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void side_normal_thenNoConstraintViolation() {

@@ -15,13 +15,11 @@
 		<h2>Add New Bid</h2>
 	</div>
 
+	<!-- Error message -->
+	<div th:replace="~{fragments/error-message}"></div>
+
 	<div class="row">
-		<form th:action="@{/bidList/validate}" th:object="${bidList}" th:method="post" class="form-horizontal" style="width: 100%">
-
-			<ul th:if="${#fields.hasErrors('*')}">
-				<li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
-			</ul>
-
+		<form th:action="@{/bidList/validate}" th:object="${bidList}" th:method="POST" class="form-horizontal" style="width: 100%">
 			<!-- account -->
 			<div class="form-group">
 				<label for="account" class="col-sm-2 control-label">Account</label>

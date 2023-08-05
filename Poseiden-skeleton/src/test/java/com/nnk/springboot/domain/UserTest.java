@@ -43,7 +43,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Id attribute
+    // id attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void id_TestBuildAndNew_thenEqual() {
@@ -57,7 +57,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Username attribute
+    // username attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void username_normal_thenNoConstraintViolation() {
@@ -123,7 +123,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Password attribute
+    // password attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void password_normal_thenNoConstraintViolation() {
@@ -177,7 +177,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Fullname attribute
+    // fullname attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void fullname_normal_thenNoConstraintViolation() {
@@ -231,7 +231,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Role attribute
+    // role attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void role_normal_thenNoConstraintViolation() {
@@ -285,7 +285,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Expired attribute
+    // expired attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void expired_normal_thenNoConstraintViolations() {
@@ -309,7 +309,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Locked attribute
+    // locked attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void locked_normal_thenNoConstraintViolations() {
@@ -333,7 +333,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CredentialsExpired attribute
+    // credentialsExpired attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void credentialsExpired_normal_thenNoConstraintViolations() {
@@ -357,7 +357,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Enabled attribute
+    // enabled attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void enabled_normal_thenNoConstraintViolations() {
@@ -381,7 +381,7 @@ public class UserTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // EmailValidationKey attribute
+    // emailValidationKey attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void emailValidationKey_normal_thenNoConstraintViolation() {

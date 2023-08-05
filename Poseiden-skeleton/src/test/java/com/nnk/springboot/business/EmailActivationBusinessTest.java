@@ -49,64 +49,64 @@ public class EmailActivationBusinessTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // EmailActivationBusiness method
+    // activatedUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void emailActivationBusiness_normal_returnUser() throws MyException {
+    public void activatedUser_normal_returnUser() throws MyException {
         // GIVEN
         userSave.setEnabled(false);
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
         when(userRepository.save(userSave)).thenReturn(userSave);
         // WHEN
-        assertThat(emailActivationBusiness.emailActivationBusiness(keyValue)).isEqualTo(userSave);
+        assertThat(emailActivationBusiness.activatedUser(keyValue)).isEqualTo(userSave);
         // THEN
     }
 
     @Test
-    public void emailActivationBusiness_userNotExist_returnMyException() {
+    public void activatedUser_userNotExist_returnMyException() {
         // GIVEN
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.empty());
         // WHEN
         Throwable exception = assertThrows(MyException.class,
-                () -> {emailActivationBusiness.emailActivationBusiness(keyValue);});
+                () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
         String messageError = MessagePropertieFormat.getMessage("throw.CustomerNotExist", "");
         assertThat(exception.getMessage()).isEqualTo(messageError);
     }
 
     @Test
-    public void emailActivationBusiness_validEmailKeyError_returnMyException() {
+    public void activatedUser_validEmailKeyError_returnMyException() {
         // GIVEN
         userSave.setEmailValidationKey("KeyError");
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
         // WHEN
         Throwable exception = assertThrows(MyException.class,
-                () -> {emailActivationBusiness.emailActivationBusiness(keyValue);});
+                () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
         String messageError = MessagePropertieFormat.getMessage("throw.InvalidEmailKey");
         assertThat(exception.getMessage()).isEqualTo(messageError);
     }
 
     @Test
-    public void emailActivationBusiness_validEmailEndDateError_returnMyException() {
+    public void activatedUser_validEmailEndDateError_returnMyException() {
         // GIVEN
         userSave.setValidEmailEndDate(GlobalData.CURRENT_TIMESTAMP);
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
         // WHEN
         Throwable exception = assertThrows(MyException.class,
-                () -> {emailActivationBusiness.emailActivationBusiness(keyValue);});
+                () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
         String messageError = MessagePropertieFormat.getMessage("throw.EmailTimeExceeded");
         assertThat(exception.getMessage()).isEqualTo(messageError);
     }
 
     @Test
-    public void emailActivationBusiness_validedEmail_returnMyException() {
+    public void activatedUser_validedEmail_returnMyException() {
         // GIVEN
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
         // WHEN
         Throwable exception = assertThrows(MyException.class,
-                () -> {emailActivationBusiness.emailActivationBusiness(keyValue);});
+                () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
         String messageError = MessagePropertieFormat.getMessage("throw.AccountAlreadyActivated");
         assertThat(exception.getMessage()).isEqualTo(messageError);

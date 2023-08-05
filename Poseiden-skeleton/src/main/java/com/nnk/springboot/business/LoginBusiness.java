@@ -49,29 +49,29 @@ public class LoginBusiness implements UserDetailsService
 
         Optional<User> optUser = userRepository.findByUsername(username);
         if (optUser.isEmpty()) {
-            log.error(MessagePropertieFormat.getMessage("throw.UserNotFound", username));
+            log.debug(MessagePropertieFormat.getMessage("throw.UserNotFound", username));
             throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.UserNotFound", username));
         }
         User user = optUser.get();
 
         // Activated user
         if (!user.isEnabled()) {
-            log.info(MessagePropertieFormat.getMessage("throw.AccountNotActivated", username));
+            log.debug(MessagePropertieFormat.getMessage("throw.AccountNotActivated", username));
             throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountNotActivated", username));
         }
         // User account expired
         if (!user.isAccountNonExpired()) {
-            log.info(MessagePropertieFormat.getMessage("throw.AccountExpired", username));
+            log.debug(MessagePropertieFormat.getMessage("throw.AccountExpired", username));
             throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountExpired", username));
         }
         // User locked
         if (!user.isAccountNonLocked()) {
-            log.info(MessagePropertieFormat.getMessage("throw.AccountLocked", username));
+            log.debug(MessagePropertieFormat.getMessage("throw.AccountLocked", username));
             throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountLocked", username));
         }
         // User credentials (password) expired
         if (!user.isCredentialsNonExpired()) {
-            log.info(MessagePropertieFormat.getMessage("throw.PasswordExpired", username));
+            log.debug(MessagePropertieFormat.getMessage("throw.PasswordExpired", username));
             throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.PasswordExpired", username));
         }
 
@@ -89,7 +89,8 @@ public class LoginBusiness implements UserDetailsService
     public void addUser(Register register) throws MyExceptionBadRequestException {
         Optional<User> optUser = userRepository.findByUsername(register.getEmail());
         if (optUser.isEmpty() == false) {
-            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyeExists", register.getEmail());
+            log.debug(MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", register.getEmail()));
+            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", register.getEmail());
         }
 
         //Add user
@@ -110,6 +111,7 @@ public class LoginBusiness implements UserDetailsService
         try {
             emailBusiness.sendEmail("contact@gmail.com", register.getEmail(), subject, message);
         } catch (MailException e) {
+            log.debug(MessagePropertieFormat.getMessage("throw.ErrorSendEmail", register.getEmail()));
             throw new MyExceptionBadRequestException("throw.ErrorSendEmail", register.getEmail());
         }
     }

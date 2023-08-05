@@ -30,7 +30,7 @@ public class CurvePointTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CurveId attribute
+    // curveId attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalCurveId_thenNoConstraintViolations() {
@@ -51,7 +51,7 @@ public class CurvePointTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Term attribute
+    // term attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalTerm_thenNoConstraintViolations() {
@@ -72,7 +72,7 @@ public class CurvePointTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Value attribute
+    // value attribute
     // -----------------------------------------------------------------------------------------------
     @Test
     public void whenNormalValue_thenNoConstraintViolations() {

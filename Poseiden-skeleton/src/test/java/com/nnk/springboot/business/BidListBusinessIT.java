@@ -47,7 +47,7 @@ public class BidListBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetBidsList method
+    // getBidsList method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
@@ -72,7 +72,7 @@ public class BidListBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // CreateBid method
+    // createBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
@@ -97,7 +97,7 @@ public class BidListBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // GetBidById method
+    // getBidById method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
@@ -119,7 +119,7 @@ public class BidListBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // UpdateBid method
+    // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
@@ -144,7 +144,7 @@ public class BidListBusinessIT {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // DeleteBid method
+    // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
