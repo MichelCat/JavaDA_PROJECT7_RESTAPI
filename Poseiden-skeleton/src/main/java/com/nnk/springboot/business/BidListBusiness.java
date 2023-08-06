@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * BidListBusiness is the home page processing service
+ * BidListBusiness is the bids page processing service
  *
  * @author MC
  * @version 1.0
@@ -44,7 +44,8 @@ public class BidListBusiness {
      * @throws MyExceptionBadRequestException Exception bad request
      */
     @Transactional(rollbackFor = Exception.class)
-    public BidList createBid(final BidList bid) throws MyExceptionBadRequestException {
+    public BidList createBid(final BidList bid)
+                                throws MyExceptionBadRequestException {
         // Bid parameter is null
         if (bid == null) {
             log.debug("THROW, Bid is null.");
@@ -72,10 +73,9 @@ public class BidListBusiness {
      * @return Bid founded
      * @throws MyExceptionNotFoundException Exception not found
      */
-    public BidList getBidById(final Integer id) throws MyExceptionNotFoundException {
+    public BidList getBidById(final Integer id)
+                                throws MyExceptionNotFoundException {
         // Bid does not exist
-//        BidList bidEntity = bidListRepository.findById(id)
-//                .orElseThrow(() -> new MyExceptionNotFoundException("throw.bid.unknown", id));
         Optional<BidList> optBidEntity = bidListRepository.findById(id);
         if (optBidEntity.isPresent() == false) {
             log.debug("THROW, Bid not exist ({}).", id);
@@ -100,8 +100,6 @@ public class BidListBusiness {
                             , final BidList bid)
                             throws MyExceptionNotFoundException {
         // Bid does not exist
-//        BidList bidEntity = bidListRepository.findById(id)
-//                .orElseThrow(() -> new MyExceptionNotFoundException("throw.bid.unknown", id));
         Optional<BidList> optBidEntity = bidListRepository.findById(id);
         if (optBidEntity.isPresent() == false) {
             log.debug("THROW, Bid not exist ({}).", id);
@@ -132,8 +130,6 @@ public class BidListBusiness {
     public void deleteBid(final Integer id)
                             throws MyExceptionNotFoundException {
         // Bid does not exist
-//        BidList bidEntity = bidListRepository.findById(id)
-//                .orElseThrow(() -> new MyExceptionNotFoundException("throw.bid.unknown", id));
         Optional<BidList> optBidEntity = bidListRepository.findById(id);
         if (optBidEntity.isPresent() == false) {
             log.debug("THROW, Bid not exist ({}).", id);

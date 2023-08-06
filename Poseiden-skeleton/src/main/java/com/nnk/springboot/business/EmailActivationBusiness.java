@@ -36,8 +36,6 @@ public class EmailActivationBusiness {
     public User activatedUser(String validationKey) throws MyException {
 
         // User does not exist
-//        User userEntity = userRepository.findByEmailValidationKey(validationKey)
-//                .orElseThrow(() -> new MyException("throw.CustomerNotExist", ""));
         Optional<User> optUserEntity = userRepository.findByEmailValidationKey(validationKey);
         if (optUserEntity.isPresent() == false) {
             log.debug("THROW, Bid not exist.");

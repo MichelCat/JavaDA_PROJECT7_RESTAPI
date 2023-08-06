@@ -153,7 +153,7 @@ public class BidListController {
     }
 
     /**
-     * Delete - Delete an fire station
+     * Delete - Delete an bid
      *
      * @param id Bid ID deleted
      * @param model Model object
