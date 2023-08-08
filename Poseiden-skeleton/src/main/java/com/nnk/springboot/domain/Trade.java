@@ -33,7 +33,7 @@ public class Trade {
     @Size(max = 30, message = "Maximum length of {max} characters")
     String type;
 
-    @NotNull(message = "Buy quantity cannot be null")
+    @NotNull(message = "Buy quantity must not be null")
     Double buyQuantity;
 
     Double sellQuantity;

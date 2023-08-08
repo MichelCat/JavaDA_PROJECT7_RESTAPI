@@ -2,9 +2,9 @@ package com.nnk.springboot.business;
 
 import com.nnk.springboot.exception.MyExceptionBadRequestException;
 import com.nnk.springboot.exception.MyExceptionNotFoundException;
-import com.nnk.springboot.data.BidData;
+import com.nnk.springboot.data.CurvePointData;
 import com.nnk.springboot.data.GlobalData;
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
- * BidListBusinessIT is a class of integration tests on bids service.
+ * BidListBusinessIT is a class of integration tests on Curve Points service.
  *
  * @author MC
  * @version 1.0
@@ -31,138 +31,138 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class BidListBusinessIT {
+public class CurveBusinessIT {
 
     @Autowired
-    private BidListBusiness bidListBusiness;
+    private CurveBusiness curveBusiness;
 
-    private BidList bidSource;
-    private BidList bidSave;
+    private CurvePoint curvePointSource;
+    private CurvePoint curvePointSave;
 
 
     @BeforeEach
     public void setUpBefore() {
-        bidSource = BidData.getBidSource();
-        bidSave = BidData.getBidSave();
+        curvePointSource = CurvePointData.getCurvePointSource();
+        curvePointSave = CurvePointData.getCurvePointSave();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // getBidsList method
+    // getCurvePointsList method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void getBidsList_findAllNormal() {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void getCurvePointsList_findAllNormal() {
         // GIVEN
         // WHEN
-        List<BidList> result = bidListBusiness.getBidsList();
+        List<CurvePoint> result = curveBusiness.getCurvePointsList();
         // THEN
         assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(bidSave);
+        assertThat(result.get(0)).isEqualTo(curvePointSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getBidsList_findAllEmpty() {
+    public void getCurvePointsList_findAllEmpty() {
         // GIVEN
         // WHEN
-        List<BidList> result = bidListBusiness.getBidsList();
+        List<CurvePoint> result = curveBusiness.getCurvePointsList();
         // THEN
         assertThat(result.size()).isEqualTo(0);
     }
 
     // -----------------------------------------------------------------------------------------------
-    // createBid method
+    // createCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void createBid_bidNotExist() {
+    public void createCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        BidList result = bidListBusiness.createBid(bidSource);
+        CurvePoint result = curveBusiness.createCurvePoint(curvePointSource);
         // THEN
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("creationDate")
-                .isEqualTo(bidSave);
+                .isEqualTo(curvePointSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void createBid_bidExist() {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void createCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(bidSave));
+        assertThrows(MyExceptionBadRequestException.class, () -> curveBusiness.createCurvePoint(curvePointSave));
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // getBidById method
+    // getCurvePointById method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void getBidById_bidExist() {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void getCurvePointById_curvePointExist() {
         // GIVEN
         // WHEN
-        assertThat(bidListBusiness.getBidById(bidSave.getBidListId())).isEqualTo(bidSave);
+        assertThat(curveBusiness.getCurvePointById(curvePointSave.getId())).isEqualTo(curvePointSave);
         // THEN
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getBidById_bidNotExist() {
+    public void getCurvePointById_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curveBusiness.getCurvePointById(curvePointSave.getId()));
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // updateBid method
+    // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void updateBid_bidExist() {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void updateCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        BidList result = bidListBusiness.updateBid(bidSave.getBidListId(), bidSave);
+        CurvePoint result = curveBusiness.updateCurvePoint(curvePointSave.getId(), curvePointSave);
         // THEN
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("revisionDate")
-                .isEqualTo(bidSave);
+                .ignoringFields("asOfDate")
+                .isEqualTo(curvePointSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateBid_bidNotExist() {
+    public void updateCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(bidSave.getBidListId(), bidSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> curveBusiness.updateCurvePoint(curvePointSave.getId(), curvePointSave));
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // deleteBid method
+    // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void deleteBid_bidExist() {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void deleteCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        bidListBusiness.deleteBid(bidSave.getBidListId());
+        curveBusiness.deleteCurvePoint(curvePointSave.getId());
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curveBusiness.getCurvePointById(curvePointSave.getId()));
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteBid_bidNotExist() {
+    public void deleteCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curveBusiness.deleteCurvePoint(curvePointSave.getId()));
         // THEN
     }
 }

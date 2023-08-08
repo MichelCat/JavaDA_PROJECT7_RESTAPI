@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class PoseidonSecurityConfigurationTest {
+public class PoseidonSecurityConfigurationIT {
 
     @Autowired
-    PoseidonSecurityConfiguration poseidonSecurityConfiguration;
+    private PoseidonSecurityConfiguration poseidonSecurityConfiguration;
 
     // -----------------------------------------------------------------------------------------------
     // passwordEncoder method

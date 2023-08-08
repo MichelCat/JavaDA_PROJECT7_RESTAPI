@@ -1,8 +1,8 @@
 package com.nnk.springboot.business;
 
 
-import com.nnk.springboot.Exception.MyExceptionBadRequestException;
-import com.nnk.springboot.Exception.MyExceptionNotFoundException;
+import com.nnk.springboot.exception.MyExceptionBadRequestException;
+import com.nnk.springboot.exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * BidListBusinessTest is a class of unit tests on bids.
+ * BidListBusinessTest is a unit testing class of the bids service.
  *
  * @author MC
  * @version 1.0

@@ -35,6 +35,6 @@ public class Rating {
     @Size(max = 125, message = "Maximum length of {max} characters")
     String fitchRating;
 
-    @NotNull(message = "Order number cannot be null")
+    @NotNull(message = "Order number must not be null")
     Integer orderNumber;
 }

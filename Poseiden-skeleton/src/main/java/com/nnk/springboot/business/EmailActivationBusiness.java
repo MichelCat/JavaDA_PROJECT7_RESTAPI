@@ -1,8 +1,6 @@
 package com.nnk.springboot.business;
 
-import com.nnk.springboot.Exception.MyException;
-import com.nnk.springboot.Exception.MyExceptionNotFoundException;
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.exception.MyException;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.Exception.MessagePropertieFormat;
+import com.nnk.springboot.exception.MessagePropertieFormat;
 import com.nnk.springboot.business.CurveBusiness;
 import com.nnk.springboot.domain.CurvePoint;
 import jakarta.validation.Valid;

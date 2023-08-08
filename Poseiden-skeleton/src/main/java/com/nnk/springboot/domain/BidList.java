@@ -39,7 +39,7 @@ public class BidList {
     @Size(max = 30, message = "Maximum length of {max} characters")
     String type;
 
-    @NotNull(message = "Bid quantity cannot be null")
+    @NotNull(message = "Bid quantity must not be null")
     Double bidQuantity;
 
     Double askQuantity;

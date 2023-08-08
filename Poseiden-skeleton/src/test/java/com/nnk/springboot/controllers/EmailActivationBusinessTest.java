@@ -1,6 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.Exception.MyException;
+import com.nnk.springboot.exception.MyException;
 import com.nnk.springboot.business.EmailActivationBusiness;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.User;

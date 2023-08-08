@@ -304,7 +304,7 @@ public class UserTest {
         // WHEN
         user.setExpired(null);
         // THEN
-        String[][] errorList = {{"expired", "User account expired cannot be null"}};
+        String[][] errorList = {{"expired", "User account expired must not be null"}};
         testConstraintViolation.checking(user, errorList);
     }
 
@@ -328,7 +328,7 @@ public class UserTest {
         // WHEN
         user.setLocked(null);
         // THEN
-        String[][] errorList = {{"locked", "User locked cannot be null"}};
+        String[][] errorList = {{"locked", "User locked must not be null"}};
         testConstraintViolation.checking(user, errorList);
     }
 
@@ -352,7 +352,7 @@ public class UserTest {
         // WHEN
         user.setCredentialsExpired(null);
         // THEN
-        String[][] errorList = {{"credentialsExpired", "User credentials expired cannot be null"}};
+        String[][] errorList = {{"credentialsExpired", "User credentials expired must not be null"}};
         testConstraintViolation.checking(user, errorList);
     }
 
@@ -376,7 +376,7 @@ public class UserTest {
         // WHEN
         user.setEnabled(null);
         // THEN
-        String[][] errorList = {{"enabled", "Activated user cannot be null"}};
+        String[][] errorList = {{"enabled", "Activated user must not be null"}};
         testConstraintViolation.checking(user, errorList);
     }
 

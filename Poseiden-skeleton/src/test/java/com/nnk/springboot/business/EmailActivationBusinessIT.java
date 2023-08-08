@@ -1,6 +1,6 @@
 package com.nnk.springboot.business;
 
-import com.nnk.springboot.Exception.MyException;
+import com.nnk.springboot.exception.MyException;
 import com.nnk.springboot.data.GlobalData;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.User;

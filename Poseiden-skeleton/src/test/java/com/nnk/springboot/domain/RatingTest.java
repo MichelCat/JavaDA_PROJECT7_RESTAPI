@@ -192,7 +192,7 @@ public class RatingTest {
         // GIVEN
         rating.setOrderNumber(null);
         // WHEN
-        String[][] errorList = {{"orderNumber", "Order number cannot be null"}};
+        String[][] errorList = {{"orderNumber", "Order number must not be null"}};
         testConstraintViolation.checking(rating, errorList);
     }
 }

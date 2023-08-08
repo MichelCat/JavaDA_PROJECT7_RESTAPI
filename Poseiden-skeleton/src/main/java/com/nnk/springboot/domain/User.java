@@ -77,25 +77,25 @@ public class User implements UserDetails {
     /**
      * User account expired
      */
-    @NotNull(message = "User account expired cannot be null")
+    @NotNull(message = "User account expired must not be null")
     Boolean expired;
 
     /**
      * User locked
      */
-    @NotNull(message = "User locked cannot be null")
+    @NotNull(message = "User locked must not be null")
     Boolean locked;
 
     /**
      * User credentials (password) expired
      */
-    @NotNull(message = "User credentials expired cannot be null")
+    @NotNull(message = "User credentials expired must not be null")
     Boolean credentialsExpired;
 
     /**
      * Activated user
      */
-    @NotNull(message = "Activated user cannot be null")
+    @NotNull(message = "Activated user must not be null")
     Boolean enabled;
 
     /**

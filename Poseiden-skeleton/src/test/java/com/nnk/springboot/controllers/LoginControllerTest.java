@@ -1,7 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.Exception.MyException;
-import com.nnk.springboot.Exception.MyExceptionBadRequestException;
+import com.nnk.springboot.exception.MyExceptionBadRequestException;
 import com.nnk.springboot.business.LoginBusiness;
 import com.nnk.springboot.data.UserData;
 import com.nnk.springboot.domain.Register;

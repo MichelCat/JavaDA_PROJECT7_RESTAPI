@@ -1,6 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.Exception.MessagePropertieFormat;
+import com.nnk.springboot.exception.MessagePropertieFormat;
 import com.nnk.springboot.business.BidListBusiness;
 import com.nnk.springboot.domain.BidList;
 import jakarta.validation.Valid;

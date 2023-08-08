@@ -19,6 +19,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.withPrecision;
 
 
+/**
+ * bidListTest is the integration test class handling BidList
+ *
+ * @author MC
+ * @version 1.0
+ */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
@@ -28,12 +34,6 @@ public class BidListDaoIT {
 	@Autowired
 	private BidListRepository bidListRepository;
 
-	/**
-	 * bidListTest is the integration test class handling BidList
-	 *
-	 * @author MC
-	 * @version 1.0
-	 */
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
 	public void bidListTest() {

@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author MC
  * @version 1.0
  */
-//@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class BidListTest {
@@ -43,10 +42,10 @@ public class BidListTest {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Id attribute
+    // builder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void id_TestBuildAndNew_thenEqual() {
+    public void builder_TestBuildAndNew_thenEqual() {
         // GIVEN
         // WHEN
         BidList objBuild = BidList.builder()
@@ -184,7 +183,7 @@ public class BidListTest {
         // WHEN
         bidList.setBidQuantity(null);
         // THEN
-        String[][] errorList = {{"bidQuantity", "Bid quantity cannot be null"}};
+        String[][] errorList = {{"bidQuantity", "Bid quantity must not be null"}};
         testConstraintViolation.checking(bidList, errorList);
     }
 

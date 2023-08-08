@@ -12,7 +12,8 @@
 	  layout:decorate="fragments/main-layout">
 
 	<head>
-		<title>Curve Point List</title>
+		<!-- Curve Point List -->
+		<title th:text="#{curvePoint.label.titleList}" />
 	</head>
 
 <body>
@@ -20,7 +21,8 @@
 <main layout:fragment="content">
 
 	<div class="container">
-		<div class="row"><h2>Curve Point List</h2></div>
+		<!-- Curve Point List -->
+		<div class="row"><h2 th:text="#{curvePoint.label.titleList}" /></div>
 
 		<!-- Error message -->
 		<div th:replace="~{fragments/error-message}"></div>

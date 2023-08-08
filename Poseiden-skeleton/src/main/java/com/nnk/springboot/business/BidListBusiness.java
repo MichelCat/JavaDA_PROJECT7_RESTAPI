@@ -1,7 +1,7 @@
 package com.nnk.springboot.business;
 
-import com.nnk.springboot.Exception.MyExceptionBadRequestException;
-import com.nnk.springboot.Exception.MyExceptionNotFoundException;
+import com.nnk.springboot.exception.MyExceptionBadRequestException;
+import com.nnk.springboot.exception.MyExceptionNotFoundException;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.utils.MyDateUtils;

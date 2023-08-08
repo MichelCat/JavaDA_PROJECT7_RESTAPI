@@ -17,6 +17,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * CurvePointDaoIT is the integration test class handling Curve Point
+ *
+ * @author MC
+ * @version 1.0
+ */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional

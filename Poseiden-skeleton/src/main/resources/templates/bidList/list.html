@@ -12,7 +12,8 @@
 	  layout:decorate="fragments/main-layout">
 
 	<head>
-		<title>Bid List</title>
+		<!-- Bid List -->
+		<title th:text="#{bid.label.titleList}" />
 	</head>
 
 <body>
@@ -20,7 +21,8 @@
 <main layout:fragment="content">
 
 	<div class="container">
-		<div class="row"><h2>Bid List</h2></div>
+		<!-- Bid List -->
+		<div class="row"><h2 th:text="#{bid.label.titleList}" /></div>
 
 		<!-- Error message -->
 		<div th:replace="~{fragments/error-message}"></div>

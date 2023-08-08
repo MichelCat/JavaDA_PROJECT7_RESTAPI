@@ -1,9 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.Application;
-import com.nnk.springboot.data.BidData;
+import com.nnk.springboot.data.CurvePointData;
 import com.nnk.springboot.data.GlobalData;
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * BidListControllerIT is a class of Endpoint integration tests on bid.
+ * CurveControllerIT is a class of Endpoint integration tests on Curve Point.
  *
  * @author MC
  * @version 1.0
@@ -37,32 +37,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class BidListControllerIT {
+public class CurveControllerIT {
+
 
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
 
-    public List<BidList> bidsList;
+    public List<CurvePoint> curvePointList;
 
-    private BidList bidSave;
-    private MultiValueMap<String, String> bidSourceController;
-    private MultiValueMap<String, String> bidSaveController;
+    private CurvePoint curvePointSave;
+    private MultiValueMap<String, String> curvePointSourceController;
+    private MultiValueMap<String, String> curvePointSaveController;
 
     @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
-                    .webAppContextSetup(context)
-                    .apply(springSecurity())
-                    .build();
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
 
-        bidSave = BidData.getBidSave();
-        bidSourceController = BidData.getBidSourceController();
-        bidSaveController = BidData.getBidSaveController();
+        curvePointSave = CurvePointData.getCurvePointSave();
+        curvePointSourceController = CurvePointData.getCurvePointSourceController();
+        curvePointSaveController = CurvePointData.getCurvePointSaveController();
 
-        bidsList = new ArrayList<>();
-        bidsList.add(bidSave);
+        curvePointList = new ArrayList<>();
+        curvePointList.add(curvePointSave);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -71,37 +72,37 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void home_getBids_return200() throws Exception {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void home_getCurvePoints_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/list")
-                    .with(csrf().asHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/list")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/list"))
+                .andExpect(view().name("curvePoint/list"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("bidList", bidsList))
+                .andExpect(model().attribute("curvePoints", curvePointList))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // addBidForm method
+    // addCurvePointForm method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void addBidForm_return200() throws Exception {
+    public void addCurvePointForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/add")
-                    .with(csrf().asHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/add")
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/add"))
+                .andExpect(view().name("curvePoint/add"))
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
@@ -113,18 +114,18 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void validate_bidNotExist_return302() throws Exception {
+    public void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/bidList/validate")
-                    .with(csrf().asHeader())
-                    .params(bidSourceController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/curvePoint/validate")
+                        .with(csrf().asHeader())
+                        .params(curvePointSourceController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
     }
@@ -132,18 +133,18 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void validate_bidExist_return302() throws Exception {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void validate_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/bidList/validate")
-                    .with(csrf().asHeader())
-                    .params(bidSaveController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/curvePoint/validate")
+                        .with(csrf().asHeader())
+                        .params(curvePointSaveController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
@@ -155,42 +156,42 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void showUpdateForm_bidExist_return200() throws Exception {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void showUpdateForm_curvePointExist_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/update/{id}", 1)
-                    .with(csrf().asHeader())
-                    .params(bidSaveController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/update/{id}", 1)
+                        .with(csrf().asHeader())
+                        .params(curvePointSaveController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
+                .andExpect(view().name("curvePoint/update"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("bidList", bidSave))
+                .andExpect(model().attribute("curvePoint", curvePointSave))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // updateBid method
+    // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void updateBid_bidExist_return302() throws Exception {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/bidList/update/{id}", 1)
-                    .with(csrf().asHeader())
-                    .params(bidSaveController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+                        .with(csrf().asHeader())
+                        .params(curvePointSaveController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
     }
@@ -198,39 +199,39 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateBid_bidNotExist_return302() throws Exception {
+    public void updateCurvePoint_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/bidList/update/{id}", 1)
-                    .with(csrf().asHeader())
-                    .params(bidSaveController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+                        .with(csrf().asHeader())
+                        .params(curvePointSaveController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // deleteBid method
+    // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = BidData.scriptCreateBid)
-    public void deleteBid_bidExist_return302() throws Exception {
+    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
+    public void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/delete/{id}", 1)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
     }
@@ -238,16 +239,16 @@ public class BidListControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteBid_bidNotExist_return302() throws Exception {
+    public void deleteCurvePoint_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/delete/{id}", 1)
-                    .with(csrf().asHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+                        .with(csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN

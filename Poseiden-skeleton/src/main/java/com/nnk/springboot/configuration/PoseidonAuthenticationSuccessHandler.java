@@ -1,6 +1,6 @@
 package com.nnk.springboot.configuration;
 
-import com.nnk.springboot.Exception.MessagePropertieFormat;
+import com.nnk.springboot.exception.MessagePropertieFormat;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,8 +1,8 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.business.BidListBusiness;
-import com.nnk.springboot.data.BidData;
-import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.business.CurveBusiness;
+import com.nnk.springboot.data.CurvePointData;
+import com.nnk.springboot.domain.CurvePoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,16 +34,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * BidListControllerTest is a class of Endpoint unit tests on bid.
+ * CurveControllerTest is a class of Endpoint unit tests on Curve Point.
  *
  * @author MC
  * @version 1.0
  */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@WebMvcTest(controllers = BidListController.class)
+@WebMvcTest(controllers = CurveController.class)
 @ActiveProfiles("test")
-public class BidListControllerTest {
+public class CurveControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,13 +52,13 @@ public class BidListControllerTest {
     private WebApplicationContext context;
 
     @MockBean
-    private BidListBusiness bidListBusiness;
+    private CurveBusiness curveBusiness;
 
-    public List<BidList> bidsList;
+    public List<CurvePoint> curvePointList;
 
-    private BidList bidSource;
-    private BidList bidSave;
-    private MultiValueMap<String, String> bidSourceController;
+    private CurvePoint curvePointSource;
+    private CurvePoint curvePointSave;
+    private MultiValueMap<String, String> curvePointSourceController;
 
     @BeforeEach
     public void setUpBefore() {
@@ -67,12 +67,12 @@ public class BidListControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        bidSource = BidData.getBidSource();
-        bidSave = BidData.getBidSave();
-        bidSourceController = BidData.getBidSourceController();
+        curvePointSource = CurvePointData.getCurvePointSource();
+        curvePointSave = CurvePointData.getCurvePointSave();
+        curvePointSourceController = CurvePointData.getCurvePointSourceController();
 
-        bidsList = new ArrayList<>();
-        bidsList.add(bidSave);
+        curvePointList = new ArrayList<>();
+        curvePointList.add(curvePointSave);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -80,34 +80,34 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getBids_return200() throws Exception {
+    public void home_getCurvePoints_return200() throws Exception {
         // GIVEN
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
+        when(curveBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
-        mockMvc.perform(get("/bidList/list")
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/list")
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/list"))
+                .andExpect(view().name("curvePoint/list"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("bidList", bidsList))
+                .andExpect(model().attribute("curvePoints", curvePointList))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // addBidForm method
+    // addCurvePointForm method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addBidForm_return200() throws Exception {
+    public void addCurvePointForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/add")
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/add")
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/add"))
+                .andExpect(view().name("curvePoint/add"))
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
@@ -118,47 +118,47 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_bidNotExist_return302() throws Exception {
+    public void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.createBid(bidSource)).thenReturn(bidSave);
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
+        when(curveBusiness.createCurvePoint(curvePointSource)).thenReturn(curvePointSave);
+        when(curveBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
-        mockMvc.perform(post("/bidList/validate")
-                    .with(csrf().asHeader())
-                    .params(bidSourceController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/curvePoint/validate")
+                        .with(csrf().asHeader())
+                        .params(curvePointSourceController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(1)).createBid(any(BidList.class));
+        verify(curveBusiness, Mockito.times(1)).createCurvePoint(any(CurvePoint.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_bidNotValid() throws Exception {
+    public void validate_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/bidList/validate")
-                    .with(csrf().asHeader())
-                    .param("account", "")
-                    .param("type", "")
-                    .param("bidQuantity", "")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(model().errorCount(3))
-            .andExpect(status().isOk())
-            .andExpect(view().name("bidList/add"))
-            .andDo(print())
-            .andReturn();
+        MvcResult mvcResult = mockMvc.perform(post("/curvePoint/validate")
+                        .with(csrf().asHeader())
+                        .param("curveId", "")
+                        .param("term", "")
+                        .param("value", "")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(model().errorCount(3))
+                .andExpect(status().isOk())
+                .andExpect(view().name("curvePoint/add"))
+                .andDo(print())
+                .andReturn();
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
-        verify(bidListBusiness, Mockito.times(0)).createBid(any(BidList.class));
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Value must not be null");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Curve Id must not be null");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Term must not be null");
+        verify(curveBusiness, Mockito.times(0)).createCurvePoint(any(CurvePoint.class));
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -166,120 +166,120 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_bidExist_return200() throws Exception {
+    public void showUpdateForm_curvePointExist_return200() throws Exception {
         // GIVEN
-        when(bidListBusiness.getBidById(1)).thenReturn(bidSave);
+        when(curveBusiness.getCurvePointById(1)).thenReturn(curvePointSave);
         // WHEN
-        mockMvc.perform(get("/bidList/update/{id}", 1)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/update/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("bidList", bidSave))
-                .andExpect(view().name("bidList/update"))
+                .andExpect(model().attribute("curvePoint", curvePointSave))
+                .andExpect(view().name("curvePoint/update"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(1)).getBidById(any(Integer.class));
+        verify(curveBusiness, Mockito.times(1)).getCurvePointById(any(Integer.class));
     }
 
     // -----------------------------------------------------------------------------------------------
-    // updateBid method
+    // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateBid_bidExist_return302() throws Exception {
+    public void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.updateBid(1, bidSave)).thenReturn(bidSave);
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
+        when(curveBusiness.updateCurvePoint(1, curvePointSave)).thenReturn(curvePointSave);
+        when(curveBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
-        mockMvc.perform(patch("/bidList/update/{id}", 1)
-                    .with(csrf().asHeader())
-                    .params(bidSourceController)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+                        .with(csrf().asHeader())
+                        .params(curvePointSourceController)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(1)).updateBid(any(Integer.class), any(BidList.class));
+        verify(curveBusiness, Mockito.times(1)).updateCurvePoint(any(Integer.class), any(CurvePoint.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateBid_bidNotValid() throws Exception {
+    public void updateCurvePoint_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(patch("/bidList/update/{id}", 1)
+        MvcResult mvcResult = mockMvc.perform(patch("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(3))
-                .andExpect(view().name("bidList/update"))
+                .andExpect(view().name("curvePoint/update"))
                 .andDo(print())
                 .andReturn();
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity must not be null");
-        verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(BidList.class));
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Curve Id must not be null");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Term must not be null");
+        assertThat(mvcResult.getResponse().getContentAsString()).contains("Value must not be null");
+        verify(curveBusiness, Mockito.times(0)).updateCurvePoint(any(Integer.class), any(CurvePoint.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateBid_idZero() throws Exception {
+    public void updateCurvePoint_idZero() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/bidList/update/{id}", 0)
+        mockMvc.perform(patch("/curvePoint/update/{id}", 0)
                         .with(csrf().asHeader())
-                        .params(bidSourceController)
+                        .params(curvePointSourceController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("bidList/update"))
+                .andExpect(view().name("curvePoint/update"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(BidList.class));
+        verify(curveBusiness, Mockito.times(0)).updateCurvePoint(any(Integer.class), any(CurvePoint.class));
     }
 
     // -----------------------------------------------------------------------------------------------
-    // deleteBid method
+    // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteBid_bidExist_return302() throws Exception {
+    public void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
-        doNothing().when(bidListBusiness).deleteBid(any(Integer.class));
+        when(curveBusiness.getCurvePointsList()).thenReturn(curvePointList);
+        doNothing().when(curveBusiness).deleteCurvePoint(any(Integer.class));
         // WHEN
-        mockMvc.perform(get("/bidList/delete/{id}", 1)
-                    .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(1)).deleteBid(any(Integer.class));
+        verify(curveBusiness, Mockito.times(1)).deleteCurvePoint(any(Integer.class));
     }
 
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteBid_idZero() throws Exception {
+    public void deleteCurvePoint_idZero() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/bidList/delete/{id}", 0)
+        mockMvc.perform(get("/curvePoint/delete/{id}", 0)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
-        verify(bidListBusiness, Mockito.times(0)).deleteBid(any(Integer.class));
+        verify(curveBusiness, Mockito.times(0)).deleteCurvePoint(any(Integer.class));
     }
 }

@@ -1,4 +1,4 @@
-package com.nnk.springboot.Exception;
+package com.nnk.springboot.exception;
 
 public class MyException extends Exception {
 
