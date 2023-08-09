@@ -1,57 +1,44 @@
+<!--
+/**
+ * list
+ * @description Rating List management page
+ */
+-->
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="fragments/main-layout">
+
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<!-- Rating List -->
+	<title th:text="#{rating.label.titleList}" />
 </head>
+
 <body>
-<div class="container">
-	<div class="row">
-		<div class="col-6">
-			<a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
-			<a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
-			<a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
-			<a href="/trade/list">Trade</a>&nbsp;|&nbsp;
-			<a href="/ruleName/list">Rule</a>
+
+<main layout:fragment="content">
+
+	<div class="container">
+		<!-- Rating List -->
+		<div class="row"><h2 th:text="#{rating.label.titleList}" /></div>
+
+		<!-- Error message -->
+		<div th:replace="~{fragments/error-message}"></div>
+
+		<!-- Add New -->
+		<div class="row">
+			<div class="col-2">
+				<a th:href="@{/rating/add}" class="btn btn-primary btn-sm">Add New</a>
+			</div>
 		</div>
-		<div class="col-6 text-right">
-			Logged in user: <b th:inline="text"  class="user"> [[${#httpServletRequest.remoteUser}]] </b>
-			<form th:action="@{/app/logout}" method="POST">
-				<input type="submit" value="Logout"/>
-			</form>
-		</div>
+
+		<!-- Bid List -->
+		<div th:replace="~{rating/list-detail}"></div>
 	</div>
-	<div class="row"><h2>Rating List</h2></div>
-	<div class="row">
-		<a href="/rating/add" class="btn btn-primary btn-sm">Add New</a>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Id</th>
-					<th>MoodysRating</th>
-					<th>SandPRating</th>
-					<th>FitchRating</th>
-					<th>Order</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="rating : ${ratings}">
-					<td style="width: 10%" th:text="${rating.id}"></td>
-					<td th:text="${rating.moodysRating}"></td>
-					<td th:text="${rating.sandPRating}"></td>
-					<td th:text="${rating.fitchRating}"></td>
-					<td th:text="${rating.order}"></td>
-					<td style="width: 15%" class="text-center">
-						<a th:href="@{/rating/update/{id}(id=${rating.id})}">Edit</a>&nbsp;|&nbsp;
-						<a th:href="@{/rating/delete/{id}(id=${rating.id})}">Delete</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
+
+</main>
+
 </body>
 </html>

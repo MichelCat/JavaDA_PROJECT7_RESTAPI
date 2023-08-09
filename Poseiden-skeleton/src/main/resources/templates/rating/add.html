@@ -1,53 +1,70 @@
+<!--
+/**
+ * add
+ * @description Add New Rating
+ */
+-->
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
-</head>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+	<head>
+		<title>Poseidon - Add New Rating</title>
+		<head th:replace="fragments/head">
+	</head>
+
 <body>
 <div class="container">
-
 	<div class="row">
-		<h2>Add New Rating</h2>
+		<!-- Add New Rating -->
+		<h2 th:text="#{rating.label.titleAdd}" />
 	</div>
 
+	<!-- Error message -->
+	<div th:replace="~{fragments/error-message}"></div>
+
 	<div class="row">
-		<form action="#" th:action="@{/rating/validate}" th:object="${rating}" method="post" class="form-horizontal" style="width: 100%">
+		<form th:action="@{/rating/validate}" th:object="${rating}" th:method="POST" class="form-horizontal" style="width: 100%">
+			<!-- moodysRating -->
 			<div class="form-group">
 				<label for="moodysRating" class="col-sm-2 control-label">MoodysRating</label>
 				<div class="col-sm-10">
-					<input type="number" th:field="*{moodysRating}" id="moodysRating" placeholder="MoodysRating" class="col-4">
+					<input type="text" th:field="*{moodysRating}" th:id="moodysRating" placeholder="MoodysRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('moodysRating')}" th:errors="*{moodysRating}"></p>
 				</div>
 			</div>
+			<!-- sandPRating -->
 			<div class="form-group">
 				<label for="sandPRating" class="col-sm-2 control-label">SandPRating</label>
 				<div class="col-sm-10">
-					<input type="number" th:field="*{sandPRating}" id="sandPRating" placeholder="SandPRating" class="col-4">
+					<input type="text" th:field="*{sandPRating}" th:id="sandPRating" placeholder="SandPRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('sandPRating')}" th:errors="*{sandPRating}"></p>
 				</div>
 			</div>
+			<!-- fitchRating -->
 			<div class="form-group">
 				<label for="fitchRating" class="col-sm-2 control-label">FitchRating</label>
 				<div class="col-sm-10">
-					<input type="number" th:field="*{fitchRating}" id="fitchRating" placeholder="FitchRating" class="col-4">
+					<input type="text" th:field="*{fitchRating}" th:id="fitchRating" placeholder="FitchRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('fitchRating')}" th:errors="*{fitchRating}"></p>
 				</div>
 			</div>
+			<!-- orderNumber -->
 			<div class="form-group">
-				<label for="order" class="col-sm-2 control-label">Order</label>
+				<label for="orderNumber" class="col-sm-2 control-label">orderNumber</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{order}" id="order" placeholder="FitchRating" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('order')}" th:errors="*{order}"></p>
+					<input type="number" th:field="*{orderNumber}" th:id="orderNumber" placeholder="OrderNumber" class="col-4">
+					<p class="text-danger" th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}"></p>
 				</div>
 			</div>
 
-
+			<!-- Button Cancel and Add -->
 			<div class="form-group">
 				<div class="col-sm-12">
-					<a class="btn btn-danger btn-sm" href="/rating/list">Cancel</a>
+					<a class="btn btn-danger btn-sm" th:href="@{/rating/list}">Cancel</a>
 					<input class="btn btn-primary btn-sm" type="submit" value="Add Rating">
 				</div>
 			</div>
@@ -55,5 +72,8 @@
 	</div>
 
 </div>
-</body>
+
+<div th:replace="fragments/scripts :: script"></div>
+
+	</body>
 </html>
