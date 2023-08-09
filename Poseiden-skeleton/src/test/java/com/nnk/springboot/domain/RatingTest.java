@@ -1,5 +1,6 @@
 package com.nnk.springboot.domain;
 
+import com.nnk.springboot.data.RatingData;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
+
+/**
+ * RatingTest is the unit test class managing the Rating
+ *
+ * @author MC
+ * @version 1.0
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 public class RatingTest {
@@ -23,58 +32,73 @@ public class RatingTest {
     private void setUpBefore() {
         testConstraintViolation = new TestConstraintViolation<>(validator);
 
-        rating = Rating.builder()
-                .moodysRating("Moodys Rating")
-                .sandPRating("Sand PRating")
-                .fitchRating("Fitch Rating")
-                .orderNumber(10)
-                .build();
+        rating = RatingData.getRatingSource();
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // builder method
+    // -----------------------------------------------------------------------------------------------
+    @Test
+    public void builder_TestBuildAndNew_thenEqual() {
+        // GIVEN
+        // WHEN
+        Rating objBuild = Rating.builder()
+                            .build();
+        Rating objNew = new Rating();
+        // THEN
+        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
     }
 
     // -----------------------------------------------------------------------------------------------
     // moodysRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void whenNormalMoodysRating_thenNoConstraintViolation() {
+    public void moodysRating_normal_thenNoConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setMoodysRating("MoodysRating Test");
         // WHEN
         String[][] errorList = {};
         testConstraintViolation.checking(rating, errorList);
+        assertThat(rating.getMoodysRating()).isEqualTo("MoodysRating Test");
     }
 
     @Test
-    public void whenBlankMoodysRating_thenOneConstraintViolation() {
+    public void moodysRating_blank_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setMoodysRating(" ");
-        // WHEN
+        // THEN
         String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenEmptyMoodysRating_thenOneConstraintViolation() {
+    public void moodysRating_empty_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setMoodysRating("");
-        // WHEN
+        // THEN
         String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenNullMoodysRating_thenOneConstraintViolation() {
+    public void moodysRating_null_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setMoodysRating(null);
-        // WHEN
+        // THEN
         String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenSizeMoodysRatingTooBig_thenOneConstraintViolation() {
+    public void moodysRating_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
-        rating.setMoodysRating(StringUtils.repeat('a', 126));
         // WHEN
+        rating.setMoodysRating(StringUtils.repeat('a', 126));
+        // THEN
         String[][] errorList = {{"moodysRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
@@ -83,46 +107,52 @@ public class RatingTest {
     // sandPRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void whenNormalSandPRating_thenNoConstraintViolation() {
+    public void sandPRating_normal_thenNoConstraintViolation() {
         // GIVEN
-        rating.setSandPRating("SandPRating Test");
         // WHEN
+        rating.setSandPRating("SandPRating Test");
+        // THEN
         String[][] errorList = {};
         testConstraintViolation.checking(rating, errorList);
+        assertThat(rating.getSandPRating()).isEqualTo("SandPRating Test");
     }
 
     @Test
-    public void whenBlankSandPRating_thenOneConstraintViolation() {
+    public void sandPRating_blank_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setSandPRating(" ");
-        // WHEN
+        // THEN
         String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenEmptySandPRating_thenOneConstraintViolation() {
+    public void sandPRating_empty_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setSandPRating("");
-        // WHEN
+        // THEN
         String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenNullSandPRating_thenOneConstraintViolation() {
+    public void sandPRating_null_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setSandPRating(null);
-        // WHEN
+        // THEN
         String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenSizeSandPRatingTooBig_thenOneConstraintViolation() {
+    public void sandPRating_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
-        rating.setSandPRating(StringUtils.repeat('a', 126));
         // WHEN
+        rating.setSandPRating(StringUtils.repeat('a', 126));
+        // THEN
         String[][] errorList = {{"sandPRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
@@ -131,46 +161,52 @@ public class RatingTest {
     // fitchRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void whenNormalFitchRating_thenNoConstraintViolation() {
+    public void fitchRating_normal_thenNoConstraintViolation() {
         // GIVEN
-        rating.setFitchRating("FitchRating Test");
         // WHEN
+        rating.setFitchRating("FitchRating Test");
+        // THEN
         String[][] errorList = {};
         testConstraintViolation.checking(rating, errorList);
+        assertThat(rating.getFitchRating()).isEqualTo("FitchRating Test");
     }
 
     @Test
-    public void whenBlankFitchRating_thenOneConstraintViolation() {
+    public void fitchRating_blank_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setFitchRating(" ");
-        // WHEN
+        // THEN
         String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenEmptyFitchRating_thenOneConstraintViolation() {
+    public void fitchRating_empty_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setFitchRating("");
-        // WHEN
+        // THEN
         String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenNullFitchRating_thenOneConstraintViolation() {
+    public void fitchRating_null_thenOneConstraintViolation() {
         // GIVEN
+        // WHEN
         rating.setFitchRating(null);
-        // WHEN
+        // THEN
         String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
     @Test
-    public void whenSizeFitchRatingTooBig_thenOneConstraintViolation() {
+    public void fitchRating_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
-        rating.setFitchRating(StringUtils.repeat('a', 126));
         // WHEN
+        rating.setFitchRating(StringUtils.repeat('a', 126));
+        // THEN
         String[][] errorList = {{"fitchRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
@@ -179,19 +215,22 @@ public class RatingTest {
     // orderNumber attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void whenNormalOrderNumber_thenNoConstraintViolations() {
+    public void orderNumber_normal_thenNoConstraintViolations() {
         // GIVEN
+        // WHEN
         rating.setOrderNumber(10);
         // WHEN
         String[][] errorList = {};
         testConstraintViolation.checking(rating, errorList);
+        assertThat(rating.getOrderNumber()).isEqualTo(10);
     }
 
     @Test
-    public void whenNullOrderNumber_thenOneConstraintViolation() {
+    public void orderNumber_null_thenOneConstraintViolation() {
         // GIVEN
-        rating.setOrderNumber(null);
         // WHEN
+        rating.setOrderNumber(null);
+        // THEN
         String[][] errorList = {{"orderNumber", "Order number must not be null"}};
         testConstraintViolation.checking(rating, errorList);
     }

@@ -1,9 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.Application;
-import com.nnk.springboot.data.CurvePointData;
 import com.nnk.springboot.data.GlobalData;
-import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.data.RatingData;
+import com.nnk.springboot.domain.Rating;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * CurveControllerIT is a class of Endpoint integration tests on Curve Point.
+ * RatingControllerIT is a class of Endpoint integration tests on Rating.
  *
  * @author MC
  * @version 1.0
@@ -37,18 +37,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class CurveControllerIT {
+public class RatingControllerIT {
 
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
 
-    public List<CurvePoint> curvePointList;
+    public List<Rating> ratingList;
 
-    private CurvePoint curvePointSave;
-    private MultiValueMap<String, String> curvePointSourceController;
-    private MultiValueMap<String, String> curvePointSaveController;
+    private Rating ratingSave;
+    private MultiValueMap<String, String> ratingSourceController;
+    private MultiValueMap<String, String> ratingSaveController;
 
     @BeforeEach
     public void setUpBefore() {
@@ -57,12 +57,12 @@ public class CurveControllerIT {
                 .apply(springSecurity())
                 .build();
 
-        curvePointSave = CurvePointData.getCurvePointSave();
-        curvePointSourceController = CurvePointData.getCurvePointSourceController();
-        curvePointSaveController = CurvePointData.getCurvePointSaveController();
+        ratingSave = RatingData.getRatingSave();
+        ratingSourceController = RatingData.getRatingSourceController();
+        ratingSaveController = RatingData.getRatingSaveController();
 
-        curvePointList = new ArrayList<>();
-        curvePointList.add(curvePointSave);
+        ratingList = new ArrayList<>();
+        ratingList.add(ratingSave);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -71,37 +71,37 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void home_getCurvePoints_return200() throws Exception {
+    @Sql(scripts = RatingData.scriptCreateRating)
+    public void home_getRatings_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/list")
+        mockMvc.perform(get("/rating/list")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/list"))
+                .andExpect(view().name("rating/list"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("curvePoints", curvePointList))
+                .andExpect(model().attribute("ratings", ratingList))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // addCurvePointForm method
+    // addRatingForm method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void addCurvePointForm_return200() throws Exception {
+    public void addRatingForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/add")
+        mockMvc.perform(get("/rating/add")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/add"))
+                .andExpect(view().name("rating/add"))
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
@@ -113,18 +113,18 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void validate_curvePointNotExist_return302() throws Exception {
+    public void validate_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/curvePoint/validate")
+        mockMvc.perform(post("/rating/validate")
                         .with(csrf().asHeader())
-                        .params(curvePointSourceController)
+                        .params(ratingSourceController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN
     }
@@ -132,18 +132,18 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void validate_curvePointExist_return302() throws Exception {
+    @Sql(scripts = RatingData.scriptCreateRating)
+    public void validate_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/curvePoint/validate")
+        mockMvc.perform(post("/rating/validate")
                         .with(csrf().asHeader())
-                        .params(curvePointSaveController)
+                        .params(ratingSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
@@ -155,42 +155,42 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void showUpdateForm_curvePointExist_return200() throws Exception {
+    @Sql(scripts = RatingData.scriptCreateRating)
+    public void showUpdateForm_ratingExist_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/update/{id}", 1)
+        mockMvc.perform(get("/rating/update/{id}", 1)
                         .with(csrf().asHeader())
-                        .params(curvePointSaveController)
+                        .params(ratingSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/update"))
+                .andExpect(view().name("rating/update"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("curvePoint", curvePointSave))
+                .andExpect(model().attribute("rating", ratingSave))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // updateCurvePoint method
+    // updateRating method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void updateCurvePoint_curvePointExist_return302() throws Exception {
+    @Sql(scripts = RatingData.scriptCreateRating)
+    public void updateRating_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+        mockMvc.perform(patch("/rating/update/{id}", 1)
                         .with(csrf().asHeader())
-                        .params(curvePointSaveController)
+                        .params(ratingSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN
     }
@@ -198,39 +198,39 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateCurvePoint_curvePointNotExist_return302() throws Exception {
+    public void updateRating_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+        mockMvc.perform(patch("/rating/update/{id}", 1)
                         .with(csrf().asHeader())
-                        .params(curvePointSaveController)
+                        .params(ratingSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // deleteCurvePoint method
+    // deleteRating method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void deleteCurvePoint_curvePointExist_return302() throws Exception {
+    @Sql(scripts = RatingData.scriptCreateRating)
+    public void deleteRating_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+        mockMvc.perform(get("/rating/delete/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("success"))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN
     }
@@ -238,16 +238,16 @@ public class CurveControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteCurvePoint_curvePointNotExist_return302() throws Exception {
+    public void deleteRating_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+        mockMvc.perform(get("/rating/delete/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(view().name("redirect:/rating/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
