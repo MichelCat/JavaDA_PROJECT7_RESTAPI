@@ -99,6 +99,7 @@ public class LoginController {
      * Create - Register with user
      *
      * @param register Register record
+     * @param result Result of a validation
      * @param model Model object
      * @param redirectAttributes RedirectAttributes object
      *

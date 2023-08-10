@@ -91,6 +91,7 @@ public class RatingController {
      *
      * @param id Rating ID added
      * @param model Model object
+     * @param redirectAttributes RedirectAttributes object
      * @return View
      */
     @GetMapping("/update/{id}")

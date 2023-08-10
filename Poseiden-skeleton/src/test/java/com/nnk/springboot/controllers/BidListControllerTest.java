@@ -90,7 +90,7 @@ public class BidListControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("bidList", bidsList))
+                .andExpect(model().attribute("bidLists", bidsList))
                 .andDo(print());
         // THEN
     }

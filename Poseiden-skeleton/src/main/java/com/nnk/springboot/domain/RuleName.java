@@ -7,6 +7,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicUpdate;
 
+/**
+ * RuleName is entity model
+ *
+ * @author MC
+ * @version 1.0
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "rulename")

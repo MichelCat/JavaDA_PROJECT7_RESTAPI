@@ -37,7 +37,7 @@ public class BidListController {
     {
         // Call service find all bids to show to the view
         log.debug("HTTP GET, display home form.");
-        model.addAttribute("bidList", bidListBusiness.getBidsList());
+        model.addAttribute("bidLists", bidListBusiness.getBidsList());
         return "bidList/list";
     }
 
@@ -80,7 +80,7 @@ public class BidListController {
             BidList bidSave = bidListBusiness.createBid(bid);
             log.info("HTTP GET, SUCCESSFUL ({}).", bidSave);
             redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
-            model.addAttribute("bidList", bidListBusiness.getBidsList());
+            model.addAttribute("bidLists", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -92,6 +92,7 @@ public class BidListController {
      *
      * @param id Bid ID added
      * @param model Model object
+     * @param redirectAttributes RedirectAttributes object
      * @return View
      */
     @GetMapping("/update/{id}")
@@ -145,7 +146,7 @@ public class BidListController {
             BidList bidSave = bidListBusiness.updateBid(id, bidList);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", bidSave);
             redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
-            model.addAttribute("bidList", bidListBusiness.getBidsList());
+            model.addAttribute("bidLists", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -178,7 +179,7 @@ public class BidListController {
             bidListBusiness.deleteBid(id);
             log.info("HTTP DELETE, SUCCESSFUL (Bid ID : {}).", id);
             redirectAttributes.addFlashAttribute("success", "Bid successfully deleted.");
-            model.addAttribute("bidList", bidListBusiness.getBidsList());
+            model.addAttribute("bidLists", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

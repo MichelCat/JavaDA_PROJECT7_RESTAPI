@@ -91,6 +91,7 @@ public class CurveController {
      *
      * @param id CurvePoint ID added
      * @param model Model object
+     * @param redirectAttributes RedirectAttributes object
      * @return View
      */
     @GetMapping("/update/{id}")

@@ -8,6 +8,12 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.sql.Timestamp;
 
+/**
+ * CurvePoint is entity model
+ *
+ * @author MC
+ * @version 1.0
+ */
 @Entity
 @DynamicUpdate
 @Table(name = "curvepoint")

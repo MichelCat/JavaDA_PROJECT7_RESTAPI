@@ -30,7 +30,7 @@
 		<form th:action="@{/rating/validate}" th:object="${rating}" th:method="POST" class="form-horizontal" style="width: 100%">
 			<!-- moodysRating -->
 			<div class="form-group">
-				<label for="moodysRating" class="col-sm-2 control-label">MoodysRating</label>
+				<label th:for="moodysRating" class="col-sm-2 control-label">MoodysRating</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{moodysRating}" th:id="moodysRating" placeholder="MoodysRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('moodysRating')}" th:errors="*{moodysRating}"></p>
@@ -38,7 +38,7 @@
 			</div>
 			<!-- sandPRating -->
 			<div class="form-group">
-				<label for="sandPRating" class="col-sm-2 control-label">SandPRating</label>
+				<label th:for="sandPRating" class="col-sm-2 control-label">SandPRating</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{sandPRating}" th:id="sandPRating" placeholder="SandPRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('sandPRating')}" th:errors="*{sandPRating}"></p>
@@ -46,7 +46,7 @@
 			</div>
 			<!-- fitchRating -->
 			<div class="form-group">
-				<label for="fitchRating" class="col-sm-2 control-label">FitchRating</label>
+				<label th:for="fitchRating" class="col-sm-2 control-label">FitchRating</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{fitchRating}" th:id="fitchRating" placeholder="FitchRating" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('fitchRating')}" th:errors="*{fitchRating}"></p>
@@ -54,7 +54,7 @@
 			</div>
 			<!-- orderNumber -->
 			<div class="form-group">
-				<label for="orderNumber" class="col-sm-2 control-label">orderNumber</label>
+				<label th:for="orderNumber" class="col-sm-2 control-label">orderNumber</label>
 				<div class="col-sm-10">
 					<input type="number" th:field="*{orderNumber}" th:id="orderNumber" placeholder="OrderNumber" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}"></p>
