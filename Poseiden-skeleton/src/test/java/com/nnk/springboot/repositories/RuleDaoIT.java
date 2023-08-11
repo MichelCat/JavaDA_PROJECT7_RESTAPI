@@ -17,6 +17,12 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * RuleDaoIT is the integration test class handling Rule
+ *
+ * @author MC
+ * @version 1.0
+ */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional

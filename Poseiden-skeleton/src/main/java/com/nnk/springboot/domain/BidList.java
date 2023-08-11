@@ -29,7 +29,7 @@ public class BidList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer BidListId;
+    Integer bidListId;
 
     @NotBlank(message = "Account is mandatory")
     @Size(max = 30, message = "Maximum length of {max} characters")

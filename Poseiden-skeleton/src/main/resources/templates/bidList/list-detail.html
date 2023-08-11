@@ -23,16 +23,16 @@
                 <!-- Bid detail -->
                 <tbody>
                     <tr th:each="bid : ${bidLists}">
-                        <td style="width: 10%" th:text="${bid.BidListId}"></td>
+                        <td style="width: 10%" th:text="${bid.bidListId}"></td>
                         <td th:text="${bid.account}"></td>
                         <td th:text="${bid.type}"></td>
                         <td th:text="${bid.bidQuantity}"></td>
                         <td style="width: 15%" class="text-center">
                             <a class="btn btn-info btn-sm mx-1"
-                               th:href="@{/bidList/update/{id}(id=${bid.BidListId})}">
+                               th:href="@{/bidList/update/{id}(id=${bid.bidListId})}">
                                 <spam class="bi bi-pencil" /></a>
                             <a class="btn btn-danger btn-sm mx-1"
-                               th:href="@{/bidList/delete/{id}(id=${bid.BidListId})}">
+                               th:href="@{/bidList/delete/{id}(id=${bid.bidListId})}">
                                 <spam class="bi bi-trash" /></a>
                         </td>
                     </tr>

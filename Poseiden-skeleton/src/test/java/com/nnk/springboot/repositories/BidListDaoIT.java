@@ -45,7 +45,7 @@ public class BidListDaoIT {
 		bid = bidListRepository.save(bid);
 		assertThat(bid).isNotNull();
 		assertThat(bid.getBidListId()).isNotNull();
-		assertThat(bid).usingRecursiveComparison().ignoringFields("BidListId").isEqualTo(oldBid);
+		assertThat(bid).usingRecursiveComparison().ignoringFields("bidListId").isEqualTo(oldBid);
 		assertThat(bid.getBidListId()).isEqualTo(1);
 		assertThat(bid.getBidQuantity()).isEqualTo(10d, withPrecision(0.001d));
 

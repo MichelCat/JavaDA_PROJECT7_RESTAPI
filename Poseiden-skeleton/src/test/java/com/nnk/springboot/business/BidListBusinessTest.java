@@ -1,6 +1,5 @@
 package com.nnk.springboot.business;
 
-
 import com.nnk.springboot.exception.MyExceptionBadRequestException;
 import com.nnk.springboot.exception.MyExceptionNotFoundException;
 import com.nnk.springboot.data.BidData;

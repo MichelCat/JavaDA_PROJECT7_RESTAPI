@@ -55,7 +55,7 @@ public class BidData {
 
     public static MultiValueMap<String, String> getBidSaveController() {
         BidList bid = BidList.builder()
-                .BidListId(1)
+                .bidListId(1)
                 .account("Account Test")
                 .type("Type Test")
                 .bidQuantity(10d)

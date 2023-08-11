@@ -22,7 +22,7 @@ import java.util.*;
  */
 @Entity
 @DynamicUpdate
-@Table(name = "users")
+@Table(name = "user")
 @Data
 @FieldDefaults(level= AccessLevel.PRIVATE)
 @NoArgsConstructor

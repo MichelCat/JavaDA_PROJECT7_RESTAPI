@@ -10,7 +10,7 @@ create database PoseidonTest;
 use PoseidonTest;
 
 CREATE TABLE BidList (
-    BidListId int NOT NULL AUTO_INCREMENT,
+    bidListId int NOT NULL AUTO_INCREMENT,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
     bidQuantity DOUBLE,
@@ -33,11 +33,11 @@ CREATE TABLE BidList (
     sourceListId VARCHAR(125),
     side VARCHAR(125),
 
-    PRIMARY KEY (BidListId)
+    constraint pk_bidlist PRIMARY KEY (bidListId)
 );
 
 CREATE TABLE Trade (
-    TradeId int NOT NULL AUTO_INCREMENT,
+    tradeId int NOT NULL AUTO_INCREMENT,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
     buyQuantity DOUBLE,
@@ -59,32 +59,32 @@ CREATE TABLE Trade (
     sourceListId VARCHAR(125),
     side VARCHAR(125),
 
-    PRIMARY KEY (TradeId)
+    constraint pk_trade PRIMARY KEY (tradeId)
 );
 
 CREATE TABLE CurvePoint (
-    Id int NOT NULL AUTO_INCREMENT,
-    CurveId tinyint,
+    id int NOT NULL AUTO_INCREMENT,
+    curveId int,
     asOfDate TIMESTAMP,
     term DOUBLE ,
     value DOUBLE ,
     creationDate TIMESTAMP ,
 
-    PRIMARY KEY (Id)
+    constraint pk_curvePoint PRIMARY KEY (id)
 );
 
 CREATE TABLE Rating (
-    Id int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     moodysRating VARCHAR(125),
     sandPRating VARCHAR(125),
     fitchRating VARCHAR(125),
-    orderNumber tinyint,
+    orderNumber int,
 
-    PRIMARY KEY (Id)
+    constraint pk_rating PRIMARY KEY (id)
 );
 
 CREATE TABLE RuleName (
-    Id int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     name VARCHAR(125),
     description VARCHAR(125),
     json VARCHAR(125),
@@ -92,23 +92,23 @@ CREATE TABLE RuleName (
     sqlStr VARCHAR(125),
     sqlPart VARCHAR(125),
 
-    PRIMARY KEY (Id)
+    constraint pk_rulename PRIMARY KEY (id)
 );
 
-CREATE TABLE Users (
-   Id int NOT NULL AUTO_INCREMENT,		        -- User ID
-   username VARCHAR(125),						-- Email used to authenticate the user
-   password VARCHAR(125),						-- Password used to authenticate the user
-   fullname VARCHAR(125),						-- Full name
-   role VARCHAR(125),							-- User role
-   expired boolean,			    				-- User account expired
-   locked boolean,								-- User locked
-   credentialsExpired boolean,					-- User credentials (password) expired
-   enabled boolean,								-- Activated user
-   emailValidationKey varchar(36),				-- Email validation key
-   validEmailEndDate datetime,					-- Valid email end date
+CREATE TABLE User (
+    id int NOT NULL AUTO_INCREMENT,              -- User ID
+    username VARCHAR(125),                       -- Email used to authenticate the user
+    password VARCHAR(125),                       -- Password used to authenticate the user
+    fullname VARCHAR(125),                       -- Full name
+    role VARCHAR(125),                           -- User role
+    expired boolean,                             -- User account expired
+    locked boolean,                              -- User locked
+    credentialsExpired boolean,                  -- User credentials (password) expired
+    enabled boolean,                             -- Activated user
+    emailValidationKey varchar(36),              -- Email validation key
+    validEmailEndDate datetime,                  -- Valid email end date
 
-   PRIMARY KEY (Id),
-   constraint uc_users_username UNIQUE KEY (username),
-   constraint uc_users_emailValidationKey UNIQUE KEY (emailValidationKey)
+    constraint pk_users PRIMARY KEY (id),
+    constraint uc_users_username UNIQUE KEY (username),
+    constraint uc_users_emailValidationKey UNIQUE KEY (emailValidationKey)
 );
