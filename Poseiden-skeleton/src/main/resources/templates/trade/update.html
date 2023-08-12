@@ -1,46 +1,63 @@
+<!--
+/**
+ * update
+ * @description Update trade
+ */
+-->
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
-</head>
+	<title>Poseidon - Update Trade</title>
+	<head th:replace="fragments/head">
+	</head>
+
 <body>
 <div class="container">
 	<div class="row">
-		<h2>Update Trade</h2>
+		<!-- Update Trade -->
+		<h2 th:text="#{trade.label.titleUpdate}" />
 	</div>
 
+	<!-- Error message -->
+	<div th:replace="~{fragments/error-message}"></div>
+
 	<div class="row">
-		<form action="#" th:action="@{/trade/update/{id}(id=${trade.tradeId})}" th:object="${trade}" method="post" class="form-horizontal" style="width: 100%">
+		<form th:action="@{/trade/update/{id}(id=${trade.tradeId})}" th:object="${trade}" th:method="PATCH" class="form-horizontal" style="width: 100%">
+			<!-- account -->
 			<div class="form-group">
-				<label for="account" class="col-sm-2 control-label">Account</label>
+				<label th:for="account" class="col-sm-2 control-label">Account</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{account}" id="account" placeholder="Account" class="col-4">
+					<input type="text" th:field="*{account}" th:id="account" placeholder="Account" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></p>
 				</div>
 			</div>
+			<!-- type -->
 			<div class="form-group">
-				<label for="type" class="col-sm-2 control-label">Type</label>
+				<label th:for="type" class="col-sm-2 control-label">Type</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{type}" id="type" placeholder="Type" class="col-4">
+					<input type="text" th:field="*{type}" th:id="type" placeholder="Type" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
 				</div>
 			</div>
+			<!-- buyQuantity -->
 			<div class="form-group">
-				<label for="buyQuantity" class="col-sm-2 control-label">Buy Quantity</label>
+				<label th:for="buyQuantity" class="col-sm-2 control-label">Buy Quantity</label>
 				<div class="col-sm-10">
-					<input type="number" th:field="*{buyQuantity}" id="buyQuantity" placeholder="Buy Quantity" class="col-4">
+					<input type="number" th:field="*{buyQuantity}" th:id="buyQuantity" placeholder="Buy Quantity" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('buyQuantity')}" th:errors="*{buyQuantity}"></p>
 				</div>
 			</div>
 
-
+			<!-- Button Cancel and Add -->
 			<div class="form-group">
 				<div class="col-sm-12">
-					<input type="hidden" th:field="*{id}">
-					<a class="btn btn-danger btn-sm" href="/trade/list">Cancel</a>
+					<input type="hidden" th:field="*{tradeId}">
+					<a class="btn btn-danger btn-sm" th:href="@{/trade/list}">Cancel</a>
 					<input class="btn btn-primary btn-sm" type="submit" value="Update Trade">
 				</div>
 			</div>
@@ -48,5 +65,8 @@
 	</div>
 
 </div>
+
+<div th:replace="fragments/scripts :: script"></div>
+
 </body>
 </html>

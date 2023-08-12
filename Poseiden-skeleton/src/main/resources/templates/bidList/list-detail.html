@@ -22,7 +22,7 @@
                 </thead>
                 <!-- Bid detail -->
                 <tbody>
-                    <tr th:each="bid : ${bidLists}">
+                    <tr th:each="bid : ${bids}">
                         <td style="width: 10%" th:text="${bid.bidListId}"></td>
                         <td th:text="${bid.account}"></td>
                         <td th:text="${bid.type}"></td>

@@ -9,93 +9,93 @@ drop database if exists PoseidonTest;
 create database PoseidonTest;
 use PoseidonTest;
 
-CREATE TABLE BidList (
-    bidListId int NOT NULL AUTO_INCREMENT,
+CREATE TABLE bid (
+    bid_list_id int NOT NULL AUTO_INCREMENT,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
-    bidQuantity DOUBLE,
-    askQuantity DOUBLE,
+    bid_quantity DOUBLE,
+    ask_quantity DOUBLE,
     bid DOUBLE ,
     ask DOUBLE,
     benchmark VARCHAR(125),
-    bidListDate TIMESTAMP,
+    bid_list_date TIMESTAMP,
     commentary VARCHAR(125),
     security VARCHAR(125),
     status VARCHAR(10),
     trader VARCHAR(125),
     book VARCHAR(125),
-    creationName VARCHAR(125),
-    creationDate TIMESTAMP ,
-    revisionName VARCHAR(125),
-    revisionDate TIMESTAMP ,
-    dealName VARCHAR(125),
-    dealType VARCHAR(125),
-    sourceListId VARCHAR(125),
+    creation_name VARCHAR(125),
+    creation_date TIMESTAMP ,
+    revision_name VARCHAR(125),
+    revision_date TIMESTAMP ,
+    deal_name VARCHAR(125),
+    deal_type VARCHAR(125),
+    source_list_id VARCHAR(125),
     side VARCHAR(125),
 
-    constraint pk_bidlist PRIMARY KEY (bidListId)
+    constraint pk_bid_list PRIMARY KEY (bid_list_id)
 );
 
-CREATE TABLE Trade (
-    tradeId int NOT NULL AUTO_INCREMENT,
+CREATE TABLE trade (
+    trade_id int NOT NULL AUTO_INCREMENT,
     account VARCHAR(30) NOT NULL,
     type VARCHAR(30) NOT NULL,
-    buyQuantity DOUBLE,
-    sellQuantity DOUBLE,
-    buyPrice DOUBLE ,
-    sellPrice DOUBLE,
-    tradeDate TIMESTAMP,
+    buy_quantity DOUBLE,
+    sell_quantity DOUBLE,
+    buy_price DOUBLE ,
+    sell_price DOUBLE,
+    trade_date TIMESTAMP,
     security VARCHAR(125),
     status VARCHAR(10),
     trader VARCHAR(125),
     benchmark VARCHAR(125),
     book VARCHAR(125),
-    creationName VARCHAR(125),
-    creationDate TIMESTAMP ,
-    revisionName VARCHAR(125),
-    revisionDate TIMESTAMP ,
-    dealName VARCHAR(125),
-    dealType VARCHAR(125),
-    sourceListId VARCHAR(125),
+    creation_name VARCHAR(125),
+    creation_date TIMESTAMP ,
+    revision_name VARCHAR(125),
+    revision_date TIMESTAMP ,
+    deal_name VARCHAR(125),
+    deal_type VARCHAR(125),
+    source_list_id VARCHAR(125),
     side VARCHAR(125),
 
-    constraint pk_trade PRIMARY KEY (tradeId)
+    constraint pk_trade PRIMARY KEY (trade_id)
 );
 
-CREATE TABLE CurvePoint (
+CREATE TABLE curve_point (
     id int NOT NULL AUTO_INCREMENT,
-    curveId int,
-    asOfDate TIMESTAMP,
+    curve_id int,
+    as_of_date TIMESTAMP,
     term DOUBLE ,
     value DOUBLE ,
-    creationDate TIMESTAMP ,
+    creation_date TIMESTAMP ,
 
-    constraint pk_curvePoint PRIMARY KEY (id)
+    constraint pk_curve_point PRIMARY KEY (id)
 );
 
-CREATE TABLE Rating (
+CREATE TABLE rating (
     id int NOT NULL AUTO_INCREMENT,
-    moodysRating VARCHAR(125),
-    sandPRating VARCHAR(125),
-    fitchRating VARCHAR(125),
-    orderNumber int,
+    moodys_rating VARCHAR(125),
+    sand_p_rating VARCHAR(125),
+    fitch_rating VARCHAR(125),
+    order_number int,
 
     constraint pk_rating PRIMARY KEY (id)
 );
 
-CREATE TABLE RuleName (
+CREATE TABLE rule (
     id int NOT NULL AUTO_INCREMENT,
     name VARCHAR(125),
     description VARCHAR(125),
     json VARCHAR(125),
     template VARCHAR(512),
-    sqlStr VARCHAR(125),
-    sqlPart VARCHAR(125),
+    sql_str VARCHAR(125),
+    sql_part VARCHAR(125),
 
-    constraint pk_rulename PRIMARY KEY (id)
+    constraint pk_rule PRIMARY KEY (id)
 );
 
-CREATE TABLE User (
+CREATE TABLE user (
     id int NOT NULL AUTO_INCREMENT,              -- User ID
     username VARCHAR(125),                       -- Email used to authenticate the user
     password VARCHAR(125),                       -- Password used to authenticate the user
@@ -103,12 +103,12 @@ CREATE TABLE User (
     role VARCHAR(125),                           -- User role
     expired boolean,                             -- User account expired
     locked boolean,                              -- User locked
-    credentialsExpired boolean,                  -- User credentials (password) expired
+    credentials_expired boolean,                 -- User credentials (password) expired
     enabled boolean,                             -- Activated user
-    emailValidationKey varchar(36),              -- Email validation key
-    validEmailEndDate datetime,                  -- Valid email end date
+    email_validation_key varchar(36),            -- Email validation key
+    valid_email_end_date datetime,               -- Valid email end date
 
     constraint pk_users PRIMARY KEY (id),
     constraint uc_users_username UNIQUE KEY (username),
-    constraint uc_users_emailValidationKey UNIQUE KEY (emailValidationKey)
+    constraint uc_users_email_validation_key UNIQUE KEY (email_validation_key)
 );

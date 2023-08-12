@@ -1,6 +1,6 @@
-truncate table BidList;
-truncate table Trade;
-truncate table CurvePoint;
-truncate table Rating;
-truncate table RuleName;
-truncate table User;
+truncate table bid;
+truncate table trade;
+truncate table curve_point;
+truncate table rating;
+truncate table rule;
+truncate table user;

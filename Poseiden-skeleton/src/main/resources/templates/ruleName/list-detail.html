@@ -1,16 +1,16 @@
 <!--
 /**
  * list-detail
- * @description RuleName List
+ * @description Rule List
  */
 -->
 
-<!-- RuleName table -->
+<!-- Rule table -->
 <div class="container my-3">
     <div class="row">
         <div class="table-responsive">
             <table class="table table-striped table-sm table-hover table-bordered">
-                <!-- RuleName title -->
+                <!-- Rule title -->
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -23,22 +23,22 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <!-- RuleName detail -->
+                <!-- Rule detail -->
                 <tbody>
-                    <tr th:each="ruleName : ${ruleNames}">
-                        <td style="width: 10%" th:text="${ruleName.id}"></td>
-                        <td th:text="${ruleName.name}"></td>
-                        <td th:text="${ruleName.description}"></td>
-                        <td th:text="${ruleName.json}"></td>
-                        <td th:text="${ruleName.template}"></td>
-                        <td th:text="${ruleName.sqlStr}"></td>
-                        <td th:text="${ruleName.sqlPart}"></td>
+                    <tr th:each="rule : ${rules}">
+                        <td style="width: 10%" th:text="${rule.id}"></td>
+                        <td th:text="${rule.name}"></td>
+                        <td th:text="${rule.description}"></td>
+                        <td th:text="${rule.json}"></td>
+                        <td th:text="${rule.template}"></td>
+                        <td th:text="${rule.sqlStr}"></td>
+                        <td th:text="${rule.sqlPart}"></td>
                         <td style="width: 15%" class="text-center">
                             <a class="btn btn-info btn-sm mx-1"
-                               th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">
+                               th:href="@{/ruleName/update/{id}(id=${rule.id})}">
                                 <spam class="bi bi-pencil" /></a>
                             <a class="btn btn-danger btn-sm mx-1"
-                               th:href="@{/ruleName/delete/{id}(id=${ruleName.id})}">
+                               th:href="@{/ruleName/delete/{id}(id=${rule.id})}">
                                 <spam class="bi bi-trash" /></a>
                         </td>
                     </tr>

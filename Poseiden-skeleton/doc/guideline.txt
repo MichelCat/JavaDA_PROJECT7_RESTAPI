@@ -18,14 +18,14 @@
 5. Run sql script to create table doc/data.sql
 
 ## Implement a feature:
-1. Create mapping domain class and place in package com.nnk.springboot.domain
-2. Create repository class and place in package com.nnk.springboot.repositories
-3. Create controller class and place in package com.nnk.springboot.controllers
+1. Create mapping domain class and place in package com.nnk.poseidon.domain
+2. Create repository class and place in package com.nnk.poseidon.repositories
+3. Create controller class and place in package com.nnk.poseidon.controllers
 4. Create view files and place in src/main/resource/templates
 
 ## Write unit test
-1. Create unit test and place in package com.nnk.springboot in folder test > java
+1. Create unit test and place in package com.nnk.poseidon in folder test > java
 
 ## Security
-1. Create user service to load user from  database and place in package com.nnk.springboot.services
-2. Add configuration class and place in package com.nnk.springboot.config
+1. Create user service to load user from  database and place in package com.nnk.poseidon.services
+2. Add configuration class and place in package com.nnk.poseidon.config
