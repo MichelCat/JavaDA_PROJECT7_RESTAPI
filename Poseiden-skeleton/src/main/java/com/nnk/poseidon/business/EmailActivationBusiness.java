@@ -1,8 +1,8 @@
 package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.exception.MyException;
-import com.nnk.poseidon.domain.User;
-import com.nnk.poseidon.repositories.UserRepository;
+import com.nnk.poseidon.model.User;
+import com.nnk.poseidon.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

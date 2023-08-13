@@ -1,7 +1,7 @@
 package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.RatingData;
-import com.nnk.poseidon.domain.Rating;
+import com.nnk.poseidon.model.Rating;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
 import com.nnk.poseidon.data.GlobalData;

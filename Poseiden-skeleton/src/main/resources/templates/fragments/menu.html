@@ -11,35 +11,17 @@
 		<nav class="navbar navbar-expand navbar-light">
 			<div class="collapse navbar-collapse justify-content-start" id="navbarNav">
 				<ul class="navbar-nav" th:with="pageName=${#ctx.springRequestContext.requestUri}">
-					<!-- Bid page -->
-					<li class="nav-item">
-						<a class="nav-link" th:classappend="${pageName == '/bidList/list' ? 'text-primary' : ''}"
-						   th:href="@{/bidList/list}">Bid List</a>
-					</li>
 
-					<!-- Curve Points page -->
-					<li class="nav-item">
-						<a class="nav-link" th:classappend="${pageName == '/curvePoint/list' ? 'text-primary' : ''}"
-						   th:href="@{/curvePoint/list}">Curve Points</a>
-					</li>
+					<!-- USER -->
+					<th:block th:if="${#authorization.expression('hasAuthority(''USER'')')}">
+						<div th:replace="~{fragments/menu-user}"></div>
+					</th:block>
 
-					<!-- Ratings page -->
-					<li class="nav-item">
-						<a class="nav-link" th:classappend="${pageName == '/rating/list' ? 'text-primary' : ''}"
-						   th:href="@{/rating/list}">Ratings</a>
-					</li>
+					<!-- ADMIN -->
+					<th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+						<div th:replace="~{fragments/menu-admin}"></div>
+					</th:block>
 
-					<!-- Trade page -->
-					<li class="nav-item">
-						<a class="nav-link" th:classappend="${pageName == '/trade/list' ? 'text-primary' : ''}"
-						   th:href="@{/trade/list}">Trade</a>
-					</li>
-
-					<!-- Rule page -->
-					<li class="nav-item">
-						<a class="nav-link" th:classappend="${pageName == '/ruleName/list' ? 'text-primary' : ''}"
-						   th:href="@{/ruleName/list}">Rule</a>
-					</li>
 				</ul>
 			</div>
 		</nav>

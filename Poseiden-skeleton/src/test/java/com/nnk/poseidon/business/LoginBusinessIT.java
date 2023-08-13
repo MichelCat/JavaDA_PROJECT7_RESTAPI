@@ -2,8 +2,8 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
-import com.nnk.poseidon.domain.AppUserPrincipal;
-import com.nnk.poseidon.domain.User;
+import com.nnk.poseidon.model.AppUserPrincipal;
+import com.nnk.poseidon.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

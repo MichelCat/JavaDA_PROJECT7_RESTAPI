@@ -1,6 +1,6 @@
 package com.nnk.poseidon.data;
 
-import com.nnk.poseidon.domain.Rating;
+import com.nnk.poseidon.model.Rating;
 import com.nnk.poseidon.mapper.MultiValueMapMapper;
 import org.springframework.util.MultiValueMap;
 

@@ -4,7 +4,7 @@ import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
 import com.nnk.poseidon.data.BidData;
 import com.nnk.poseidon.data.GlobalData;
-import com.nnk.poseidon.domain.Bid;
+import com.nnk.poseidon.model.Bid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

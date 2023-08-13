@@ -1,9 +1,9 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.domain.Trade;
+import com.nnk.poseidon.model.Trade;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
-import com.nnk.poseidon.repositories.TradeRepository;
+import com.nnk.poseidon.repository.TradeRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

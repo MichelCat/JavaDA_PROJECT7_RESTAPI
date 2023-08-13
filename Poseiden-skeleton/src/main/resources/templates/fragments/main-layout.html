@@ -21,8 +21,11 @@
 		<header>
 			<!-- Menu -->
 		    <div th:replace="~{fragments/menu}"></div>
+
+			<!-- Navigational hierarchy -->
+			<div th:replace="~{fragments/navigational-hierarchy}"></div>
 		</header>
-	</div>    
+	</div>
     
     <main class="container" id="mainContent">
         <div layout:fragment="content"></div>

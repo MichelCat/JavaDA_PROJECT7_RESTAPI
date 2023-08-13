@@ -1,9 +1,9 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.domain.Rule;
+import com.nnk.poseidon.model.Rule;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
-import com.nnk.poseidon.repositories.RuleRepository;
+import com.nnk.poseidon.repository.RuleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.nnk.poseidon.data;
 
-import com.nnk.poseidon.domain.Rule;
+import com.nnk.poseidon.model.Rule;
 import com.nnk.poseidon.mapper.MultiValueMapMapper;
 import org.springframework.util.MultiValueMap;
 

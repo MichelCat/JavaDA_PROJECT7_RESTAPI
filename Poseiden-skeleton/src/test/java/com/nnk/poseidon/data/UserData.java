@@ -1,7 +1,7 @@
 package com.nnk.poseidon.data;
 
-import com.nnk.poseidon.domain.Register;
-import com.nnk.poseidon.domain.User;
+import com.nnk.poseidon.model.Register;
+import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.mapper.MultiValueMapMapper;
 import org.springframework.util.MultiValueMap;
 

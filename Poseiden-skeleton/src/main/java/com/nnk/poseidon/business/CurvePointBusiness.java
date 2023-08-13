@@ -2,8 +2,8 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
-import com.nnk.poseidon.domain.CurvePoint;
-import com.nnk.poseidon.repositories.CurvePointRepository;
+import com.nnk.poseidon.model.CurvePoint;
+import com.nnk.poseidon.repository.CurvePointRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

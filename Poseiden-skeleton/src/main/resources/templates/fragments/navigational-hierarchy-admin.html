@@ -1,0 +1,25 @@
+<!--
+/**
+ * navigational-hierarchy-admin
+ * @description Navigational hierarchy
+ */
+-->
+
+<div class="row bg-light">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" th:with="pageName=${#ctx.springRequestContext.requestUri}">
+
+            <!-- Home page -->
+            <th:block th:if="${pageName == '/admin/home'}">
+                <li class="breadcrumb-item active" aria-current="page">Home</li>
+            </th:block>
+
+            <!-- User List page -->
+            <th:block th:if="${pageName == '/user/list'}">
+                <li class="breadcrumb-item"><a th:href="@{/admin/home}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">User List</li>
+            </th:block>
+
+        </ol>
+    </nav>
+</div>

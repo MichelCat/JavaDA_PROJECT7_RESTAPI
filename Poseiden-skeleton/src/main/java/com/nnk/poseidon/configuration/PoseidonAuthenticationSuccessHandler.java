@@ -61,8 +61,8 @@ public class PoseidonAuthenticationSuccessHandler implements AuthenticationSucce
      */
     protected String determineTargetUrl(final Authentication authentication) {
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("USER", "/bidList/list");
-        roleTargetUrlMap.put("ADMIN", "/home");
+        roleTargetUrlMap.put("USER", "/user/home");
+        roleTargetUrlMap.put("ADMIN", "/admin/home");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {

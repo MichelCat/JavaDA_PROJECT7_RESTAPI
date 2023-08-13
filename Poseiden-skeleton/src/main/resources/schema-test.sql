@@ -108,7 +108,7 @@ CREATE TABLE user (
     email_validation_key varchar(36),            -- Email validation key
     valid_email_end_date datetime,               -- Valid email end date
 
-    constraint pk_users PRIMARY KEY (id),
-    constraint uc_users_username UNIQUE KEY (username),
-    constraint uc_users_email_validation_key UNIQUE KEY (email_validation_key)
+    constraint pk_user PRIMARY KEY (id),
+    constraint uc_user_username UNIQUE KEY (username),
+    constraint uc_user_email_validation_key UNIQUE KEY (email_validation_key)
 );

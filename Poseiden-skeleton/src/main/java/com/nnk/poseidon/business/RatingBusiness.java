@@ -1,9 +1,9 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.domain.Rating;
+import com.nnk.poseidon.model.Rating;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
-import com.nnk.poseidon.repositories.RatingRepository;
+import com.nnk.poseidon.repository.RatingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

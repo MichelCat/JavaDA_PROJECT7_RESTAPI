@@ -2,8 +2,8 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
-import com.nnk.poseidon.domain.Bid;
-import com.nnk.poseidon.repositories.BidRepository;
+import com.nnk.poseidon.model.Bid;
+import com.nnk.poseidon.repository.BidRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

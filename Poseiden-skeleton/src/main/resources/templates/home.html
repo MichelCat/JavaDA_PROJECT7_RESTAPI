@@ -1,13 +1,45 @@
+<!--
+/**
+ * list
+ * @description Home page
+ */
+-->
+
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="fragments/main-layout">
+
 <head>
-    <title> Spring Boot </title>
-    <link rel="stylesheet" href="/css/styles.css"/>
+    <!-- HOME PAGE -->
+    <title th:text="#{adminHome.label.titleList}" />
 </head>
+
 <body>
-<h3> HOME PAGE </h3>
-<p>
-    <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
-</p>
+
+<main layout:fragment="content">
+
+    <div class="container">
+
+        <div class="bg-image"
+             th:style="'background-image:url(' + @{/img/ImagePoseidon.png} + ');
+							height: 100vh;
+							background-size: cover;
+							background-repeat: no-repeat;'" >
+            <div class="d-flex justify-content-center align-items-start">
+                <div class="container">
+
+                    <!-- Error message -->
+                    <div th:replace="~{fragments/error-message}"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
 </body>
 </html>

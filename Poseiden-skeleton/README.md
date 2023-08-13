@@ -18,9 +18,9 @@
 5. Run sql script to create table doc/data.sql
 
 ## Implement a Feature
-1. Create mapping domain class and place in package com.nnk.poseidon.domain
-2. Create repository class and place in package com.nnk.poseidon.repositories
-3. Create controller class and place in package com.nnk.poseidon.controllers
+1. Create mapping domain class and place in package com.nnk.poseidon.model
+2. Create repository class and place in package com.nnk.poseidon.repository
+3. Create controller class and place in package com.nnk.poseidon.controller
 
 ## Security
 1. Create user service to load user from  database and place in package com.nnk.poseidon.services
