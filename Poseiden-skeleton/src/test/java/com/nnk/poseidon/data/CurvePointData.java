@@ -30,20 +30,20 @@ public class CurvePointData {
 
     public static MultiValueMap<String, String> getCurvePointSourceController() {
         CurvePoint curvePoint = CurvePoint.builder()
-                .curveId(10)
-                .term(11d)
-                .value(12d)
-                .build();
+                                .curveId(10)
+                                .term(11d)
+                                .value(12d)
+                                .build();
         return MultiValueMapMapper.convert(curvePoint);
     }
 
     public static MultiValueMap<String, String> getCurvePointSaveController() {
         CurvePoint curvePoint = CurvePoint.builder()
-                .id(1)
-                .curveId(10)
-                .term(11d)
-                .value(12d)
-                .build();
+                                .id(1)
+                                .curveId(10)
+                                .term(11d)
+                                .value(12d)
+                                .build();
         return MultiValueMapMapper.convert(curvePoint);
     }
 
