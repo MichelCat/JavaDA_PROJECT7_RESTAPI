@@ -95,6 +95,7 @@ public class CurvePointBusinessTest {
     @Test
     public void createCurvePoint_nullCurvePointParameter_returnNullPointer() {
         // GIVEN
+        when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> curvePointBusiness.createCurvePoint(null));
         // THEN
@@ -127,6 +128,7 @@ public class CurvePointBusinessTest {
     @Test
     public void getCurvePointById_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(null));
         // THEN
@@ -160,6 +162,7 @@ public class CurvePointBusinessTest {
     @Test
     public void updateCurvePoint_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.updateCurvePoint(null, curvePointSource));
         // THEN
@@ -169,6 +172,7 @@ public class CurvePointBusinessTest {
     @Test
     public void updateCurvePoint_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(curvePointRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.updateCurvePoint(0, curvePointSource));
         // THEN
@@ -191,7 +195,7 @@ public class CurvePointBusinessTest {
     @Test
     public void deleteCurvePoint_deleteNormal() {
         // GIVEN
-        when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.of(curvePointSave));
+        when(curvePointRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(curvePointRepository).deleteById(any(Integer.class));
         // WHEN
         curvePointBusiness.deleteCurvePoint(1);
@@ -202,7 +206,7 @@ public class CurvePointBusinessTest {
     @Test
     public void deleteCurvePoint_CurvePointNotExist_returnNotFound() {
         // GIVEN
-        when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(curvePointRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(2));
         // THEN
@@ -212,6 +216,7 @@ public class CurvePointBusinessTest {
     @Test
     public void deleteCurvePoint_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(curvePointRepository.existsById(null)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(null));
         // THEN
@@ -221,6 +226,7 @@ public class CurvePointBusinessTest {
     @Test
     public void deleteCurvePoint_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(curvePointRepository.existsById(0)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(0));
         // THEN

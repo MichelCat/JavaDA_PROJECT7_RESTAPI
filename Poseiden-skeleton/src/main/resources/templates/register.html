@@ -29,7 +29,7 @@
 					<!-- Error message -->
 					<div th:replace="~{fragments/error-message}"></div>
 				
-					<form th:action="@{/app/register}" th:object="${user}" th:method="POST">
+					<form th:action="@{/app/register}" th:object="${register}" th:method="POST">
 					
 						<div class="mb-3 input-group form-group">
 							<div class="input-group-prepend">
@@ -48,8 +48,8 @@
 							</div>
 							<div>
 								<input type="email" class="form-control" placeholder="Email"
-									   id="idEmail" th:field="*{email}" />
-								<p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+									   id="idUsername" th:field="*{username}" />
+								<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
 							</div>
 						</div>
 						

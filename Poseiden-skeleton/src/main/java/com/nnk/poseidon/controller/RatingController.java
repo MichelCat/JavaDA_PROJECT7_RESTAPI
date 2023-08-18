@@ -2,7 +2,6 @@ package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.business.RatingBusiness;
 import com.nnk.poseidon.model.Rating;
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class RatingController {
             // Save Rating
             Rating ratingSave = ratingBusiness.createRating(rating);
             log.info("HTTP GET, SUCCESSFUL ({}).", ratingSave);
-            redirectAttributes.addFlashAttribute("success", "Rating was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rating created successfully.");
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -129,12 +128,6 @@ public class RatingController {
                                 , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Rating and return Rating list
 
-        // Rating ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("rating.error.template", id));
-            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("rating.error.template", id));
-            return "rating/update";
-        }
         // Rating parameter is not valid
         if (result.hasErrors()) {
             log.debug("HTTP PATCH, Validation failed for Rating ({}).", rating);
@@ -144,7 +137,7 @@ public class RatingController {
             // Modify Rating
             Rating ratingSave = ratingBusiness.updateRating(id, rating);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", ratingSave);
-            redirectAttributes.addFlashAttribute("success", "Rating was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rating updated successfully.");
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -167,17 +160,11 @@ public class RatingController {
                                 , RedirectAttributes redirectAttributes) {
         // Find Rating by Id and delete the Rating, return to Rating list
 
-        // Rating ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("rating.error.template", id));
-            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("rating.error.template", id));
-            return "redirect:/rating/list";
-        }
         try {
             // Delete Rating
             ratingBusiness.deleteRating(id);
             log.info("HTTP DELETE, SUCCESSFUL (Rating ID : {}).", id);
-            redirectAttributes.addFlashAttribute("success", "Rating successfully deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rating deleted successfully.");
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

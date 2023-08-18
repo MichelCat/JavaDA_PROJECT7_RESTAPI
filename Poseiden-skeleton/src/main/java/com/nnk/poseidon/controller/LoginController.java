@@ -82,16 +82,11 @@ public class LoginController {
     /**
      * Read - Get Register Page
      *
-     * @param model Model object
-     * @param redirectAttributes RedirectAttributes object
+     * @param register The User object
      * @return View
      */
     @GetMapping("/register")
-    public String getRegister(Model model
-            , RedirectAttributes redirectAttributes) {
-        // New user record
-        Register register = new Register();
-        model.addAttribute("user", register);
+    public String getRegister(Register register) {
         return "register";
     }
 
@@ -111,9 +106,8 @@ public class LoginController {
                                 , Model model
                                 , RedirectAttributes redirectAttributes) {
     if (result.hasErrors()) {
-//        model.addAttribute("user", register);
         log.debug("HTTP POST, Validation failed for register ({}).", register);
-        return "/app/register";
+        return "register";
     }
 
     try {

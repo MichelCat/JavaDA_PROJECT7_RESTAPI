@@ -1,6 +1,7 @@
 package com.nnk.poseidon.data;
 
 import com.nnk.poseidon.model.Register;
+import com.nnk.poseidon.model.Role;
 import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.mapper.MultiValueMapMapper;
 import org.springframework.util.MultiValueMap;
@@ -15,17 +16,25 @@ import java.sql.Date;
  */
 public class UserData {
 
+    private static String encryptedPassword = "$2a$10$o47/tdA8WWuD1/ZRNfwDjOiDvS2wGzgl5/jPGK7U36qkz92I9ZO/K";
+    private static String unencryptedPassword = "12345678+aA";
+    private static String userEmailValidationKey = "cf0551e9-1c63-4b93-ae6e-bb3966c83e83";
+    private static String alexEmailValidationKey = "cf0551e9-1c63-4b93-ae6e-bb3966c83e85";
+
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
     public static User getUserSource() {
         return User.builder()
                 .username("user@gmail.com")
-                .password("$2a$10$55oEaTtOLOQZqJcu/ytTlO7bzdoo2tbRKNUsrJpU4W1wfLKw/opD.")
+                .password(encryptedPassword)
                 .fullname("User")
-                .role("USER")
+                .role(Role.USER)
                 .expired(false)
                 .locked(false)
                 .credentialsExpired(false)
                 .enabled(true)
-                .emailValidationKey("cf0551e9-1c63-4b93-ae6e-bb3966c83e83")
+                .emailValidationKey(userEmailValidationKey)
                 .validEmailEndDate(new Date(123,06,29))
                 .build();
     }
@@ -36,17 +45,20 @@ public class UserData {
         return user;
     }
 
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
     public static User getAlexSource() {
         return User.builder()
                 .username("alex@gmail.com")
-                .password("$2a$10$55oEaTtOLOQZqJcu/ytTlO7bzdoo2tbRKNUsrJpU4W1wfLKw/opD.")
+                .password(encryptedPassword)
                 .fullname("Alex")
-                .role("USER")
+                .role(Role.USER)
                 .expired(false)
                 .locked(false)
                 .credentialsExpired(false)
                 .enabled(false)
-                .emailValidationKey("cf0551e9-1c63-4b93-ae6e-bb3966c83e85")
+                .emailValidationKey(alexEmailValidationKey)
                 .validEmailEndDate(new Date(200,06,29))
                 .build();
     }
@@ -57,17 +69,51 @@ public class UserData {
         return user;
     }
 
-    public static Register getRegisterSource() {
-        return Register.builder()
-                .email("user@gmail.com")
-                .password("12345678+aA")
-                .fullname("Alex")
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
+    public static User getLoginSource() {
+        return User.builder()
+                .username("user@gmail.com")
+                .password(encryptedPassword)
+                .fullname("User")
+                .role(Role.USER)
                 .build();
     }
 
+    public static User getLoginSave() {
+        User user = getUserSource();
+        user.setId(1);
+        return user;
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
+    public static Register getRegisterSource() {
+        return Register.builder()
+                .username("user@gmail.com")
+                .password(unencryptedPassword)
+                .fullname("User")
+                .role(Role.USER)
+                .build();
+    }
+
+    public static Register getRegisterSave() {
+        Register register = getRegisterSource();
+        register.setId(1);
+        return register;
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
     public static MultiValueMap<String, String> getRegisterController() {
         return MultiValueMapMapper.convert(getRegisterSource());
     }
 
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
     public final static String scriptCreateUser = "/data/createUser.sql";
 }

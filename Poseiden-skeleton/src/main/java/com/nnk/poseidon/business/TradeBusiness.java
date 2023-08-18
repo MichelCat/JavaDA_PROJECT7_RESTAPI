@@ -132,8 +132,7 @@ public class TradeBusiness {
     public void deleteTrade(final Integer id)
                             throws MyExceptionNotFoundException {
         // Trade does not exist
-        Optional<Trade> optTradeEntity = tradeRepository.findById(id);
-        if (optTradeEntity.isPresent() == false) {
+        if (tradeRepository.existsById(id) == false) {
             log.debug("THROW, Trade not exist ({}).", id);
             throw new MyExceptionNotFoundException("throw.trade.unknown", id);
         }

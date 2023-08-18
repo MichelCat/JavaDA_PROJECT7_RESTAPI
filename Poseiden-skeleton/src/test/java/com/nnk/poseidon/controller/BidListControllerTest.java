@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -130,7 +128,7 @@ public class BidListControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/bidList/list"))
                 .andDo(print());
         // THEN
@@ -142,7 +140,7 @@ public class BidListControllerTest {
     public void validate_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/bidList/validate")
+        mockMvc.perform(post("/bidList/validate")
                     .with(csrf().asHeader())
                     .param("account", "")
                     .param("type", "")
@@ -152,12 +150,11 @@ public class BidListControllerTest {
             .andExpect(model().errorCount(3))
             .andExpect(status().isOk())
             .andExpect(view().name("bidList/add"))
-            .andDo(print())
-            .andReturn();
+            .andExpect(model().attributeHasFieldErrorCode("bid","account","NotBlank"))
+            .andExpect(model().attributeHasFieldErrorCode("bid","account","NotBlank"))
+            .andExpect(model().attributeHasFieldErrorCode("bid","bidQuantity","NotNull"))
+            .andDo(print());
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
         verify(bidListBusiness, Mockito.times(0)).createBid(any(Bid.class));
     }
 
@@ -198,7 +195,7 @@ public class BidListControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/bidList/list"))
                 .andDo(print());
         // THEN
@@ -210,35 +207,16 @@ public class BidListControllerTest {
     public void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(patch("/bidList/update/{id}", 1)
+        mockMvc.perform(patch("/bidList/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(3))
                 .andExpect(view().name("bidList/update"))
-                .andDo(print())
-                .andReturn();
-        // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Bid quantity must not be null");
-        verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(Bid.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void updateBid_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(patch("/bidList/update/{id}", 0)
-                        .with(csrf().asHeader())
-                        .params(bidSourceController)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("bidList/update"))
+                .andExpect(model().attributeHasFieldErrorCode("bid","account","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("bid","account","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("bid","bidQuantity","NotNull"))
                 .andDo(print());
         // THEN
         verify(bidListBusiness, Mockito.times(0)).updateBid(any(Integer.class), any(Bid.class));
@@ -259,27 +237,10 @@ public class BidListControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/bidList/list"))
                 .andDo(print());
         // THEN
         verify(bidListBusiness, Mockito.times(1)).deleteBid(any(Integer.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteBid_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/bidList/delete/{id}", 0)
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
-                .andDo(print());
-        // THEN
-        verify(bidListBusiness, Mockito.times(0)).deleteBid(any(Integer.class));
     }
 }

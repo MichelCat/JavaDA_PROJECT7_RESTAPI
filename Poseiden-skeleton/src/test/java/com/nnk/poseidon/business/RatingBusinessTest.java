@@ -96,6 +96,7 @@ public class RatingBusinessTest {
     @Test
     public void createRating_nullRatingParameter_returnNullPointer() {
         // GIVEN
+        when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.createRating(null));
         // THEN
@@ -128,6 +129,7 @@ public class RatingBusinessTest {
     @Test
     public void getRatingById_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(null));
         // THEN
@@ -161,6 +163,7 @@ public class RatingBusinessTest {
     @Test
     public void updateRating_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(null, ratingSource));
         // THEN
@@ -170,6 +173,7 @@ public class RatingBusinessTest {
     @Test
     public void updateRating_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(ratingRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(0, ratingSource));
         // THEN
@@ -192,7 +196,7 @@ public class RatingBusinessTest {
     @Test
     public void deleteRating_deleteNormal() {
         // GIVEN
-        when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
+        when(ratingRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ratingRepository).deleteById(any(Integer.class));
         // WHEN
         ratingBusiness.deleteRating(1);
@@ -203,7 +207,7 @@ public class RatingBusinessTest {
     @Test
     public void deleteRating_ratingNotExist_returnNotFound() {
         // GIVEN
-        when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(ratingRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(2));
         // THEN
@@ -213,6 +217,7 @@ public class RatingBusinessTest {
     @Test
     public void deleteRating_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ratingRepository.existsById(null)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(null));
         // THEN
@@ -222,6 +227,7 @@ public class RatingBusinessTest {
     @Test
     public void deleteRating_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(ratingRepository.existsById(0)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(0));
         // THEN

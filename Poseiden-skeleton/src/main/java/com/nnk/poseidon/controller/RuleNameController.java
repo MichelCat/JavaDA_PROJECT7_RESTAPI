@@ -2,7 +2,6 @@ package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.business.RuleNameBusiness;
 import com.nnk.poseidon.model.Rule;
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class RuleNameController {
             // Save Rule
             Rule ruleSave = ruleNameBusiness.createRule(rule);
             log.info("HTTP GET, SUCCESSFUL ({}).", ruleSave);
-            redirectAttributes.addFlashAttribute("success", "Rule was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rule created successfully.");
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -129,12 +128,6 @@ public class RuleNameController {
                                 , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Rule and return Rule list
 
-        // Rule ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("rule.error.template", id));
-            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("rule.error.template", id));
-            return "ruleName/update";
-        }
         // Rule parameter is not valid
         if (result.hasErrors()) {
             log.debug("HTTP PATCH, Validation failed for Rule ({}).", rule);
@@ -144,7 +137,7 @@ public class RuleNameController {
             // Modify Rule
             Rule ruleSave = ruleNameBusiness.updateRule(id, rule);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", ruleSave);
-            redirectAttributes.addFlashAttribute("success", "Rule was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rule updated successfully.");
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -167,17 +160,11 @@ public class RuleNameController {
                                 , RedirectAttributes redirectAttributes) {
         // Find Rule by Id and delete the Rule, return to Rule list
 
-        // Rule ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("rule.error.template", id));
-            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("rule.error.template", id));
-            return "redirect:/ruleName/list";
-        }
         try {
             // Delete Rule
             ruleNameBusiness.deleteRule(id);
             log.info("HTTP DELETE, SUCCESSFUL (Rule ID : {}).", id);
-            redirectAttributes.addFlashAttribute("success", "Rule successfully deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "Rule deleted successfully.");
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

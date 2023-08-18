@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -130,7 +128,7 @@ public class RuleNameControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/ruleName/list"))
                 .andDo(print());
         // THEN
@@ -142,7 +140,7 @@ public class RuleNameControllerTest {
     public void validate_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/ruleName/validate")
+        mockMvc.perform(post("/ruleName/validate")
                         .with(csrf().asHeader())
                         .param("name", "")
                         .param("description", "")
@@ -155,15 +153,14 @@ public class RuleNameControllerTest {
                 .andExpect(model().errorCount(6))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/add"))
-                .andDo(print())
-                .andReturn();
+                .andExpect(model().attributeHasFieldErrorCode("rule","name","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","description","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","json","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","template","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","sqlStr","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","sqlPart","NotBlank"))
+                .andDo(print());
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Name is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Description is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Json is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Template is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("SqlStr is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("SqlPart is mandatory");
         verify(ruleNameBusiness, Mockito.times(0)).createRule(any(Rule.class));
     }
 
@@ -204,7 +201,7 @@ public class RuleNameControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/ruleName/list"))
                 .andDo(print());
         // THEN
@@ -216,38 +213,19 @@ public class RuleNameControllerTest {
     public void updateRule_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(patch("/ruleName/update/{id}", 1)
+        mockMvc.perform(patch("/ruleName/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(6))
                 .andExpect(view().name("ruleName/update"))
-                .andDo(print())
-                .andReturn();
-        // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Name is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Description is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Json is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Template is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("SqlStr is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("SqlPart is mandatory");
-        verify(ruleNameBusiness, Mockito.times(0)).updateRule(any(Integer.class), any(Rule.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void updateRule_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(patch("/ruleName/update/{id}", 0)
-                        .with(csrf().asHeader())
-                        .params(ruleSourceController)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("ruleName/update"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","name","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","description","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","json","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","template","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","sqlStr","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("rule","sqlPart","NotBlank"))
                 .andDo(print());
         // THEN
         verify(ruleNameBusiness, Mockito.times(0)).updateRule(any(Integer.class), any(Rule.class));
@@ -268,27 +246,10 @@ public class RuleNameControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/ruleName/list"))
                 .andDo(print());
         // THEN
         verify(ruleNameBusiness, Mockito.times(1)).deleteRule(any(Integer.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteRule_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/ruleName/delete/{id}", 0)
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/ruleName/list"))
-                .andDo(print());
-        // THEN
-        verify(ruleNameBusiness, Mockito.times(0)).deleteRule(any(Integer.class));
     }
 }

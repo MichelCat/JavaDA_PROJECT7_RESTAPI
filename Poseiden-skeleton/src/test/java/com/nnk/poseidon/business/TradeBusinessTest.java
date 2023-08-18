@@ -94,6 +94,7 @@ public class TradeBusinessTest {
     @Test
     public void createTrade_nullTradeParameter_returnNullPointer() {
         // GIVEN
+        when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> tradeBusiness.createTrade(null));
         // THEN
@@ -126,6 +127,7 @@ public class TradeBusinessTest {
     @Test
     public void getTradeById_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(null));
         // THEN
@@ -159,6 +161,7 @@ public class TradeBusinessTest {
     @Test
     public void updateTrade_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.updateTrade(null, tradeSource));
         // THEN
@@ -168,6 +171,7 @@ public class TradeBusinessTest {
     @Test
     public void updateTrade_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(tradeRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.updateTrade(0, tradeSource));
         // THEN
@@ -190,7 +194,7 @@ public class TradeBusinessTest {
     @Test
     public void deleteTrade_deleteNormal() {
         // GIVEN
-        when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.of(tradeSave));
+        when(tradeRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(tradeRepository).deleteById(any(Integer.class));
         // WHEN
         tradeBusiness.deleteTrade(1);
@@ -201,7 +205,7 @@ public class TradeBusinessTest {
     @Test
     public void deleteTrade_TradeNotExist_returnNotFound() {
         // GIVEN
-        when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(tradeRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(2));
         // THEN
@@ -211,6 +215,7 @@ public class TradeBusinessTest {
     @Test
     public void deleteTrade_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(tradeRepository.existsById(null)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(null));
         // THEN
@@ -220,6 +225,7 @@ public class TradeBusinessTest {
     @Test
     public void deleteTrade_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(tradeRepository.existsById(0)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(0));
         // THEN

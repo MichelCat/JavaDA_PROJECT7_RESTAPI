@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -130,7 +128,7 @@ public class CurvePointControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
@@ -142,7 +140,7 @@ public class CurvePointControllerTest {
     public void validate_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/curvePoint/validate")
+        mockMvc.perform(post("/curvePoint/validate")
                         .with(csrf().asHeader())
                         .param("curveId", "")
                         .param("term", "")
@@ -152,12 +150,11 @@ public class CurvePointControllerTest {
                 .andExpect(model().errorCount(3))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/add"))
-                .andDo(print())
-                .andReturn();
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","curveId","NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","term","NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","value","NotNull"))
+                .andDo(print());
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Value must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Curve Id must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Term must not be null");
         verify(curvePointBusiness, Mockito.times(0)).createCurvePoint(any(CurvePoint.class));
     }
 
@@ -198,7 +195,7 @@ public class CurvePointControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
@@ -210,35 +207,16 @@ public class CurvePointControllerTest {
     public void updateCurvePoint_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(3))
                 .andExpect(view().name("curvePoint/update"))
-                .andDo(print())
-                .andReturn();
-        // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Curve Id must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Term must not be null");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Value must not be null");
-        verify(curvePointBusiness, Mockito.times(0)).updateCurvePoint(any(Integer.class), any(CurvePoint.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void updateCurvePoint_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(patch("/curvePoint/update/{id}", 0)
-                        .with(csrf().asHeader())
-                        .params(curvePointSourceController)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","curveId","NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","term","NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint","value","NotNull"))
                 .andDo(print());
         // THEN
         verify(curvePointBusiness, Mockito.times(0)).updateCurvePoint(any(Integer.class), any(CurvePoint.class));
@@ -259,27 +237,10 @@ public class CurvePointControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
         verify(curvePointBusiness, Mockito.times(1)).deleteCurvePoint(any(Integer.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteCurvePoint_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/curvePoint/delete/{id}", 0)
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/curvePoint/list"))
-                .andDo(print());
-        // THEN
-        verify(curvePointBusiness, Mockito.times(0)).deleteCurvePoint(any(Integer.class));
     }
 }

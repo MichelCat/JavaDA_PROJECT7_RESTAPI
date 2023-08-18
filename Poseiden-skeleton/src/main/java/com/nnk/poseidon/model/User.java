@@ -70,9 +70,9 @@ public class User implements UserDetails {
     /**
      * User role
      */
-    @NotBlank(message = "Role is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
-    String role;
+    @NotNull(message = "Role must not be null")
+    @Enumerated(value = EnumType.STRING)
+    Role role;
 
     /**
      * User account expired
@@ -116,7 +116,7 @@ public class User implements UserDetails {
     // -----------------------------------------------------------------------------------------------
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
         return Collections.singleton(authority);
     }
 

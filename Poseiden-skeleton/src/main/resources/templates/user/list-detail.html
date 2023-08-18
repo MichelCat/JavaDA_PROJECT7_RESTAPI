@@ -1,0 +1,43 @@
+<!--
+/**
+ * list-detail
+ * @description User List
+ */
+-->
+
+<!-- User table -->
+<div class="container my-3">
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped table-sm table-hover table-bordered">
+                <!-- User title -->
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Full Name</th>
+                        <th>User Name</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <!-- User detail -->
+                <tbody>
+                    <tr th:each="user : ${registers}">
+                        <td style="width: 10%" th:text="${user.id}"></td>
+                        <td th:text="${user.fullname}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td style="width: 25%" th:text="${user.role}"></td>
+                        <td style="width: 15%" class="text-center">
+                            <a class="btn btn-info btn-sm mx-1"
+                               th:href="@{/user/update/{id}(id=${user.id})}">
+                                <spam class="bi bi-pencil" /></a>
+                            <a class="btn btn-danger btn-sm mx-1"
+                               th:href="@{/user/delete/{id}(id=${user.id})}">
+                                <spam class="bi bi-trash" /></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -96,6 +96,7 @@ public class BidListBusinessTest {
     @Test
     public void createBid_nullBidParameter_returnNullPointer() {
         // GIVEN
+        when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(null));
         // THEN
@@ -128,6 +129,7 @@ public class BidListBusinessTest {
     @Test
     public void getBidById_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(null));
         // THEN
@@ -161,6 +163,7 @@ public class BidListBusinessTest {
     @Test
     public void updateBid_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(null, bidSource));
         // THEN
@@ -170,6 +173,7 @@ public class BidListBusinessTest {
     @Test
     public void updateBid_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(bidRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(0, bidSource));
         // THEN
@@ -192,7 +196,7 @@ public class BidListBusinessTest {
     @Test
     public void deleteBid_deleteNormal() {
         // GIVEN
-        when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
+        when(bidRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(bidRepository).deleteById(any(Integer.class));
         // WHEN
         bidListBusiness.deleteBid(1);
@@ -203,7 +207,7 @@ public class BidListBusinessTest {
     @Test
     public void deleteBid_bidNotExist_returnNotFound() {
         // GIVEN
-        when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(bidRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(2));
         // THEN
@@ -213,6 +217,7 @@ public class BidListBusinessTest {
     @Test
     public void deleteBid_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(bidRepository.existsById(null)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(null));
         // THEN
@@ -222,6 +227,7 @@ public class BidListBusinessTest {
     @Test
     public void deleteBid_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(bidRepository.existsById(0)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(0));
         // THEN

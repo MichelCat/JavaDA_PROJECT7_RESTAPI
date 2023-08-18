@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -130,7 +128,7 @@ public class TradeControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
@@ -142,7 +140,7 @@ public class TradeControllerTest {
     public void validate_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(post("/trade/validate")
+        mockMvc.perform(post("/trade/validate")
                         .with(csrf().asHeader())
                         .param("Account", "")
                         .param("Type", "")
@@ -152,12 +150,11 @@ public class TradeControllerTest {
                 .andExpect(model().errorCount(3))
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/add"))
-                .andDo(print())
-                .andReturn();
+                .andExpect(model().attributeHasFieldErrorCode("trade","account","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("trade","type","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("trade","buyQuantity","NotNull"))
+                .andDo(print());
         // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Buy quantity must not be null");
         verify(tradeBusiness, Mockito.times(0)).createTrade(any(Trade.class));
     }
 
@@ -198,7 +195,7 @@ public class TradeControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
@@ -210,35 +207,16 @@ public class TradeControllerTest {
     public void updateTrade_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
-        MvcResult mvcResult = mockMvc.perform(patch("/trade/update/{id}", 1)
+        mockMvc.perform(patch("/trade/update/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(3))
                 .andExpect(view().name("trade/update"))
-                .andDo(print())
-                .andReturn();
-        // THEN
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Account is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Type is mandatory");
-        assertThat(mvcResult.getResponse().getContentAsString()).contains("Buy quantity must not be null");
-        verify(tradeBusiness, Mockito.times(0)).updateTrade(any(Integer.class), any(Trade.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void updateTrade_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(patch("/trade/update/{id}", 0)
-                        .with(csrf().asHeader())
-                        .params(tradeSourceController)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("trade/update"))
+                .andExpect(model().attributeHasFieldErrorCode("trade","account","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("trade","type","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("trade","buyQuantity","NotNull"))
                 .andDo(print());
         // THEN
         verify(tradeBusiness, Mockito.times(0)).updateTrade(any(Integer.class), any(Trade.class));
@@ -259,27 +237,10 @@ public class TradeControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
         verify(tradeBusiness, Mockito.times(1)).deleteTrade(any(Integer.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void deleteTrade_idZero() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/trade/delete/{id}", 0)
-                        .with(csrf().asHeader())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/trade/list"))
-                .andDo(print());
-        // THEN
-        verify(tradeBusiness, Mockito.times(0)).deleteTrade(any(Integer.class));
     }
 }

@@ -214,6 +214,13 @@
 			<version>5.2.3</version>
 		</dependency>
 
+		<!-- An annotation processor for generating type-safe bean mappers -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.5.5.Final</version>
+		</dependency>
+
 
 		<!--
 		<!- Hibernate Validator Engine Relocation Artifact ->

@@ -3,6 +3,7 @@ package com.nnk.poseidon.business;
 import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.data.UserData;
+import com.nnk.poseidon.mapper.UserRegisterMapper;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.repository.UserRepository;
@@ -16,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -46,19 +46,22 @@ public class LoginBusinessTest {
     @MockBean
     private EmailBusiness emailBusiness;
     @MockBean
-    private PasswordEncoder passwordEncoder;
+    private UserRegisterMapper userRegisterMapper;
 
-    private User userSource;
     private User userSave;
+    private User loginSource;
     private Register registerSource;
     private String userEmail;
 
 
     @BeforeEach
     public void setUpBefore() {
-        userSource = UserData.getUserSource();
         userSave = UserData.getUserSave();
+
+        loginSource = UserData.getLoginSource();
+
         registerSource = UserData.getRegisterSource();
+
         userEmail = userSave.getUsername();
     }
 
@@ -135,9 +138,9 @@ public class LoginBusinessTest {
     @Test
     public void addUser_normal() throws Exception {
         // GIVEN
-        when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(userEmail)).thenReturn(false);
+        when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
         when(userRepository.save(any(User.class))).thenReturn(userSave);
-        when(passwordEncoder.encode(any(String.class))).thenReturn(userSave.getPassword());
         doNothing().when(emailBusiness).sendEmail(any(String.class), any(String.class), any(String.class), any(String.class));
         // WHEN
         loginBusiness.addUser(registerSource);
@@ -149,7 +152,7 @@ public class LoginBusinessTest {
     @Test
     public void addUser_userExist_returnBadRequestException() {
         // GIVEN
-        when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
+        when(userRepository.existsByUsername(userEmail)).thenReturn(true);
         // WHEN
         Throwable exception = assertThrows(MyExceptionBadRequestException.class,
                 () -> {loginBusiness.addUser(registerSource);});
@@ -161,9 +164,9 @@ public class LoginBusinessTest {
     @Test
     public void addUser_sendErrorMailSendException_returnBadRequestException() throws Exception {
         // GIVEN
-        when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(userEmail)).thenReturn(false);
+        when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
         when(userRepository.save(any(User.class))).thenReturn(userSave);
-        when(passwordEncoder.encode(any(String.class))).thenReturn(userSave.getPassword());
         doThrow(new MailSendException("Test message"))
             .when(emailBusiness).sendEmail(any(String.class), any(String.class)
                 , any(String.class), any(String.class));

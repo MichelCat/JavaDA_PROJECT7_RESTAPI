@@ -129,8 +129,7 @@ public class RatingBusiness {
     public void deleteRating(final Integer id)
             throws MyExceptionNotFoundException {
         // Rating does not exist
-        Optional<Rating> optRatingEntity = ratingRepository.findById(id);
-        if (optRatingEntity.isPresent() == false) {
+        if (ratingRepository.existsById(id) == false) {
             log.debug("THROW, Rating not exist ({}).", id);
             throw new MyExceptionNotFoundException("throw.rating.unknown", id);
         }

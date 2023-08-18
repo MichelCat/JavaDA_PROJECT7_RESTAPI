@@ -1,6 +1,5 @@
 package com.nnk.poseidon.controller;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.business.CurvePointBusiness;
 import com.nnk.poseidon.model.CurvePoint;
 import jakarta.validation.Valid;
@@ -78,7 +77,7 @@ public class CurvePointController {
             // Save CurvePoint
             CurvePoint curvePointSave = curvePointBusiness.createCurvePoint(curvePoint);
             log.info("HTTP GET, SUCCESSFUL ({}).", curvePointSave);
-            redirectAttributes.addFlashAttribute("success", "CurvePoint was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint created successfully.");
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -129,12 +128,6 @@ public class CurvePointController {
                             , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Curve and return Curve list
 
-        // CurvePoint ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("curvePoint.error.template", id));
-            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("curvePoint.error.template", id));
-            return "curvePoint/update";
-        }
         // CurvePoint parameter is not valid
         if (result.hasErrors()) {
             log.debug("HTTP PATCH, Validation failed for CurvePoint ({}).", curvePoint);
@@ -144,7 +137,7 @@ public class CurvePointController {
             // Modify CurvePoint
             CurvePoint curvePointSave = curvePointBusiness.updateCurvePoint(id, curvePoint);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", curvePointSave);
-            redirectAttributes.addFlashAttribute("success", "CurvePoint was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint updated successfully.");
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -167,17 +160,11 @@ public class CurvePointController {
                             , RedirectAttributes redirectAttributes) {
         // Find Curve by Id and delete the Curve, return to Curve list
 
-        // CurvePoint ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("curvePoint.error.template", id));
-            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("curvePoint.error.template", id));
-            return "redirect:/curvePoint/list";
-        }
         try {
             // Delete CurvePoint
             curvePointBusiness.deleteCurvePoint(id);
             log.info("HTTP DELETE, SUCCESSFUL (CurvePoint ID : {}).", id);
-            redirectAttributes.addFlashAttribute("success", "CurvePoint successfully deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint deleted successfully.");
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

@@ -2,6 +2,7 @@ package com.nnk.poseidon.model;
 
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -234,54 +236,21 @@ public class UserTest {
     // role attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void role_normal_thenNoConstraintViolation() {
+    public void role_whenURoleUser_thenRoleUser() {
         // GIVEN
         // WHEN
-        user.setRole("Role Test");
+        user.setRole(Role.USER);
         // THEN
-        String[][] errorList = {};
-        testConstraintViolation.checking(user, errorList);
-        assertThat(user.getRole()).isEqualTo("Role Test");
+        assertThat(user.getRole()).isEqualTo(Role.USER);
     }
 
     @Test
-    public void role_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        user.setRole(" ");
-        // THEN
-        String[][] errorList = {{"role", "Role is mandatory"}};
-        testConstraintViolation.checking(user, errorList);
-    }
-
-    @Test
-    public void role_empty_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        user.setRole("");
-        // THEN
-        String[][] errorList = {{"role", "Role is mandatory"}};
-        testConstraintViolation.checking(user, errorList);
-    }
-
-    @Test
-    public void role_null_thenOneConstraintViolation() {
+    public void role_whenNull_thenNull() {
         // GIVEN
         // WHEN
         user.setRole(null);
         // THEN
-        String[][] errorList = {{"role", "Role is mandatory"}};
-        testConstraintViolation.checking(user, errorList);
-    }
-
-    @Test
-    public void role_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        user.setRole(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"role", "Maximum length of 125 characters"}};
-        testConstraintViolation.checking(user, errorList);
+        assertThat(user.getRole()).isNull();
     }
 
     // -----------------------------------------------------------------------------------------------

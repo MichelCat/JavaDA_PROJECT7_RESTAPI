@@ -131,8 +131,7 @@ public class BidListBusiness {
     public void deleteBid(final Integer id)
                             throws MyExceptionNotFoundException {
         // Bid does not exist
-        Optional<Bid> optBidEntity = bidRepository.findById(id);
-        if (optBidEntity.isPresent() == false) {
+        if (bidRepository.existsById(id) == false) {
             log.debug("THROW, Bid not exist ({}).", id);
             throw new MyExceptionNotFoundException("throw.bid.unknown", id);
         }

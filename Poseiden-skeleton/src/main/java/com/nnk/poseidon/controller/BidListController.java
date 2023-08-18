@@ -1,6 +1,5 @@
 package com.nnk.poseidon.controller;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.business.BidListBusiness;
 import com.nnk.poseidon.model.Bid;
 import jakarta.validation.Valid;
@@ -79,7 +78,7 @@ public class BidListController {
             // Save bid
             Bid bidSave = bidListBusiness.createBid(bid);
             log.info("HTTP GET, SUCCESSFUL ({}).", bidSave);
-            redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Bid created successfully.");
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -130,12 +129,6 @@ public class BidListController {
                             , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Bid and return list Bid
 
-        // Bid ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("bid.error.template", id));
-            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("bid.error.template", id));
-            return "bidList/update";
-        }
         // Bid parameter is not valid
         if (result.hasErrors()) {
             log.debug("HTTP PATCH, Validation failed for bid ({}).", bid);
@@ -145,7 +138,7 @@ public class BidListController {
             // Modify bid
             Bid bidSave = bidListBusiness.updateBid(id, bid);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", bidSave);
-            redirectAttributes.addFlashAttribute("success", "Bid was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Bid updated successfully.");
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -168,17 +161,11 @@ public class BidListController {
                             , RedirectAttributes redirectAttributes) {
         // Find Bid by Id and delete the bid, return to Bid list
 
-        // Bid ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("bid.error.template", id));
-            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("bid.error.template", id));
-            return "redirect:/bidList/list";
-        }
         try {
             // Delete bid
             bidListBusiness.deleteBid(id);
             log.info("HTTP DELETE, SUCCESSFUL (Bid ID : {}).", id);
-            redirectAttributes.addFlashAttribute("success", "Bid successfully deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "Bid deleted successfully.");
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

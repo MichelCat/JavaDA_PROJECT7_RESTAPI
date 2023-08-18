@@ -2,7 +2,6 @@ package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.business.TradeBusiness;
 import com.nnk.poseidon.model.Trade;
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class TradeController {
             // Save Trade
             Trade tradeSave = tradeBusiness.createTrade(trade);
             log.info("HTTP GET, SUCCESSFUL ({}).", tradeSave);
-            redirectAttributes.addFlashAttribute("success", "Trade was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Trade created successfully.");
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -129,12 +128,6 @@ public class TradeController {
                             , RedirectAttributes redirectAttributes) {
         // Check required fields, if valid call service to update Trade and return Trade list
 
-        // Trade ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("trade.error.template", id));
-            model.addAttribute("errorMessage", MessagePropertieFormat.getMessage("trade.error.template", id));
-            return "trade/update";
-        }
         // Trade parameter is not valid
         if (result.hasErrors()) {
             log.debug("HTTP PATCH, Validation failed for Trade ({}).", trade);
@@ -144,7 +137,7 @@ public class TradeController {
             // Modify Trade
             Trade tradeSave = tradeBusiness.updateTrade(id, trade);
             log.info("HTTP PATCH, SUCCESSFUL ({}).", tradeSave);
-            redirectAttributes.addFlashAttribute("success", "Trade was created successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Trade updated successfully.");
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -167,17 +160,11 @@ public class TradeController {
                                 , RedirectAttributes redirectAttributes) {
         // Find Trade by Id and delete the Trade, return to Trade list
 
-        // Trade ID parameter is null or zero
-        if (id == null || id == 0) {
-            log.debug(MessagePropertieFormat.getMessage("trade.error.template", id));
-            redirectAttributes.addFlashAttribute("errorMessage", MessagePropertieFormat.getMessage("trade.error.template", id));
-            return "redirect:/trade/list";
-        }
         try {
             // Delete Trade
             tradeBusiness.deleteTrade(id);
             log.info("HTTP DELETE, SUCCESSFUL (Trade ID : {}).", id);
-            redirectAttributes.addFlashAttribute("success", "Trade successfully deleted.");
+            redirectAttributes.addFlashAttribute("successMessage", "Trade deleted successfully.");
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

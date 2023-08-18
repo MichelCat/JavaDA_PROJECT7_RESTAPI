@@ -116,7 +116,7 @@ public class LoginControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("user", new Register()))
+                .andExpect(model().attribute("register", new Register()))
                 .andDo(print());
         // THEN
     }
@@ -172,7 +172,7 @@ public class LoginControllerIT {
     public void postLogin_userExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                 .user("username", "user@gmail.com")
-                .password("password", "test")
+                .password("password", "12345678+aA")
                 .acceptMediaType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/home"))
@@ -186,7 +186,7 @@ public class LoginControllerIT {
     public void postLogin_adminExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                         .user("username", "admin@gmail.com")
-                        .password("password", "test")
+                        .password("password", "12345678+aA")
                         .acceptMediaType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/home"))
@@ -199,7 +199,7 @@ public class LoginControllerIT {
     public void postLogin_userNotExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                 .user("username", "user@gmail.com")
-                .password("password", "test")
+                .password("password", "12345678+aA")
                 .acceptMediaType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/app/login?error=true"))

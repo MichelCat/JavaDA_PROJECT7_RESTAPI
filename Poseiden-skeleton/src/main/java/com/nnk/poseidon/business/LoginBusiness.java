@@ -3,6 +3,7 @@ package com.nnk.poseidon.business;
 import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
+import com.nnk.poseidon.mapper.UserRegisterMapper;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.Role;
 import com.nnk.poseidon.repository.UserRepository;
@@ -15,7 +16,6 @@ import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +30,14 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class LoginBusiness implements UserDetailsService
-//    implements UserDetailsService
 {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     @Autowired
     private EmailBusiness emailBusiness;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserRegisterMapper userRegisterMapper;
 
 
     @Override
@@ -89,32 +88,29 @@ public class LoginBusiness implements UserDetailsService
      */
     @Transactional(rollbackFor = Exception.class)
     public void addUser(Register register) throws MyExceptionBadRequestException {
-        Optional<User> optUser = userRepository.findByUsername(register.getEmail());
-        if (optUser.isEmpty() == false) {
-            log.debug(MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", register.getEmail()));
-            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", register.getEmail());
+        // User does not exist
+        if (userRepository.existsByUsername(register.getUsername())) {
+            log.debug(MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", register.getUsername()));
+            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", register.getUsername());
         }
 
         //Add user
-        User newUserEntity = User.builder()
-                .username(register.getEmail())
-                .password(passwordEncoder.encode(register.getPassword()))
-                .fullname(register.getFullname())
-                .role(Role.USER.name())
-                .build();
+        User newUserEntity = userRegisterMapper.addUserFrom(register);
+        newUserEntity.setRole(Role.USER);
+//        newUserEntity.setCreationDate(MyDateUtils.getcurrentTime())
         newUserEntity.createAuthorization();
         newUserEntity.createValidationEmail();
         newUserEntity = userRepository.save(newUserEntity);
 
         // Send activation email contact
         String subject = "Activation Email";
-        String message = "You can activate your account using the link : "
+        String message = "You have 24 hours to activate your account using the link : "
                 + "http://localhost:8080/app/register/" + newUserEntity.getEmailValidationKey();
         try {
-            emailBusiness.sendEmail("contact@gmail.com", register.getEmail(), subject, message);
+            emailBusiness.sendEmail("contact@gmail.com", register.getUsername(), subject, message);
         } catch (MailException e) {
-            log.debug(MessagePropertieFormat.getMessage("throw.ErrorSendEmail", register.getEmail()));
-            throw new MyExceptionBadRequestException("throw.ErrorSendEmail", register.getEmail());
+            log.debug(MessagePropertieFormat.getMessage("throw.ErrorSendEmail", register.getUsername()));
+            throw new MyExceptionBadRequestException("throw.ErrorSendEmail", register.getUsername());
         }
     }
 }

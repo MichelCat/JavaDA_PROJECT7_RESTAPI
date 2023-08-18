@@ -131,8 +131,7 @@ public class RuleNameBusiness {
     public void deleteRule(final Integer id)
             throws MyExceptionNotFoundException {
         // Rule does not exist
-        Optional<Rule> optRuleEntity = ruleRepository.findById(id);
-        if (optRuleEntity.isPresent() == false) {
+        if (ruleRepository.existsById(id) == false) {
             log.debug("THROW, Rule not exist ({}).", id);
             throw new MyExceptionNotFoundException("throw.rule.unknown", id);
         }

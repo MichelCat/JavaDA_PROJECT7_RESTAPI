@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -126,7 +125,7 @@ public class LoginControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().errorCount(0))
-                .andExpect(model().attribute("user", new Register()))
+                .andExpect(model().attribute("register", new Register()))
                 .andDo(print());
         // THEN
     }
@@ -155,7 +154,7 @@ public class LoginControllerTest {
     @WithMockUser(roles = "USER")
     public void postRegister_userExist_return302() throws Exception {
         // GIVEN
-        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", registerSource.getEmail()))
+        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", registerSource.getUsername()))
                 .when(loginBusiness).addUser(registerSource);
         // WHEN
         mockMvc.perform(post("/app/register")

@@ -123,7 +123,7 @@ public class RatingControllerIT {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN
@@ -189,7 +189,7 @@ public class RatingControllerIT {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN
@@ -229,7 +229,7 @@ public class RatingControllerIT {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(flash().attributeExists("success"))
+                .andExpect(flash().attributeExists("successMessage"))
                 .andExpect(view().name("redirect:/rating/list"))
                 .andDo(print());
         // THEN

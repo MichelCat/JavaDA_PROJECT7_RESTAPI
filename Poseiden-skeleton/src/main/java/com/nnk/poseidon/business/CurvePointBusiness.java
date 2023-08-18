@@ -131,8 +131,7 @@ public class CurvePointBusiness {
     public void deleteCurvePoint(final Integer id)
                                     throws MyExceptionNotFoundException {
         // CurvePoint does not exist
-        Optional<CurvePoint> optCurvePointEntity = curvePointRepository.findById(id);
-        if (optCurvePointEntity.isPresent() == false) {
+        if (curvePointRepository.existsById(id) == false) {
             log.debug("THROW, CurvePoint not exist ({}).", id);
             throw new MyExceptionNotFoundException("throw.curvePoint.unknown", id);
         }

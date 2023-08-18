@@ -95,6 +95,7 @@ public class RuleNameBusinessTest {
     @Test
     public void createRule_nullRuleParameter_returnNullPointer() {
         // GIVEN
+        when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.createRule(null));
         // THEN
@@ -127,6 +128,7 @@ public class RuleNameBusinessTest {
     @Test
     public void getRuleById_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(null));
         // THEN
@@ -160,6 +162,7 @@ public class RuleNameBusinessTest {
     @Test
     public void updateRule_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(null, ruleSource));
         // THEN
@@ -169,6 +172,7 @@ public class RuleNameBusinessTest {
     @Test
     public void updateRule_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(ruleRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(0, ruleSource));
         // THEN
@@ -191,7 +195,7 @@ public class RuleNameBusinessTest {
     @Test
     public void deleteRule_deleteNormal() {
         // GIVEN
-        when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
+        when(ruleRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ruleRepository).deleteById(any(Integer.class));
         // WHEN
         ruleNameBusiness.deleteRule(1);
@@ -202,7 +206,7 @@ public class RuleNameBusinessTest {
     @Test
     public void deleteRule_RuleNotExist_returnNotFound() {
         // GIVEN
-        when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(ruleRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(2));
         // THEN
@@ -212,6 +216,7 @@ public class RuleNameBusinessTest {
     @Test
     public void deleteRule_nullIdParameter_returnNotFound() {
         // GIVEN
+        when(ruleRepository.existsById(null)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(null));
         // THEN
@@ -221,6 +226,7 @@ public class RuleNameBusinessTest {
     @Test
     public void deleteRule_zeroIdParameter_returnNotFound() {
         // GIVEN
+        when(ruleRepository.existsById(0)).thenReturn(false);
         // WHEN
         assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(0));
         // THEN
