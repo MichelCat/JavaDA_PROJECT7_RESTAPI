@@ -18,13 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class MultiValueMapMapperTest {
+class MultiValueMapMapperTest {
 
     // -----------------------------------------------------------------------------------------------
     // Convert method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void convert_ObjToMultiValueMap() {
+    void convert_ObjToMultiValueMap() {
         // GIVEN
         // Convert object to Map
         ObjectMapper objMapper = new ObjectMapper();
@@ -37,7 +37,7 @@ public class MultiValueMapMapperTest {
         // THEN
         //  Compare Map to MultiValueMap
         assertThat(objMultiValueMap).isNotNull();
-        assertThat(objMap.size()).isEqualTo(objMultiValueMap.size());
+        assertThat(objMap).hasSize(objMultiValueMap.size());
 
         for (Map.Entry<String, String> entry : objMap.entrySet()) {
             assertThat((Collection<String>) objMultiValueMap.get(entry.getKey()))

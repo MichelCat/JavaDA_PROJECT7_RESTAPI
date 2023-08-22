@@ -6,11 +6,15 @@ import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-public class TradeTest {
+class TradeTest {
 
     @Autowired
     private Validator validator;
@@ -45,21 +49,21 @@ public class TradeTest {
     // builder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void builder_TestBuildAndNew_thenEqual() {
+    void builder_TestBuildAndNew_thenEqual() {
         // GIVEN
         // WHEN
         Trade objBuild = Trade.builder()
                             .build();
         Trade objNew = new Trade();
         // THEN
-        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
+        assertThat(objBuild).isEqualTo(objNew);
     }
 
     // -----------------------------------------------------------------------------------------------
     // account attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void account_normal_thenNoConstraintViolation() {
+    void account_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setAccount("Account Test");
@@ -69,43 +73,27 @@ public class TradeTest {
         assertThat(trade.getAccount()).isEqualTo("Account Test");
     }
 
-    @Test
-    public void account_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setAccount(" ");
-        // THEN
-        String[][] errorList = {{"account", "Account is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
+    private static Stream<Arguments> listOfAccountToTest() {
+        String[][] errorSpace = {{"account", "{constraint.notBlank.trade.account}"}};
+        String[][] errorEmpty = {{"account", "{constraint.notBlank.trade.account}"}};
+        String[][] errorNull = {{"account", "{constraint.notBlank.trade.account}"}};
+        String[][] errorSizeTooBig = {{"account", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 31), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void account_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Account is {2} ({0}).")
+    @MethodSource("listOfAccountToTest")
+    void account_thenConstraintViolation(String account, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        trade.setAccount("");
+        trade.setAccount(account);
         // THEN
-        String[][] errorList = {{"account", "Account is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
-    }
-
-    @Test
-    public void account_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setAccount(null);
-        // THEN
-        String[][] errorList = {{"account", "Account is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
-    }
-
-    @Test
-    public void account_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setAccount(StringUtils.repeat('a', 31));
-        // THEN
-        String[][] errorList = {{"account", "Maximum length of 30 characters"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -113,7 +101,7 @@ public class TradeTest {
     // type attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void type_normal_thenNoConstraintViolation() {
+    void type_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setType("Type Test");
@@ -123,43 +111,27 @@ public class TradeTest {
         assertThat(trade.getType()).isEqualTo("Type Test");
     }
 
-    @Test
-    public void type_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setType(" ");
-        // THEN
-        String[][] errorList = {{"type", "Type is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
+    private static Stream<Arguments> listOfTypeToTest() {
+        String[][] errorSpace = {{"type", "{constraint.notBlank.trade.type}"}};
+        String[][] errorEmpty = {{"type", "{constraint.notBlank.trade.type}"}};
+        String[][] errorNull = {{"type", "{constraint.notBlank.trade.type}"}};
+        String[][] errorSizeTooBig = {{"type", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 31), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void type_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Type is {2} ({0}).")
+    @MethodSource("listOfTypeToTest")
+    void type_thenConstraintViolation(String type, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        trade.setType("");
+        trade.setType(type);
         // THEN
-        String[][] errorList = {{"type", "Type is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
-    }
-
-    @Test
-    public void type_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setType(null);
-        // THEN
-        String[][] errorList = {{"type", "Type is mandatory"}};
-        testConstraintViolation.checking(trade, errorList);
-    }
-
-    @Test
-    public void type_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        trade.setType(StringUtils.repeat('a', 31));
-        // THEN
-        String[][] errorList = {{"type", "Maximum length of 30 characters"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -167,7 +139,7 @@ public class TradeTest {
     // buyQuantity attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void buyQuantity_normal_thenNoConstraintViolations() {
+    void buyQuantity_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         trade.setBuyQuantity(10d);
@@ -178,12 +150,12 @@ public class TradeTest {
     }
 
     @Test
-    public void buyQuantity_null_thenOneConstraintViolation() {
+    void buyQuantity_null_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setBuyQuantity(null);
         // THEN
-        String[][] errorList = {{"buyQuantity", "Buy quantity must not be null"}};
+        String[][] errorList = {{"buyQuantity", "{constraint.notNull.trade.buyQuantity}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -191,7 +163,7 @@ public class TradeTest {
     // sellQuantity attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sellQuantity_normal_thenNoConstraintViolations() {
+    void sellQuantity_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         trade.setSellQuantity(11d);
@@ -205,7 +177,7 @@ public class TradeTest {
     // buyPrice attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void buyPrice_normal_thenNoConstraintViolations() {
+    void buyPrice_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         trade.setBuyPrice(12d);
@@ -219,7 +191,7 @@ public class TradeTest {
     // sellPrice attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sellPrice_normal_thenNoConstraintViolations() {
+    void sellPrice_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         trade.setSellPrice(13d);
@@ -233,7 +205,7 @@ public class TradeTest {
     // benchmark attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void benchmark_normal_thenNoConstraintViolation() {
+    void benchmark_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setBenchmark("Benchmark Test");
@@ -244,12 +216,12 @@ public class TradeTest {
     }
 
     @Test
-    public void benchmark_sizeTooBig_thenOneConstraintViolation() {
+    void benchmark_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setBenchmark(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"benchmark", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"benchmark", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -257,7 +229,7 @@ public class TradeTest {
     // tradeDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void tradeDate_normal() {
+    void tradeDate_normal() {
         // GIVEN
         // WHEN
         trade.setTradeDate(currentTimestamp);
@@ -271,7 +243,7 @@ public class TradeTest {
     // security attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void security_normal_thenNoConstraintViolation() {
+    void security_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSecurity("Security Test");
@@ -282,12 +254,12 @@ public class TradeTest {
     }
 
     @Test
-    public void security_sizeTooBig_thenOneConstraintViolation() {
+    void security_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSecurity(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"security", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"security", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -295,7 +267,7 @@ public class TradeTest {
     // status attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void status_normal_thenNoConstraintViolation() {
+    void status_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setStatus("Status");
@@ -306,12 +278,12 @@ public class TradeTest {
     }
 
     @Test
-    public void status_sizeTooBig_thenOneConstraintViolation() {
+    void status_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setStatus(StringUtils.repeat('a', 11));
         // THEN
-        String[][] errorList = {{"status", "Maximum length of 10 characters"}};
+        String[][] errorList = {{"status", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -319,7 +291,7 @@ public class TradeTest {
     // trader attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void trader_normal_thenNoConstraintViolation() {
+    void trader_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setTrader("Trader Test");
@@ -330,12 +302,12 @@ public class TradeTest {
     }
 
     @Test
-    public void trader_sizeTooBig_thenOneConstraintViolation() {
+    void trader_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setTrader(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"trader", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"trader", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -343,7 +315,7 @@ public class TradeTest {
     // book attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void book_normal_thenNoConstraintViolation() {
+    void book_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setBook("Book Test");
@@ -354,12 +326,12 @@ public class TradeTest {
     }
 
     @Test
-    public void book_sizeTooBig_thenOneConstraintViolation() {
+    void book_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setBook(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"book", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"book", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -367,7 +339,7 @@ public class TradeTest {
     // creationName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void creationName_normal_thenNoConstraintViolation() {
+    void creationName_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setCreationName("CreationName Test");
@@ -378,12 +350,12 @@ public class TradeTest {
     }
 
     @Test
-    public void creationName_sizeTooBig_thenOneConstraintViolation() {
+    void creationName_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setCreationName(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"creationName", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"creationName", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -391,7 +363,7 @@ public class TradeTest {
     // creationDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void creationDate_normal() {
+    void creationDate_normal() {
         // GIVEN
         // WHEN
         trade.setCreationDate(currentTimestamp);
@@ -405,7 +377,7 @@ public class TradeTest {
     // revisionName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void revisionName_normal_thenNoConstraintViolation() {
+    void revisionName_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setRevisionName("RevisionName Test");
@@ -416,12 +388,12 @@ public class TradeTest {
     }
 
     @Test
-    public void revisionName_sizeTooBig_thenOneConstraintViolation() {
+    void revisionName_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setRevisionName(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"revisionName", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"revisionName", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -429,7 +401,7 @@ public class TradeTest {
     // revisionDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void revisionDate_normal() {
+    void revisionDate_normal() {
         // GIVEN
         // WHEN
         trade.setRevisionDate(currentTimestamp);
@@ -443,7 +415,7 @@ public class TradeTest {
     // dealName attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void dealName_normal_thenNoConstraintViolation() {
+    void dealName_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setDealName("DealName Test");
@@ -454,12 +426,12 @@ public class TradeTest {
     }
 
     @Test
-    public void dealName_sizeTooBig_thenOneConstraintViolation() {
+    void dealName_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setDealName(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"dealName", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"dealName", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -467,7 +439,7 @@ public class TradeTest {
     // dealType attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void dealType_normal_thenNoConstraintViolation() {
+    void dealType_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setDealType("DealType Test");
@@ -478,12 +450,12 @@ public class TradeTest {
     }
 
     @Test
-    public void dealType_sizeTooBig_thenOneConstraintViolation() {
+    void dealType_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setDealType(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"dealType", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"dealType", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -491,7 +463,7 @@ public class TradeTest {
     // sourceListId attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sourceListId_normal_thenNoConstraintViolation() {
+    void sourceListId_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSourceListId("SourceListId Test");
@@ -502,12 +474,12 @@ public class TradeTest {
     }
 
     @Test
-    public void sourceListId_sizeTooBig_thenOneConstraintViolation() {
+    void sourceListId_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSourceListId(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"sourceListId", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"sourceListId", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 
@@ -515,7 +487,7 @@ public class TradeTest {
     // side attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void side_normal_thenNoConstraintViolation() {
+    void side_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSide("Side Test");
@@ -526,12 +498,12 @@ public class TradeTest {
     }
 
     @Test
-    public void side_sizeTooBig_thenOneConstraintViolation() {
+    void side_sizeTooBig_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         trade.setSide(StringUtils.repeat('a', 126));
         // THEN
-        String[][] errorList = {{"side", "Maximum length of 125 characters"}};
+        String[][] errorList = {{"side", "{constraint.size.global}"}};
         testConstraintViolation.checking(trade, errorList);
     }
 }

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class LocalConfigurationIT {
+class LocalConfigurationIT {
 
     @Autowired
     private LocalConfiguration localConfiguration;
@@ -23,12 +23,12 @@ public class LocalConfigurationIT {
     // messageSource method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void messageSource_normal_returnMessageSource() {
+    void messageSource_normal_returnMessageSource() {
         // GIVEN
         Locale locale = Locale.ENGLISH;
         // WHEN
         String result = localConfiguration.messageSource()
-                .getMessage("curvePoint.label.titleList", null, locale);
+                .getMessage("label.curvePoint.titleList", null, locale);
 
         // THEN
         assertThat(result).isEqualTo("Curve Point List");

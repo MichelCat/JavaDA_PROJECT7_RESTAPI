@@ -16,9 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class PasswordEncodeTest {
+class PasswordEncodeTest {
     @Test
-    public void testPassword() {
+    void testPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String pw = encoder.encode("123456");
         System.out.println("[ "+ pw + " ]");

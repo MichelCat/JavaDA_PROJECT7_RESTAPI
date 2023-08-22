@@ -29,14 +29,14 @@ import static org.assertj.core.api.Assertions.withPrecision;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class BidDaoIT {
+class BidDaoIT {
 
 	@Autowired
 	private BidRepository bidRepository;
 
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
-	public void bidListTest() {
+	void bidListTest() {
 		Bid oldBid;
 		Bid bid = BidData.getBidSource();
 
@@ -53,15 +53,15 @@ public class BidDaoIT {
 		bid.setBidQuantity(20d);
 		oldBid = bid;
 		bid = bidRepository.save(bid);
-		assertThat(bid).isNotNull();
-		assertThat(bid).usingRecursiveComparison().isEqualTo(oldBid);
+		assertThat(bid).isNotNull()
+							.isEqualTo(oldBid);
 		assertThat(bid.getBidQuantity()).isEqualTo(20d, withPrecision(0.001d));
 
 		// Find
 		List<Bid> listResult = bidRepository.findAll();
-		assertThat(listResult).isNotNull();
-		assertThat(listResult).hasSize(1);
-		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(bid);
+		assertThat(listResult).isNotNull()
+								.hasSize(1)
+								.contains(bid);
 
 		// Delete
 		Integer id = bid.getBidListId();

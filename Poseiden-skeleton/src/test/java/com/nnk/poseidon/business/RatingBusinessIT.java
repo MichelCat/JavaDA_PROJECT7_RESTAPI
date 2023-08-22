@@ -31,19 +31,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class RatingBusinessIT {
+class RatingBusinessIT {
 
     @Autowired
     private RatingBusiness ratingBusiness;
 
     private Rating ratingSource;
     private Rating ratingSave;
+    private Integer ratingId;
 
 
     @BeforeEach
     public void setUpBefore() {
         ratingSource = RatingData.getRatingSource();
         ratingSave = RatingData.getRatingSave();
+
+        ratingId = ratingSave.getId();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -52,23 +55,23 @@ public class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void getRatingsList_findAllNormal() {
+    void getRatingsList_findAllNormal() {
         // GIVEN
         // WHEN
         List<Rating> result = ratingBusiness.getRatingsList();
         // THEN
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(ratingSave);
+        assertThat(result).hasSize(1)
+                            .contains(ratingSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getRatingsList_findAllEmpty() {
+    void getRatingsList_findAllEmpty() {
         // GIVEN
         // WHEN
         List<Rating> result = ratingBusiness.getRatingsList();
         // THEN
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -76,7 +79,7 @@ public class RatingBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void createRating_ratingNotExist() {
+    void createRating_ratingNotExist() {
         // GIVEN
         // WHEN
         Rating result = ratingBusiness.createRating(ratingSource);
@@ -89,7 +92,7 @@ public class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void createRating_ratingExist() {
+    void createRating_ratingExist() {
         // GIVEN
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.createRating(ratingSave));
@@ -102,19 +105,19 @@ public class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void getRatingById_ratingExist() {
+    void getRatingById_ratingExist() {
         // GIVEN
         // WHEN
-        assertThat(ratingBusiness.getRatingById(ratingSave.getId())).isEqualTo(ratingSave);
+        assertThat(ratingBusiness.getRatingById(ratingId)).isEqualTo(ratingSave);
         // THEN
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getRatingById_ratingNotExist() {
+    void getRatingById_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingId));
         // THEN
     }
 
@@ -124,10 +127,10 @@ public class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void updateRating_ratingExist() {
+    void updateRating_ratingExist() {
         // GIVEN
         // WHEN
-        Rating result = ratingBusiness.updateRating(ratingSave.getId(), ratingSave);
+        Rating result = ratingBusiness.updateRating(ratingId, ratingSave);
         // THEN
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("asOfDate")
@@ -136,10 +139,10 @@ public class RatingBusinessIT {
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateRating_ratingNotExist() {
+    void updateRating_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(ratingSave.getId(), ratingSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(ratingId, ratingSave));
         // THEN
     }
 
@@ -149,20 +152,20 @@ public class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void deleteRating_ratingExist() {
+    void deleteRating_ratingExist() {
         // GIVEN
         // WHEN
-        ratingBusiness.deleteRating(ratingSave.getId());
+        ratingBusiness.deleteRating(ratingId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingId));
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteRating_ratingNotExist() {
+    void deleteRating_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(ratingSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(ratingId));
         // THEN
     }
 }

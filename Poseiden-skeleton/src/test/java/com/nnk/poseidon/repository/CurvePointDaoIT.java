@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class CurvePointDaoIT {
+class CurvePointDaoIT {
 
 	@Autowired
 	private CurvePointRepository curvePointRepository;
 
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
-	public void curvePointTest() {
+	void curvePointTest() {
 		CurvePoint oldCurvePoint;
 		CurvePoint curvePoint = CurvePointData.getCurvePointSource();
 
@@ -49,14 +49,14 @@ public class CurvePointDaoIT {
 		curvePoint.setCurveId(20);
 		oldCurvePoint = curvePoint;
 		curvePoint = curvePointRepository.save(curvePoint);
-		assertThat(curvePoint).isNotNull();
-		assertThat(curvePoint).usingRecursiveComparison().isEqualTo(oldCurvePoint);
+		assertThat(curvePoint).isNotNull()
+								.isEqualTo(oldCurvePoint);
 
 		// Find
 		List<CurvePoint> listResult = curvePointRepository.findAll();
-		assertThat(listResult).isNotNull();
-		assertThat(listResult).hasSize(1);
-		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(curvePoint);
+		assertThat(listResult).isNotNull()
+								.hasSize(1)
+								.contains(curvePoint);
 
 		// Delete
 		Integer id = curvePoint.getId();

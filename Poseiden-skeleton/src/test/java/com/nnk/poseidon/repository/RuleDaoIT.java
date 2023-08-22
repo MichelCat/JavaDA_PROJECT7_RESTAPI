@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class RuleDaoIT {
+class RuleDaoIT {
 
 	@Autowired
 	private RuleRepository ruleRepository;
 
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
-	public void ruleTest() {
+	void ruleTest() {
 		Rule oldRule;
 		Rule rule = RuleData.getRuleSource();
 
@@ -49,14 +49,14 @@ public class RuleDaoIT {
 		rule.setName("Rule Name Update");
 		oldRule = rule;
 		rule = ruleRepository.save(rule);
-		assertThat(rule).isNotNull();
-		assertThat(rule).usingRecursiveComparison().isEqualTo(oldRule);
+		assertThat(rule).isNotNull()
+							.isEqualTo(oldRule);
 
 		// Find
 		List<Rule> listResult = ruleRepository.findAll();
-		assertThat(listResult).isNotNull();
-		assertThat(listResult).hasSize(1);
-		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(rule);
+		assertThat(listResult).isNotNull()
+								.hasSize(1)
+								.contains(rule);
 
 		// Delete
 		Integer id = rule.getId();

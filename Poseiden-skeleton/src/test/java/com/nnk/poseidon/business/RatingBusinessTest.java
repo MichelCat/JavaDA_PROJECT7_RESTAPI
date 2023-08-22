@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class RatingBusinessTest {
+class RatingBusinessTest {
 
     @Autowired
     private RatingBusiness ratingBusiness;
@@ -60,7 +60,7 @@ public class RatingBusinessTest {
     // getRatingsList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getRatingsList_findAllNormal() {
+    void getRatingsList_findAllNormal() {
         // GIVEN
         when(ratingRepository.findAll()).thenReturn(ratingsList);
         // WHEN
@@ -70,7 +70,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void getRatingsList_findAllEmpty() {
+    void getRatingsList_findAllEmpty() {
         // GIVEN
         when(ratingRepository.findAll()).thenReturn(new ArrayList<>());
         // WHEN
@@ -83,7 +83,7 @@ public class RatingBusinessTest {
     // createRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void createRating_saveNormal() {
+    void createRating_saveNormal() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(ratingRepository.save(ratingSource)).thenReturn(ratingSave);
@@ -94,7 +94,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void createRating_nullRatingParameter_returnNullPointer() {
+    void createRating_nullRatingParameter_returnNullPointer() {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -104,7 +104,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void createRating_ratingExist_returnBadRequest() {
+    void createRating_ratingExist_returnBadRequest() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
@@ -117,7 +117,7 @@ public class RatingBusinessTest {
     // getRatingById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getRatingById_findByIdNormal() {
+    void getRatingById_findByIdNormal() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
@@ -127,7 +127,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void getRatingById_nullIdParameter_returnNotFound() {
+    void getRatingById_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -140,7 +140,7 @@ public class RatingBusinessTest {
     // updateRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void updateRating_updateNormal() {
+    void updateRating_updateNormal() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         when(ratingRepository.save(ratingSave)).thenReturn(ratingSave);
@@ -151,7 +151,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void updateRating_ratingNotExist_returnNotFound() {
+    void updateRating_ratingNotExist_returnNotFound() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
@@ -161,7 +161,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void updateRating_nullIdParameter_returnNotFound() {
+    void updateRating_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -171,7 +171,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void updateRating_zeroIdParameter_returnNotFound() {
+    void updateRating_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
@@ -181,7 +181,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void updateRating_nullRatingParameter_returnNotFound() {
+    void updateRating_nullRatingParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
@@ -194,7 +194,7 @@ public class RatingBusinessTest {
     // deleteRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void deleteRating_deleteNormal() {
+    void deleteRating_deleteNormal() {
         // GIVEN
         when(ratingRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ratingRepository).deleteById(any(Integer.class));
@@ -205,7 +205,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void deleteRating_ratingNotExist_returnNotFound() {
+    void deleteRating_ratingNotExist_returnNotFound() {
         // GIVEN
         when(ratingRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
@@ -215,7 +215,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void deleteRating_nullIdParameter_returnNotFound() {
+    void deleteRating_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.existsById(null)).thenReturn(false);
         // WHEN
@@ -225,7 +225,7 @@ public class RatingBusinessTest {
     }
 
     @Test
-    public void deleteRating_zeroIdParameter_returnNotFound() {
+    void deleteRating_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(ratingRepository.existsById(0)).thenReturn(false);
         // WHEN

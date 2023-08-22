@@ -28,27 +28,27 @@ public class Rule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @NotBlank(message = "Name is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.name}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String name;
 
-    @NotBlank(message = "Description is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.description}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String description;
 
-    @NotBlank(message = "Json is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.json}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String json;
 
-    @NotBlank(message = "Template is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.template}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String template;
 
-    @NotBlank(message = "SqlStr is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.sqlStr}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String sqlStr;
 
-    @NotBlank(message = "SqlPart is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rule.sqlPart}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String sqlPart;
 }

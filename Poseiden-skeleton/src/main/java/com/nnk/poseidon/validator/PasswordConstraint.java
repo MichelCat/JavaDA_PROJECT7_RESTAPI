@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordConstraint {
-    String message() default "The password must contain (at least one capital letter, at least 8 characters, at least one number and one symbol)";
+    String message() default "{constraint.passwordConstraint.global}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

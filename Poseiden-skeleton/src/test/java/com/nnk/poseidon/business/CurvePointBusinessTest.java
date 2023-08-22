@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class CurvePointBusinessTest {
+class CurvePointBusinessTest {
 
     @Autowired
     private CurvePointBusiness curvePointBusiness;
@@ -59,7 +59,7 @@ public class CurvePointBusinessTest {
     // getCurvePointsList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getCurvePointsList_findAllNormal() {
+    void getCurvePointsList_findAllNormal() {
         // GIVEN
         when(curvePointRepository.findAll()).thenReturn(curvePointList);
         // WHEN
@@ -69,7 +69,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void getCurvePointsList_findAllEmpty() {
+    void getCurvePointsList_findAllEmpty() {
         // GIVEN
         when(curvePointRepository.findAll()).thenReturn(new ArrayList<>());
         // WHEN
@@ -82,7 +82,7 @@ public class CurvePointBusinessTest {
     // createCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void createCurvePoint_saveNormal() {
+    void createCurvePoint_saveNormal() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(curvePointRepository.save(curvePointSource)).thenReturn(curvePointSave);
@@ -93,7 +93,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void createCurvePoint_nullCurvePointParameter_returnNullPointer() {
+    void createCurvePoint_nullCurvePointParameter_returnNullPointer() {
         // GIVEN
         when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -103,7 +103,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void createCurvePoint_CurvePointExist_returnBadRequest() {
+    void createCurvePoint_CurvePointExist_returnBadRequest() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.of(curvePointSave));
         // WHEN
@@ -116,7 +116,7 @@ public class CurvePointBusinessTest {
     // getCurvePointById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getCurvePointById_findByIdNormal() {
+    void getCurvePointById_findByIdNormal() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.of(curvePointSave));
         // WHEN
@@ -126,7 +126,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void getCurvePointById_nullIdParameter_returnNotFound() {
+    void getCurvePointById_nullIdParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -139,7 +139,7 @@ public class CurvePointBusinessTest {
     // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void updateCurvePoint_updateNormal() {
+    void updateCurvePoint_updateNormal() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.of(curvePointSave));
         when(curvePointRepository.save(curvePointSave)).thenReturn(curvePointSave);
@@ -150,7 +150,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void updateCurvePoint_CurvePointNotExist_returnNotFound() {
+    void updateCurvePoint_CurvePointNotExist_returnNotFound() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
@@ -160,7 +160,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void updateCurvePoint_nullIdParameter_returnNotFound() {
+    void updateCurvePoint_nullIdParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -170,7 +170,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void updateCurvePoint_zeroIdParameter_returnNotFound() {
+    void updateCurvePoint_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
@@ -180,7 +180,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void updateCurvePoint_nullCurvePointParameter_returnNotFound() {
+    void updateCurvePoint_nullCurvePointParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.findById(any(Integer.class))).thenReturn(Optional.of(curvePointSave));
         // WHEN
@@ -193,7 +193,7 @@ public class CurvePointBusinessTest {
     // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void deleteCurvePoint_deleteNormal() {
+    void deleteCurvePoint_deleteNormal() {
         // GIVEN
         when(curvePointRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(curvePointRepository).deleteById(any(Integer.class));
@@ -204,7 +204,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void deleteCurvePoint_CurvePointNotExist_returnNotFound() {
+    void deleteCurvePoint_CurvePointNotExist_returnNotFound() {
         // GIVEN
         when(curvePointRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
@@ -214,7 +214,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void deleteCurvePoint_nullIdParameter_returnNotFound() {
+    void deleteCurvePoint_nullIdParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.existsById(null)).thenReturn(false);
         // WHEN
@@ -224,7 +224,7 @@ public class CurvePointBusinessTest {
     }
 
     @Test
-    public void deleteCurvePoint_zeroIdParameter_returnNotFound() {
+    void deleteCurvePoint_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(curvePointRepository.existsById(0)).thenReturn(false);
         // WHEN

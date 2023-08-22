@@ -46,9 +46,9 @@ public class User implements UserDetails {
     /**
      * Email used to authenticate the user
      */
-    @NotBlank(message = "Username is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
-    @Email(message = "Email should be valid")
+    @NotBlank(message = "{constraint.notBlank.user.username}")
+    @Size(max = 125, message = "{constraint.size.global}")
+    @Email(message = "{constraint.email.user.username}")
     @Column(unique=true)
     String username;
 
@@ -56,53 +56,53 @@ public class User implements UserDetails {
      * Password used to authenticate the user
      */
     @ToString.Exclude
-    @NotBlank(message = "Password is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.user.password}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String password;
 
     /**
      * Full name
      */
-    @NotBlank(message = "FullName is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.user.fullname}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String fullname;
 
     /**
      * User role
      */
-    @NotNull(message = "Role must not be null")
+    @NotNull(message = "{constraint.notNull.user.role}")
     @Enumerated(value = EnumType.STRING)
     Role role;
 
     /**
      * User account expired
      */
-    @NotNull(message = "User account expired must not be null")
+    @NotNull(message = "{constraint.notNull.user.expired}")
     Boolean expired;
 
     /**
      * User locked
      */
-    @NotNull(message = "User locked must not be null")
+    @NotNull(message = "{constraint.notNull.user.locked}")
     Boolean locked;
 
     /**
      * User credentials (password) expired
      */
-    @NotNull(message = "User credentials expired must not be null")
+    @NotNull(message = "{constraint.notNull.user.credentialsExpired}")
     Boolean credentialsExpired;
 
     /**
      * Activated user
      */
-    @NotNull(message = "Activated user must not be null")
+    @NotNull(message = "{constraint.notNull.user.enabled}")
     Boolean enabled;
 
     /**
      * Email validation key for user
      */
     @Column(unique=true)
-    @Size(max = 36, message = "Maximum length of {max} characters")
+    @Size(max = 36, message = "{constraint.size.global}")
     String emailValidationKey;
 
     /**

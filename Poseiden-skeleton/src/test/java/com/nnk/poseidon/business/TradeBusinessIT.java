@@ -31,19 +31,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class TradeBusinessIT {
+class TradeBusinessIT {
 
     @Autowired
     private TradeBusiness tradeBusiness;
 
     private Trade tradeSource;
     private Trade tradeSave;
+    private Integer tradeId;
 
 
     @BeforeEach
     public void setUpBefore() {
         tradeSource = TradeData.getTradeSource();
         tradeSave = TradeData.getTradeSave();
+
+        tradeId = tradeSave.getTradeId();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -52,23 +55,23 @@ public class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void getTradesList_findAllNormal() {
+    void getTradesList_findAllNormal() {
         // GIVEN
         // WHEN
         List<Trade> result = tradeBusiness.getTradesList();
         // THEN
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(tradeSave);
+        assertThat(result).hasSize(1)
+                            .contains(tradeSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getTradesList_findAllEmpty() {
+    void getTradesList_findAllEmpty() {
         // GIVEN
         // WHEN
         List<Trade> result = tradeBusiness.getTradesList();
         // THEN
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -76,7 +79,7 @@ public class TradeBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void createTrade_tradeNotExist() {
+    void createTrade_tradeNotExist() {
         // GIVEN
         // WHEN
         Trade result = tradeBusiness.createTrade(tradeSource);
@@ -89,7 +92,7 @@ public class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void createTrade_tradeExist() {
+    void createTrade_tradeExist() {
         // GIVEN
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> tradeBusiness.createTrade(tradeSave));
@@ -102,19 +105,19 @@ public class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void getTradeById_tradeExist() {
+    void getTradeById_tradeExist() {
         // GIVEN
         // WHEN
-        assertThat(tradeBusiness.getTradeById(tradeSave.getTradeId())).isEqualTo(tradeSave);
+        assertThat(tradeBusiness.getTradeById(tradeId)).isEqualTo(tradeSave);
         // THEN
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getTradeById_tradeNotExist() {
+    void getTradeById_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeSave.getTradeId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeId));
         // THEN
     }
 
@@ -124,10 +127,10 @@ public class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void updateTrade_tradeExist() {
+    void updateTrade_tradeExist() {
         // GIVEN
         // WHEN
-        Trade result = tradeBusiness.updateTrade(tradeSave.getTradeId(), tradeSave);
+        Trade result = tradeBusiness.updateTrade(tradeId, tradeSave);
         // THEN
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("revisionDate")
@@ -136,10 +139,10 @@ public class TradeBusinessIT {
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateTrade_tradeNotExist() {
+    void updateTrade_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.updateTrade(tradeSave.getTradeId(), tradeSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.updateTrade(tradeId, tradeSave));
         // THEN
     }
 
@@ -149,20 +152,20 @@ public class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void deleteTrade_tradeExist() {
+    void deleteTrade_tradeExist() {
         // GIVEN
         // WHEN
-        tradeBusiness.deleteTrade(tradeSave.getTradeId());
+        tradeBusiness.deleteTrade(tradeId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeSave.getTradeId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeId));
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteTrade_tradeNotExist() {
+    void deleteTrade_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(tradeSave.getTradeId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(tradeId));
         // THEN
     }
 }

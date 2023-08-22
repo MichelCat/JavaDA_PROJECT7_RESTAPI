@@ -31,19 +31,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class CurvePointBusinessIT {
+class CurvePointBusinessIT {
 
     @Autowired
     private CurvePointBusiness curvePointBusiness;
 
     private CurvePoint curvePointSource;
     private CurvePoint curvePointSave;
+    private Integer curvePointId;
 
 
     @BeforeEach
     public void setUpBefore() {
         curvePointSource = CurvePointData.getCurvePointSource();
         curvePointSave = CurvePointData.getCurvePointSave();
+
+        curvePointId = curvePointSave.getId();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -52,23 +55,23 @@ public class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void getCurvePointsList_findAllNormal() {
+    void getCurvePointsList_findAllNormal() {
         // GIVEN
         // WHEN
         List<CurvePoint> result = curvePointBusiness.getCurvePointsList();
         // THEN
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(curvePointSave);
+        assertThat(result).hasSize(1)
+                            .contains(curvePointSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getCurvePointsList_findAllEmpty() {
+    void getCurvePointsList_findAllEmpty() {
         // GIVEN
         // WHEN
         List<CurvePoint> result = curvePointBusiness.getCurvePointsList();
         // THEN
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -76,7 +79,7 @@ public class CurvePointBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void createCurvePoint_curvePointNotExist() {
+    void createCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
         CurvePoint result = curvePointBusiness.createCurvePoint(curvePointSource);
@@ -89,7 +92,7 @@ public class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void createCurvePoint_curvePointExist() {
+    void createCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> curvePointBusiness.createCurvePoint(curvePointSave));
@@ -102,19 +105,19 @@ public class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void getCurvePointById_curvePointExist() {
+    void getCurvePointById_curvePointExist() {
         // GIVEN
         // WHEN
-        assertThat(curvePointBusiness.getCurvePointById(curvePointSave.getId())).isEqualTo(curvePointSave);
+        assertThat(curvePointBusiness.getCurvePointById(curvePointId)).isEqualTo(curvePointSave);
         // THEN
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getCurvePointById_curvePointNotExist() {
+    void getCurvePointById_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
         // THEN
     }
 
@@ -124,10 +127,10 @@ public class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void updateCurvePoint_curvePointExist() {
+    void updateCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        CurvePoint result = curvePointBusiness.updateCurvePoint(curvePointSave.getId(), curvePointSave);
+        CurvePoint result = curvePointBusiness.updateCurvePoint(curvePointId, curvePointSave);
         // THEN
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("asOfDate")
@@ -136,10 +139,10 @@ public class CurvePointBusinessIT {
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateCurvePoint_curvePointNotExist() {
+    void updateCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.updateCurvePoint(curvePointSave.getId(), curvePointSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.updateCurvePoint(curvePointId, curvePointSave));
         // THEN
     }
 
@@ -149,20 +152,20 @@ public class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    public void deleteCurvePoint_curvePointExist() {
+    void deleteCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        curvePointBusiness.deleteCurvePoint(curvePointSave.getId());
+        curvePointBusiness.deleteCurvePoint(curvePointId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteCurvePoint_curvePointNotExist() {
+    void deleteCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(curvePointSave.getId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(curvePointId));
         // THEN
     }
 }

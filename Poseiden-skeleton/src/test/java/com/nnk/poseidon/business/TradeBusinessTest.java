@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class TradeBusinessTest {
+class TradeBusinessTest {
 
     @Autowired
     private TradeBusiness tradeBusiness;
@@ -58,7 +58,7 @@ public class TradeBusinessTest {
     // getTradesList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getTradesList_findAllNormal() {
+    void getTradesList_findAllNormal() {
         // GIVEN
         when(tradeRepository.findAll()).thenReturn(tradeList);
         // WHEN
@@ -68,7 +68,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void getTradesList_findAllEmpty() {
+    void getTradesList_findAllEmpty() {
         // GIVEN
         when(tradeRepository.findAll()).thenReturn(new ArrayList<>());
         // WHEN
@@ -81,7 +81,7 @@ public class TradeBusinessTest {
     // createTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void createTrade_saveNormal() {
+    void createTrade_saveNormal() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(tradeRepository.save(tradeSource)).thenReturn(tradeSave);
@@ -92,7 +92,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void createTrade_nullTradeParameter_returnNullPointer() {
+    void createTrade_nullTradeParameter_returnNullPointer() {
         // GIVEN
         when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -102,7 +102,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void createTrade_TradeExist_returnBadRequest() {
+    void createTrade_TradeExist_returnBadRequest() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.of(tradeSave));
         // WHEN
@@ -115,7 +115,7 @@ public class TradeBusinessTest {
     // getTradeById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getTradeById_findByIdNormal() {
+    void getTradeById_findByIdNormal() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.of(tradeSave));
         // WHEN
@@ -125,7 +125,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void getTradeById_nullIdParameter_returnNotFound() {
+    void getTradeById_nullIdParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -138,7 +138,7 @@ public class TradeBusinessTest {
     // updateTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void updateTrade_updateNormal() {
+    void updateTrade_updateNormal() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.of(tradeSave));
         when(tradeRepository.save(tradeSave)).thenReturn(tradeSave);
@@ -149,7 +149,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void updateTrade_TradeNotExist_returnNotFound() {
+    void updateTrade_TradeNotExist_returnNotFound() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
@@ -159,7 +159,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void updateTrade_nullIdParameter_returnNotFound() {
+    void updateTrade_nullIdParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -169,7 +169,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void updateTrade_zeroIdParameter_returnNotFound() {
+    void updateTrade_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
@@ -179,7 +179,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void updateTrade_nullTradeParameter_returnNotFound() {
+    void updateTrade_nullTradeParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.findById(any(Integer.class))).thenReturn(Optional.of(tradeSave));
         // WHEN
@@ -192,7 +192,7 @@ public class TradeBusinessTest {
     // deleteTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void deleteTrade_deleteNormal() {
+    void deleteTrade_deleteNormal() {
         // GIVEN
         when(tradeRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(tradeRepository).deleteById(any(Integer.class));
@@ -203,7 +203,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void deleteTrade_TradeNotExist_returnNotFound() {
+    void deleteTrade_TradeNotExist_returnNotFound() {
         // GIVEN
         when(tradeRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
@@ -213,7 +213,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void deleteTrade_nullIdParameter_returnNotFound() {
+    void deleteTrade_nullIdParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.existsById(null)).thenReturn(false);
         // WHEN
@@ -223,7 +223,7 @@ public class TradeBusinessTest {
     }
 
     @Test
-    public void deleteTrade_zeroIdParameter_returnNotFound() {
+    void deleteTrade_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(tradeRepository.existsById(0)).thenReturn(false);
         // WHEN

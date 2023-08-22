@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class TradeDaoIT {
+class TradeDaoIT {
 
 	@Autowired
 	private TradeRepository tradeRepository;
 
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
-	public void tradeTest() {
+	void tradeTest() {
 		Trade oldTrade;
 		Trade trade = TradeData.getTradeSource();
 
@@ -49,14 +49,14 @@ public class TradeDaoIT {
 		trade.setAccount("Trade Account Update");
 		oldTrade = trade;
 		trade = tradeRepository.save(trade);
-		assertThat(trade).isNotNull();
-		assertThat(trade).usingRecursiveComparison().isEqualTo(oldTrade);
+		assertThat(trade).isNotNull()
+							.isEqualTo(oldTrade);
 
 		// Find
 		List<Trade> listResult = tradeRepository.findAll();
-		assertThat(listResult).isNotNull();
-		assertThat(listResult).hasSize(1);
-		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(trade);
+		assertThat(listResult).isNotNull()
+								.hasSize(1)
+								.contains(trade);
 
 		// Delete
 		Integer id = trade.getTradeId();

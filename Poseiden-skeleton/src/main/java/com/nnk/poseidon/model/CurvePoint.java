@@ -29,15 +29,15 @@ public class CurvePoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @NotNull(message = "Curve Id must not be null")
+    @NotNull(message = "{constraint.notNull.curvePoint.curveId}")
     Integer curveId;
 
     Timestamp asOfDate;
 
-    @NotNull(message = "Term must not be null")
+    @NotNull(message = "{constraint.notNull.curvePoint.term}")
     Double term;
 
-    @NotNull(message = "Value must not be null")
+    @NotNull(message = "{constraint.notNull.curvePoint.value}")
     Double value;
 
     Timestamp creationDate;

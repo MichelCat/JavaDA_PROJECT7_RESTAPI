@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class RatingDaoIT {
+class RatingDaoIT {
 
 	@Autowired
 	private RatingRepository ratingRepository;
 
 	@Test
 	@Sql(scripts = GlobalData.scriptClearDataBase)
-	public void ratingTest() {
+	void ratingTest() {
 		Rating oldRating;
 		Rating rating = RatingData.getRatingSource();
 
@@ -49,14 +49,14 @@ public class RatingDaoIT {
 		rating.setOrderNumber(20);
 		oldRating = rating;
 		rating = ratingRepository.save(rating);
-		assertThat(rating).isNotNull();
-		assertThat(rating).usingRecursiveComparison().isEqualTo(oldRating);
+		assertThat(rating).isNotNull()
+							.isEqualTo(oldRating);
 
 		// Find
 		List<Rating> listResult = ratingRepository.findAll();
-		assertThat(listResult).isNotNull();
-		assertThat(listResult).hasSize(1);
-		assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(rating);
+		assertThat(listResult).isNotNull()
+								.hasSize(1)
+								.contains(rating);
 
 		// Delete
 		Integer id = rating.getId();

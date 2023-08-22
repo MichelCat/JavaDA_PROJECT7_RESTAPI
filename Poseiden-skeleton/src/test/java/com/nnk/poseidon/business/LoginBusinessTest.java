@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class LoginBusinessTest {
+class LoginBusinessTest {
 
     @Autowired
     private LoginBusiness loginBusiness;
@@ -69,7 +69,7 @@ public class LoginBusinessTest {
     // loadUserByUsername method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void loadUserByUsername_userNotExist_returnNotFound() {
+    void loadUserByUsername_userNotExist_returnNotFound() {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
         // WHEN
@@ -81,7 +81,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void loadUserByUsername_enabledFalse_returnNotFound() {
+    void loadUserByUsername_enabledFalse_returnNotFound() {
         // GIVEN
         userSave.setEnabled(false);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -94,7 +94,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void loadUserByUsername_expiredTrue_returnNotFound() {
+    void loadUserByUsername_expiredTrue_returnNotFound() {
         // GIVEN
         userSave.setExpired(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -107,7 +107,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void loadUserByUsername_lockedTrue_returnNotFound() {
+    void loadUserByUsername_lockedTrue_returnNotFound() {
         // GIVEN
         userSave.setLocked(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -120,7 +120,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void loadUserByUsername_credentialsExpiredTrue_returnNotFound() {
+    void loadUserByUsername_credentialsExpiredTrue_returnNotFound() {
         // GIVEN
         userSave.setCredentialsExpired(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -136,7 +136,7 @@ public class LoginBusinessTest {
     // addUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void addUser_normal() throws Exception {
+    void addUser_normal() throws Exception {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(false);
         when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
@@ -150,7 +150,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void addUser_userExist_returnBadRequestException() {
+    void addUser_userExist_returnBadRequestException() {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(true);
         // WHEN
@@ -162,7 +162,7 @@ public class LoginBusinessTest {
     }
 
     @Test
-    public void addUser_sendErrorMailSendException_returnBadRequestException() throws Exception {
+    void addUser_sendErrorMailSendException_returnBadRequestException() throws Exception {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(false);
         when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);

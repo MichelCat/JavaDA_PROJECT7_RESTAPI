@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class EmailBusinessTest {
+class EmailBusinessTest {
 
     @Autowired
     private EmailBusiness emailBusiness;
@@ -35,7 +35,7 @@ public class EmailBusinessTest {
     // sendEmail method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sendEmail_normal() {
+    void sendEmail_normal() {
         // GIVEN
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom("contact@gmail.com");

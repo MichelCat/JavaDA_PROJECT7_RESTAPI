@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = RuleNameController.class)
 @ActiveProfiles("test")
-public class RuleNameControllerTest {
+class RuleNameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getRules_return200() throws Exception {
+    void home_getRules_return200() throws Exception {
         // GIVEN
         when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
         // WHEN
@@ -98,7 +98,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addRuleForm_return200() throws Exception {
+    void addRuleForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/add")
@@ -116,7 +116,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_ruleNotExist_return302() throws Exception {
+    void validate_ruleNotExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.createRule(ruleSource)).thenReturn(ruleSave);
         when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
@@ -137,7 +137,7 @@ public class RuleNameControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_ruleNotValid() throws Exception {
+    void validate_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/ruleName/validate")
@@ -169,7 +169,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_ruleExist_return200() throws Exception {
+    void showUpdateForm_ruleExist_return200() throws Exception {
         // GIVEN
         when(ruleNameBusiness.getRuleById(1)).thenReturn(ruleSave);
         // WHEN
@@ -189,7 +189,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateRule_ruleExist_return302() throws Exception {
+    void updateRule_ruleExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.updateRule(1, ruleSave)).thenReturn(ruleSave);
         when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
@@ -210,7 +210,7 @@ public class RuleNameControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateRule_ruleNotValid() throws Exception {
+    void updateRule_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/ruleName/update/{id}", 1)
@@ -236,7 +236,7 @@ public class RuleNameControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteRule_ruleExist_return302() throws Exception {
+    void deleteRule_ruleExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
         doNothing().when(ruleNameBusiness).deleteRule(any(Integer.class));

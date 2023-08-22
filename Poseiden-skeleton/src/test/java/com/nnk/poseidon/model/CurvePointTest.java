@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-public class CurvePointTest {
+class CurvePointTest {
 
     @Autowired
     private Validator validator;
@@ -44,14 +44,14 @@ public class CurvePointTest {
     // builder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void builder_TestBuildAndNew_thenEqual() {
+    void builder_TestBuildAndNew_thenEqual() {
         // GIVEN
         // WHEN
         CurvePoint objBuild = CurvePoint.builder()
                                 .build();
         CurvePoint objNew = new CurvePoint();
         // THEN
-        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
+        assertThat(objBuild).isEqualTo(objNew);
     }
 
 
@@ -59,7 +59,7 @@ public class CurvePointTest {
     // curveId attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void curveId_normal_thenNoConstraintViolations() {
+    void curveId_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         curvePoint.setCurveId(10);
@@ -70,12 +70,12 @@ public class CurvePointTest {
     }
 
     @Test
-    public void curveId_null_thenOneConstraintViolation() {
+    void curveId_null_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         curvePoint.setCurveId(null);
         // THEN
-        String[][] errorList = {{"curveId", "Curve Id must not be null"}};
+        String[][] errorList = {{"curveId", "{constraint.notNull.curvePoint.curveId}"}};
         testConstraintViolation.checking(curvePoint, errorList);
     }
 
@@ -83,7 +83,7 @@ public class CurvePointTest {
     // asOfDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void asOfDate_normal() {
+    void asOfDate_normal() {
         // GIVEN
         // WHEN
         curvePoint.setAsOfDate(currentTimestamp);
@@ -97,7 +97,7 @@ public class CurvePointTest {
     // term attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void term_normal_thenNoConstraintViolations() {
+    void term_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         curvePoint.setTerm(10d);
@@ -108,12 +108,12 @@ public class CurvePointTest {
     }
 
     @Test
-    public void term_null_thenOneConstraintViolation() {
+    void term_null_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         curvePoint.setTerm(null);
         // THEN
-        String[][] errorList = {{"term", "Term must not be null"}};
+        String[][] errorList = {{"term", "{constraint.notNull.curvePoint.term}"}};
         testConstraintViolation.checking(curvePoint, errorList);
     }
 
@@ -121,7 +121,7 @@ public class CurvePointTest {
     // value attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void value_normal_thenNoConstraintViolations() {
+    void value_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         curvePoint.setValue(30d);
@@ -132,12 +132,12 @@ public class CurvePointTest {
     }
 
     @Test
-    public void value_null_thenOneConstraintViolation() {
+    void value_null_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         curvePoint.setValue(null);
         // THEN
-        String[][] errorList = {{"value", "Value must not be null"}};
+        String[][] errorList = {{"value", "{constraint.notNull.curvePoint.value}"}};
         testConstraintViolation.checking(curvePoint, errorList);
     }
 
@@ -145,7 +145,7 @@ public class CurvePointTest {
     // creationDate attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void creationDate_normal() {
+    void creationDate_normal() {
         // GIVEN
         // WHEN
         curvePoint.setCreationDate(currentTimestamp);

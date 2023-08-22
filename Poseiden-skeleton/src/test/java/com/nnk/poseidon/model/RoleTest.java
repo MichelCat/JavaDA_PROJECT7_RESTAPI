@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @version 1.0
  */
 @SpringBootTest
-public class RoleTest {
+class RoleTest {
 
     /**
      * Read USER ROLE

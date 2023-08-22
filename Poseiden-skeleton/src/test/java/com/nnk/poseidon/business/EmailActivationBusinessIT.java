@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class EmailActivationBusinessIT {
+class EmailActivationBusinessIT {
 
     @Autowired
     private EmailActivationBusiness emailActivationBusiness;
@@ -47,7 +47,7 @@ public class EmailActivationBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void activatedUser_normal_returnUser() throws MyException {
+    void activatedUser_normal_returnUser() throws MyException {
         // GIVEN
         // WHEN
         User result = emailActivationBusiness.activatedUser(keyValue);

@@ -1,6 +1,7 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.business.UserBusiness;
+import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.User;
 import jakarta.validation.Valid;
@@ -74,8 +75,7 @@ public class UserController {
         // Check null role
         if (register.getRole() == null) {
             result.addError(new FieldError("register", "role"
-                    , "Role must not be null"));
-            return "user/add";
+                            , MessagePropertieFormat.getMessage("constraint.notNull.user.role")));
         }
         // User parameter is not valid
         if (result.hasErrors()) {

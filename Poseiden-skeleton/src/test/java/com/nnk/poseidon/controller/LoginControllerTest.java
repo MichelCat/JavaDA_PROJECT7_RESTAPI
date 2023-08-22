@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = LoginController.class)
 @ActiveProfiles("test")
-public class LoginControllerTest {
+class LoginControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,7 +63,7 @@ public class LoginControllerTest {
                 .build();
 
         registerSource = UserData.getRegisterSource();
-        registerController = UserData.getRegisterController();
+        registerController = UserData.getRegisterSourceController();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ public class LoginControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_normal_return200() throws Exception {
+    void getLogin_normal_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login"))
@@ -85,7 +85,7 @@ public class LoginControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_error_return200() throws Exception {
+    void getLogin_error_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login?error=true"))
@@ -100,7 +100,7 @@ public class LoginControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_logout_return200() throws Exception {
+    void getLogin_logout_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login?logout=true"))
@@ -118,7 +118,7 @@ public class LoginControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void getRegister_normal_return200() throws Exception {
+    void getRegister_normal_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/register"))
@@ -134,7 +134,7 @@ public class LoginControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void postRegister_userNotExist_return302() throws Exception {
+    void postRegister_userNotExist_return302() throws Exception {
         // GIVEN
         doNothing().when(loginBusiness).addUser(any(Register.class));
         // WHEN
@@ -152,7 +152,7 @@ public class LoginControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void postRegister_userExist_return302() throws Exception {
+    void postRegister_userExist_return302() throws Exception {
         // GIVEN
         doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", registerSource.getUsername()))
                 .when(loginBusiness).addUser(registerSource);

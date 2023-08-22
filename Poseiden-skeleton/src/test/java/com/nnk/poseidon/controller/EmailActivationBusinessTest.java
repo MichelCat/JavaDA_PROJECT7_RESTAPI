@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = EmailActivationController.class)
 @ActiveProfiles("test")
-public class EmailActivationBusinessTest {
+class EmailActivationBusinessTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -66,11 +66,11 @@ public class EmailActivationBusinessTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void patchAccountActivation_userExist_return302() throws Exception {
+    void patchAccountActivation_userExist_return302() throws Exception {
         // GIVEN
         when(emailActivationBusiness.activatedUser(any(String.class))).thenReturn(userSave);
         // WHEN
-        mockMvc.perform(get("/app/register/{key")
+        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -83,12 +83,12 @@ public class EmailActivationBusinessTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void patchAccountActivation_userNoExist_return302() throws Exception {
+    void patchAccountActivation_userNoExist_return302() throws Exception {
         // GIVEN
         doThrow(new MyException("throw.CustomerNotExist", ""))
                 .when(emailActivationBusiness).activatedUser(any(String.class));
         // WHEN
-        mockMvc.perform(get("/app/register/{key")
+        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())

@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = TradeController.class)
 @ActiveProfiles("test")
-public class TradeControllerTest {
+class TradeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getTrades_return200() throws Exception {
+    void home_getTrades_return200() throws Exception {
         // GIVEN
         when(tradeBusiness.getTradesList()).thenReturn(tradeList);
         // WHEN
@@ -98,7 +98,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addTradeForm_return200() throws Exception {
+    void addTradeForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/add")
@@ -116,7 +116,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_tradeNotExist_return302() throws Exception {
+    void validate_tradeNotExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.createTrade(tradeSource)).thenReturn(tradeSave);
         when(tradeBusiness.getTradesList()).thenReturn(tradeList);
@@ -137,7 +137,7 @@ public class TradeControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_tradeNotValid() throws Exception {
+    void validate_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/trade/validate")
@@ -163,7 +163,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_tradeExist_return200() throws Exception {
+    void showUpdateForm_tradeExist_return200() throws Exception {
         // GIVEN
         when(tradeBusiness.getTradeById(1)).thenReturn(tradeSave);
         // WHEN
@@ -183,7 +183,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateTrade_tradeExist_return302() throws Exception {
+    void updateTrade_tradeExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.updateTrade(1, tradeSave)).thenReturn(tradeSave);
         when(tradeBusiness.getTradesList()).thenReturn(tradeList);
@@ -204,7 +204,7 @@ public class TradeControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateTrade_tradeNotValid() throws Exception {
+    void updateTrade_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/trade/update/{id}", 1)
@@ -227,7 +227,7 @@ public class TradeControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteTrade_tradeExist_return302() throws Exception {
+    void deleteTrade_tradeExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.getTradesList()).thenReturn(tradeList);
         doNothing().when(tradeBusiness).deleteTrade(any(Integer.class));

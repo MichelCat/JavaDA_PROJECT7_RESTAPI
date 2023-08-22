@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class TradeControllerIT {
+class TradeControllerIT {
 
     private MockMvc mockMvc;
 
@@ -72,7 +72,7 @@ public class TradeControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void home_getTrades_return200() throws Exception {
+    void home_getTrades_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/list")
@@ -93,7 +93,7 @@ public class TradeControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void addTradeForm_return200() throws Exception {
+    void addTradeForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/add")
@@ -113,7 +113,7 @@ public class TradeControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void validate_tradeNotExist_return302() throws Exception {
+    void validate_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/trade/validate")
@@ -133,7 +133,7 @@ public class TradeControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void validate_tradeExist_return302() throws Exception {
+    void validate_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/trade/validate")
@@ -156,7 +156,7 @@ public class TradeControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void showUpdateForm_tradeExist_return200() throws Exception {
+    void showUpdateForm_tradeExist_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/update/{id}", 1)
@@ -179,7 +179,7 @@ public class TradeControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void updateTrade_tradeExist_return302() throws Exception {
+    void updateTrade_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/trade/update/{id}", 1)
@@ -198,7 +198,7 @@ public class TradeControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateTrade_tradeNotExist_return302() throws Exception {
+    void updateTrade_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/trade/update/{id}", 1)
@@ -221,7 +221,7 @@ public class TradeControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    public void deleteTrade_tradeExist_return302() throws Exception {
+    void deleteTrade_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/delete/{id}", 1)
@@ -238,7 +238,7 @@ public class TradeControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteTrade_tradeNotExist_return302() throws Exception {
+    void deleteTrade_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/trade/delete/{id}", 1)

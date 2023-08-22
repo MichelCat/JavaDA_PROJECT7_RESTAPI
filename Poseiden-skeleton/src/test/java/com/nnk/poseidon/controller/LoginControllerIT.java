@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class LoginControllerIT {
+class LoginControllerIT {
 
     private MockMvc mockMvc;
 
@@ -54,7 +54,7 @@ public class LoginControllerIT {
                 .apply(springSecurity())
                 .build();
 
-        registerController = UserData.getRegisterController();
+        registerController = UserData.getRegisterSourceController();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ public class LoginControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_normal_return200() throws Exception {
+    void getLogin_normal_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login"))
@@ -76,7 +76,7 @@ public class LoginControllerIT {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_error_return200() throws Exception {
+    void getLogin_error_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login?error=true"))
@@ -91,7 +91,7 @@ public class LoginControllerIT {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void getLogin_logout_return200() throws Exception {
+    void getLogin_logout_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/login?logout=true"))
@@ -109,7 +109,7 @@ public class LoginControllerIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void getRegister_normal_return200() throws Exception {
+    void getRegister_normal_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/app/register"))
@@ -127,7 +127,7 @@ public class LoginControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void postRegister_userNotExist_return302() throws Exception {
+    void postRegister_userNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/app/register")
@@ -146,7 +146,7 @@ public class LoginControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void postRegister_userExist_return302() throws Exception {
+    void postRegister_userExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/app/register")
@@ -169,7 +169,7 @@ public class LoginControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void postLogin_userExist_return302() throws Exception {
+    void postLogin_userExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                 .user("username", "user@gmail.com")
                 .password("password", "12345678+aA")
@@ -183,7 +183,7 @@ public class LoginControllerIT {
     @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void postLogin_adminExist_return302() throws Exception {
+    void postLogin_adminExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                         .user("username", "admin@gmail.com")
                         .password("password", "12345678+aA")
@@ -196,7 +196,7 @@ public class LoginControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void postLogin_userNotExist_return302() throws Exception {
+    void postLogin_userNotExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")
                 .user("username", "user@gmail.com")
                 .password("password", "12345678+aA")

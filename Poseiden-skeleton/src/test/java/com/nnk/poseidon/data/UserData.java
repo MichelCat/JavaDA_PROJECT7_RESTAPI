@@ -65,7 +65,7 @@ public class UserData {
 
     public static User getAlexSave() {
         User user = getAlexSource();
-        user.setId(1);
+        user.setId(2);
         return user;
     }
 
@@ -108,8 +108,35 @@ public class UserData {
     // -----------------------------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------------------------
-    public static MultiValueMap<String, String> getRegisterController() {
+    public static Register getAlexRegisterSave() {
+        return Register.builder()
+                .id(2)
+                .username("alex@gmail.com")
+                .password(encryptedPassword)
+                .fullname("Alex")
+                .role(Role.USER)
+                .build();
+    }
+
+    public static Register getAdminegisterSave() {
+        return Register.builder()
+                .id(3)
+                .username("admin@gmail.com")
+                .password(encryptedPassword)
+                .fullname("Administrator")
+                .role(Role.ADMIN)
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------------------------
+    public static MultiValueMap<String, String> getRegisterSourceController() {
         return MultiValueMapMapper.convert(getRegisterSource());
+    }
+
+    public static MultiValueMap<String, String> getRegisterSaveController() {
+        return MultiValueMapMapper.convert(getRegisterSave());
     }
 
     // -----------------------------------------------------------------------------------------------

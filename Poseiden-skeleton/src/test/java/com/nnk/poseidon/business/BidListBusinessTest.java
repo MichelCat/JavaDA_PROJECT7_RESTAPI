@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class BidListBusinessTest {
+class BidListBusinessTest {
 
     @Autowired
     private BidListBusiness bidListBusiness;
@@ -60,7 +60,7 @@ public class BidListBusinessTest {
     // getBidsList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getBidsList_findAllNormal() {
+     void getBidsList_findAllNormal() {
         // GIVEN
         when(bidRepository.findAll()).thenReturn(bidsList);
         // WHEN
@@ -70,7 +70,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void getBidsList_findAllEmpty() {
+    void getBidsList_findAllEmpty() {
         // GIVEN
         when(bidRepository.findAll()).thenReturn(new ArrayList<>());
         // WHEN
@@ -83,7 +83,7 @@ public class BidListBusinessTest {
     // createBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void createBid_saveNormal() {
+    void createBid_saveNormal() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(bidRepository.save(bidSource)).thenReturn(bidSave);
@@ -94,7 +94,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void createBid_nullBidParameter_returnNullPointer() {
+    void createBid_nullBidParameter_returnNullPointer() {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -104,7 +104,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void createBid_bidExist_returnBadRequest() {
+    void createBid_bidExist_returnBadRequest() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
@@ -117,7 +117,7 @@ public class BidListBusinessTest {
     // getBidById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getBidById_findByIdNormal() {
+    void getBidById_findByIdNormal() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
@@ -127,7 +127,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void getBidById_nullIdParameter_returnNotFound() {
+    void getBidById_nullIdParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -140,7 +140,7 @@ public class BidListBusinessTest {
     // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void updateBid_updateNormal() {
+    void updateBid_updateNormal() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         when(bidRepository.save(bidSave)).thenReturn(bidSave);
@@ -151,7 +151,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void updateBid_bidNotExist_returnNotFound() {
+    void updateBid_bidNotExist_returnNotFound() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
@@ -161,7 +161,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void updateBid_nullIdParameter_returnNotFound() {
+    void updateBid_nullIdParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -171,7 +171,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void updateBid_zeroIdParameter_returnNotFound() {
+    void updateBid_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
@@ -181,7 +181,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void updateBid_nullBidParameter_returnNotFound() {
+    void updateBid_nullBidParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
@@ -194,7 +194,7 @@ public class BidListBusinessTest {
     // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void deleteBid_deleteNormal() {
+    void deleteBid_deleteNormal() {
         // GIVEN
         when(bidRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(bidRepository).deleteById(any(Integer.class));
@@ -205,7 +205,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void deleteBid_bidNotExist_returnNotFound() {
+    void deleteBid_bidNotExist_returnNotFound() {
         // GIVEN
         when(bidRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
@@ -215,7 +215,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void deleteBid_nullIdParameter_returnNotFound() {
+    void deleteBid_nullIdParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.existsById(null)).thenReturn(false);
         // WHEN
@@ -225,7 +225,7 @@ public class BidListBusinessTest {
     }
 
     @Test
-    public void deleteBid_zeroIdParameter_returnNotFound() {
+    void deleteBid_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(bidRepository.existsById(0)).thenReturn(false);
         // WHEN

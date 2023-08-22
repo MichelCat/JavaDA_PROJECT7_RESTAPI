@@ -2,6 +2,8 @@ package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
 import com.nnk.poseidon.data.GlobalData;
+import com.nnk.poseidon.data.UserData;
+import com.nnk.poseidon.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,12 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class EmailActivationBusinessIT {
+class EmailActivationBusinessIT {
 
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
+
+    private User userSave;
 
     @BeforeEach
     public void setUpBefore() {
@@ -45,6 +47,8 @@ public class EmailActivationBusinessIT {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+
+        userSave = UserData.getUserSave();
    }
 
     // -----------------------------------------------------------------------------------------------
@@ -53,10 +57,10 @@ public class EmailActivationBusinessIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void patchAccountActivation_userNotExist_return302() throws Exception {
+    void patchAccountActivation_userNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/app/register/{key")
+        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())

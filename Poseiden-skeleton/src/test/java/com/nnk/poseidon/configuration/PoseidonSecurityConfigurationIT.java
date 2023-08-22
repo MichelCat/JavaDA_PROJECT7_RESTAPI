@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class PoseidonSecurityConfigurationIT {
+class PoseidonSecurityConfigurationIT {
 
     @Autowired
     private PoseidonSecurityConfiguration poseidonSecurityConfiguration;
@@ -22,7 +22,7 @@ public class PoseidonSecurityConfigurationIT {
     // passwordEncoder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void passwordEncoder_password_returnEncryptedPassword() {
+    void passwordEncoder_password_returnEncryptedPassword() {
         // GIVEN
         PasswordEncoder encoder = poseidonSecurityConfiguration.passwordEncoder();
         // WHEN

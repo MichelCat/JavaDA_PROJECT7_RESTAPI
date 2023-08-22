@@ -15,6 +15,10 @@ import java.util.Map;
  */
 public class MultiValueMapMapper {
 
+    private MultiValueMapMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Mapper Mapper to MultiValueMapMapper
      *
@@ -22,7 +26,7 @@ public class MultiValueMapMapper {
      * @return MultiValueMapMapper result
      */
     public static MultiValueMap<String, String> convert(Object obj) {
-        MultiValueMap parameters = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         Map<String, String> maps = new ObjectMapper().convertValue(
                                                 obj
                                                 , new TypeReference<Map<String, String>>() {});

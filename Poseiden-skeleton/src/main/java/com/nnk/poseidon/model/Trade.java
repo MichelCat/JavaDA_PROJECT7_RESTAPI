@@ -31,15 +31,15 @@ public class Trade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer tradeId;
 
-    @NotBlank(message = "Account is mandatory")
-    @Size(max = 30, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.trade.account}")
+    @Size(max = 30, message = "{constraint.size.global}")
     String account;
 
-    @NotBlank(message = "Type is mandatory")
-    @Size(max = 30, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.trade.type}")
+    @Size(max = 30, message = "{constraint.size.global}")
     String type;
 
-    @NotNull(message = "Buy quantity must not be null")
+    @NotNull(message = "{constraint.notNull.trade.buyQuantity}")
     Double buyQuantity;
 
     Double sellQuantity;
@@ -48,42 +48,42 @@ public class Trade {
 
     Double sellPrice;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String benchmark;
 
     Timestamp tradeDate;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String security;
 
-    @Size(max = 10, message = "Maximum length of {max} characters")
+    @Size(max = 10, message = "{constraint.size.global}")
     String status;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String trader;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String book;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String creationName;
 
     Timestamp creationDate;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String revisionName;
 
     Timestamp revisionDate;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String dealName;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String dealType;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String sourceListId;
 
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @Size(max = 125, message = "{constraint.size.global}")
     String side;
 }

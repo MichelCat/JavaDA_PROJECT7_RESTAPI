@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = CurvePointController.class)
 @ActiveProfiles("test")
-public class CurvePointControllerTest {
+class CurvePointControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getCurvePoints_return200() throws Exception {
+    void home_getCurvePoints_return200() throws Exception {
         // GIVEN
         when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
@@ -98,7 +98,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addCurvePointForm_return200() throws Exception {
+    void addCurvePointForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/curvePoint/add")
@@ -116,7 +116,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_curvePointNotExist_return302() throws Exception {
+    void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.createCurvePoint(curvePointSource)).thenReturn(curvePointSave);
         when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
@@ -137,7 +137,7 @@ public class CurvePointControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_curvePointNotValid() throws Exception {
+    void validate_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/curvePoint/validate")
@@ -163,7 +163,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_curvePointExist_return200() throws Exception {
+    void showUpdateForm_curvePointExist_return200() throws Exception {
         // GIVEN
         when(curvePointBusiness.getCurvePointById(1)).thenReturn(curvePointSave);
         // WHEN
@@ -183,7 +183,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateCurvePoint_curvePointExist_return302() throws Exception {
+    void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.updateCurvePoint(1, curvePointSave)).thenReturn(curvePointSave);
         when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
@@ -204,7 +204,7 @@ public class CurvePointControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateCurvePoint_curvePointNotValid() throws Exception {
+    void updateCurvePoint_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/curvePoint/update/{id}", 1)
@@ -227,7 +227,7 @@ public class CurvePointControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteCurvePoint_curvePointExist_return302() throws Exception {
+    void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
         doNothing().when(curvePointBusiness).deleteCurvePoint(any(Integer.class));

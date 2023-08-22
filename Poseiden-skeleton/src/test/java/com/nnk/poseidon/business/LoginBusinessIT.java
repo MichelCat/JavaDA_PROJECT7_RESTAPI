@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class LoginBusinessIT {
+class LoginBusinessIT {
 
     @Autowired
     private LoginBusiness loginBusiness;
@@ -43,7 +43,7 @@ public class LoginBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    public void loadUserByUsername_userExist() {
+    void loadUserByUsername_userExist() {
         // GIVEN
         // WHEN
         AppUserPrincipal result = (AppUserPrincipal)loginBusiness.loadUserByUsername(userSave.getUsername());

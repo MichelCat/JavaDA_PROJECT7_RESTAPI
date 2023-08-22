@@ -29,6 +29,8 @@ public class LocalConfiguration implements WebMvcConfigurer {
     public ResourceBundleMessageSource messageSource() {
         // ReloadableResourceBundleMessageSource if our localized messages will be changed at runtime.
         // ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        // messageSource.setBasename("classpath:messages");
+        // messageSource.setDefaultEncoding("UTF-8");
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("lang/messages");

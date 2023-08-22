@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class RuleNameBusinessTest {
+class RuleNameBusinessTest {
 
     @Autowired
     private RuleNameBusiness ruleNameBusiness;
@@ -59,7 +59,7 @@ public class RuleNameBusinessTest {
     // getRulesList method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getRulesList_findAllNormal() {
+    void getRulesList_findAllNormal() {
         // GIVEN
         when(ruleRepository.findAll()).thenReturn(ruleList);
         // WHEN
@@ -69,7 +69,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void getRulesList_findAllEmpty() {
+    void getRulesList_findAllEmpty() {
         // GIVEN
         when(ruleRepository.findAll()).thenReturn(new ArrayList<>());
         // WHEN
@@ -82,7 +82,7 @@ public class RuleNameBusinessTest {
     // createRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void createRule_saveNormal() {
+    void createRule_saveNormal() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(ruleRepository.save(ruleSource)).thenReturn(ruleSave);
@@ -93,7 +93,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void createRule_nullRuleParameter_returnNullPointer() {
+    void createRule_nullRuleParameter_returnNullPointer() {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -103,7 +103,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void createRule_ruleExist_returnBadRequest() {
+    void createRule_ruleExist_returnBadRequest() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
@@ -116,7 +116,7 @@ public class RuleNameBusinessTest {
     // getRuleById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void getRuleById_findByIdNormal() {
+    void getRuleById_findByIdNormal() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
@@ -126,7 +126,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void getRuleById_nullIdParameter_returnNotFound() {
+    void getRuleById_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -139,7 +139,7 @@ public class RuleNameBusinessTest {
     // updateRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void updateRule_updateNormal() {
+    void updateRule_updateNormal() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         when(ruleRepository.save(ruleSave)).thenReturn(ruleSave);
@@ -150,7 +150,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void updateRule_RuleNotExist_returnNotFound() {
+    void updateRule_RuleNotExist_returnNotFound() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
@@ -160,7 +160,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void updateRule_nullIdParameter_returnNotFound() {
+    void updateRule_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
@@ -170,7 +170,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void updateRule_zeroIdParameter_returnNotFound() {
+    void updateRule_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
@@ -180,7 +180,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void updateRule_nullRuleParameter_returnNotFound() {
+    void updateRule_nullRuleParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
@@ -193,7 +193,7 @@ public class RuleNameBusinessTest {
     // deleteRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void deleteRule_deleteNormal() {
+    void deleteRule_deleteNormal() {
         // GIVEN
         when(ruleRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ruleRepository).deleteById(any(Integer.class));
@@ -204,7 +204,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void deleteRule_RuleNotExist_returnNotFound() {
+    void deleteRule_RuleNotExist_returnNotFound() {
         // GIVEN
         when(ruleRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
@@ -214,7 +214,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void deleteRule_nullIdParameter_returnNotFound() {
+    void deleteRule_nullIdParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.existsById(null)).thenReturn(false);
         // WHEN
@@ -224,7 +224,7 @@ public class RuleNameBusinessTest {
     }
 
     @Test
-    public void deleteRule_zeroIdParameter_returnNotFound() {
+    void deleteRule_zeroIdParameter_returnNotFound() {
         // GIVEN
         when(ruleRepository.existsById(0)).thenReturn(false);
         // WHEN

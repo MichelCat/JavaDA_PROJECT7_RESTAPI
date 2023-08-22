@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class RuleNameControllerIT {
+class RuleNameControllerIT {
     private MockMvc mockMvc;
 
     @Autowired
@@ -71,7 +71,7 @@ public class RuleNameControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    public void home_getRules_return200() throws Exception {
+    void home_getRules_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/list")
@@ -92,7 +92,7 @@ public class RuleNameControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void addRuleForm_return200() throws Exception {
+    void addRuleForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/add")
@@ -112,7 +112,7 @@ public class RuleNameControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void validate_ruleNotExist_return302() throws Exception {
+    void validate_ruleNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/ruleName/validate")
@@ -132,7 +132,7 @@ public class RuleNameControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    public void validate_ruleExist_return302() throws Exception {
+    void validate_ruleExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/ruleName/validate")
@@ -155,7 +155,7 @@ public class RuleNameControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    public void showUpdateForm_ruleExist_return200() throws Exception {
+    void showUpdateForm_ruleExist_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/update/{id}", 1)
@@ -178,7 +178,7 @@ public class RuleNameControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    public void updateRule_ruleExist_return302() throws Exception {
+    void updateRule_ruleExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/ruleName/update/{id}", 1)
@@ -197,7 +197,7 @@ public class RuleNameControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateRule_ruleNotExist_return302() throws Exception {
+    void updateRule_ruleNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/ruleName/update/{id}", 1)
@@ -220,7 +220,7 @@ public class RuleNameControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    public void deleteRule_ruleExist_return302() throws Exception {
+    void deleteRule_ruleExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/delete/{id}", 1)
@@ -237,7 +237,7 @@ public class RuleNameControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteRule_ruleNotExist_return302() throws Exception {
+    void deleteRule_ruleNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/ruleName/delete/{id}", 1)

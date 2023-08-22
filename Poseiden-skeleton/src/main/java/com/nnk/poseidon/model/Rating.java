@@ -29,19 +29,19 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @NotBlank(message = "Moodys rating is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rating.moodysRating}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String moodysRating;
 
-    @NotBlank(message = "Sand PRating is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rating.sandPRating}")
+    @Size(max = 125, message = "{constraint.size.global}")
     @Column(name = "sand_p_rating")
     String sandPRating;
 
-    @NotBlank(message = "Fitch rating is mandatory")
-    @Size(max = 125, message = "Maximum length of {max} characters")
+    @NotBlank(message = "{constraint.notBlank.rating.fitchRating}")
+    @Size(max = 125, message = "{constraint.size.global}")
     String fitchRating;
 
-    @NotNull(message = "Order number must not be null")
+    @NotNull(message = "{constraint.notNull.rating.orderNumber}")
     Integer orderNumber;
 }

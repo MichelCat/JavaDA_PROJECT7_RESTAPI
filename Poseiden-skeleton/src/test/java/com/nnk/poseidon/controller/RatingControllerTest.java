@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = RatingController.class)
 @ActiveProfiles("test")
-public class RatingControllerTest {
+class RatingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getRatings_return200() throws Exception {
+    void home_getRatings_return200() throws Exception {
         // GIVEN
         when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
         // WHEN
@@ -98,7 +98,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addRatingForm_return200() throws Exception {
+    void addRatingForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/add")
@@ -116,7 +116,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_ratingNotExist_return302() throws Exception {
+    void validate_ratingNotExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.createRating(ratingSource)).thenReturn(ratingSave);
         when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
@@ -137,7 +137,7 @@ public class RatingControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_ratingNotValid() throws Exception {
+    void validate_ratingNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/rating/validate")
@@ -164,7 +164,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_ratingExist_return200() throws Exception {
+    void showUpdateForm_ratingExist_return200() throws Exception {
         // GIVEN
         when(ratingBusiness.getRatingById(1)).thenReturn(ratingSave);
         // WHEN
@@ -184,7 +184,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateRating_ratingExist_return302() throws Exception {
+    void updateRating_ratingExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.updateRating(1, ratingSave)).thenReturn(ratingSave);
         when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
@@ -205,7 +205,7 @@ public class RatingControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateRating_ratingNotValid() throws Exception {
+    void updateRating_ratingNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/rating/update/{id}", 1)
@@ -229,7 +229,7 @@ public class RatingControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteRating_ratingExist_return302() throws Exception {
+    void deleteRating_ratingExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
         doNothing().when(ratingBusiness).deleteRating(any(Integer.class));

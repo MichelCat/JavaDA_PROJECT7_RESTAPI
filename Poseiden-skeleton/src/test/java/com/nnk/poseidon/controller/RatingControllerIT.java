@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
-public class RatingControllerIT {
+class RatingControllerIT {
 
     private MockMvc mockMvc;
 
@@ -72,7 +72,7 @@ public class RatingControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void home_getRatings_return200() throws Exception {
+    void home_getRatings_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/list")
@@ -93,7 +93,7 @@ public class RatingControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void addRatingForm_return200() throws Exception {
+    void addRatingForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/add")
@@ -113,7 +113,7 @@ public class RatingControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void validate_ratingNotExist_return302() throws Exception {
+    void validate_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/rating/validate")
@@ -133,7 +133,7 @@ public class RatingControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void validate_ratingExist_return302() throws Exception {
+    void validate_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/rating/validate")
@@ -156,7 +156,7 @@ public class RatingControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void showUpdateForm_ratingExist_return200() throws Exception {
+    void showUpdateForm_ratingExist_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/update/{id}", 1)
@@ -179,7 +179,7 @@ public class RatingControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void updateRating_ratingExist_return302() throws Exception {
+    void updateRating_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/rating/update/{id}", 1)
@@ -198,7 +198,7 @@ public class RatingControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateRating_ratingNotExist_return302() throws Exception {
+    void updateRating_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/rating/update/{id}", 1)
@@ -221,7 +221,7 @@ public class RatingControllerIT {
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    public void deleteRating_ratingExist_return302() throws Exception {
+    void deleteRating_ratingExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/delete/{id}", 1)
@@ -238,7 +238,7 @@ public class RatingControllerIT {
     @Test
     @WithMockUser(roles = "USER")
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteRating_ratingNotExist_return302() throws Exception {
+    void deleteRating_ratingNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/rating/delete/{id}", 1)

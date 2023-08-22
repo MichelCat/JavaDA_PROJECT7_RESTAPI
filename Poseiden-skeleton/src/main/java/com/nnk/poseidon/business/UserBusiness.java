@@ -77,7 +77,7 @@ public class UserBusiness {
      *
      * @param id User ID founded
      *
-     * @return User founded
+     * @return Register founded
      * @throws MyExceptionNotFoundException Exception not found
      */
     public Register getRegisterById(final Integer id)

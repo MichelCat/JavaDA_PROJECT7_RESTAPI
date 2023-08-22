@@ -5,9 +5,14 @@ import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-public class RatingTest {
+class RatingTest {
 
     @Autowired
     private Validator validator;
@@ -39,21 +44,21 @@ public class RatingTest {
     // builder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void builder_TestBuildAndNew_thenEqual() {
+    void builder_TestBuildAndNew_thenEqual() {
         // GIVEN
         // WHEN
         Rating objBuild = Rating.builder()
                             .build();
         Rating objNew = new Rating();
         // THEN
-        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
+        assertThat(objBuild).isEqualTo(objNew);
     }
 
     // -----------------------------------------------------------------------------------------------
     // moodysRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void moodysRating_normal_thenNoConstraintViolation() {
+    void moodysRating_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rating.setMoodysRating("MoodysRating Test");
@@ -63,43 +68,27 @@ public class RatingTest {
         assertThat(rating.getMoodysRating()).isEqualTo("MoodysRating Test");
     }
 
-    @Test
-    public void moodysRating_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setMoodysRating(" ");
-        // THEN
-        String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
+    private static Stream<Arguments> listOfMoodysRatingToTest() {
+        String[][] errorSpace = {{"moodysRating", "{constraint.notBlank.rating.moodysRating}"}};
+        String[][] errorEmpty = {{"moodysRating", "{constraint.notBlank.rating.moodysRating}"}};
+        String[][] errorNull = {{"moodysRating", "{constraint.notBlank.rating.moodysRating}"}};
+        String[][] errorSizeTooBig = {{"moodysRating", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void moodysRating_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "MoodysRating is {2} ({0}).")
+    @MethodSource("listOfMoodysRatingToTest")
+    void moodysRating_thenConstraintViolation(String moodysRating, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rating.setMoodysRating("");
+        rating.setMoodysRating(moodysRating);
         // THEN
-        String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void moodysRating_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setMoodysRating(null);
-        // THEN
-        String[][] errorList = {{"moodysRating", "Moodys rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void moodysRating_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setMoodysRating(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"moodysRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
@@ -107,7 +96,7 @@ public class RatingTest {
     // sandPRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sandPRating_normal_thenNoConstraintViolation() {
+    void sandPRating_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rating.setSandPRating("SandPRating Test");
@@ -117,43 +106,27 @@ public class RatingTest {
         assertThat(rating.getSandPRating()).isEqualTo("SandPRating Test");
     }
 
-    @Test
-    public void sandPRating_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setSandPRating(" ");
-        // THEN
-        String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
+    private static Stream<Arguments> listOfSandPRatingToTest() {
+        String[][] errorSpace = {{"sandPRating", "{constraint.notBlank.rating.sandPRating}"}};
+        String[][] errorEmpty = {{"sandPRating", "{constraint.notBlank.rating.sandPRating}"}};
+        String[][] errorNull = {{"sandPRating", "{constraint.notBlank.rating.sandPRating}"}};
+        String[][] errorSizeTooBig = {{"sandPRating", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void sandPRating_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "SandPRating is {2} ({0}).")
+    @MethodSource("listOfSandPRatingToTest")
+    void sandPRating_thenConstraintViolation(String sandPRating, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rating.setSandPRating("");
+        rating.setSandPRating(sandPRating);
         // THEN
-        String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void sandPRating_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setSandPRating(null);
-        // THEN
-        String[][] errorList = {{"sandPRating", "Sand PRating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void sandPRating_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setSandPRating(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"sandPRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
@@ -161,7 +134,7 @@ public class RatingTest {
     // fitchRating attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void fitchRating_normal_thenNoConstraintViolation() {
+    void fitchRating_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rating.setFitchRating("FitchRating Test");
@@ -171,43 +144,27 @@ public class RatingTest {
         assertThat(rating.getFitchRating()).isEqualTo("FitchRating Test");
     }
 
-    @Test
-    public void fitchRating_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setFitchRating(" ");
-        // THEN
-        String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
+    private static Stream<Arguments> listOfFitchRatingToTest() {
+        String[][] errorSpace = {{"fitchRating", "{constraint.notBlank.rating.fitchRating}"}};
+        String[][] errorEmpty = {{"fitchRating", "{constraint.notBlank.rating.fitchRating}"}};
+        String[][] errorNull = {{"fitchRating", "{constraint.notBlank.rating.fitchRating}"}};
+        String[][] errorSizeTooBig = {{"fitchRating", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void fitchRating_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "FitchRating is {2} ({0}).")
+    @MethodSource("listOfFitchRatingToTest")
+    void fitchRating_thenConstraintViolation(String fitchRating, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rating.setFitchRating("");
+        rating.setFitchRating(fitchRating);
         // THEN
-        String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void fitchRating_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setFitchRating(null);
-        // THEN
-        String[][] errorList = {{"fitchRating", "Fitch rating is mandatory"}};
-        testConstraintViolation.checking(rating, errorList);
-    }
-
-    @Test
-    public void fitchRating_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rating.setFitchRating(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"fitchRating", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rating, errorList);
     }
 
@@ -215,7 +172,7 @@ public class RatingTest {
     // orderNumber attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void orderNumber_normal_thenNoConstraintViolations() {
+    void orderNumber_normal_thenNoConstraintViolations() {
         // GIVEN
         // WHEN
         rating.setOrderNumber(10);
@@ -226,12 +183,12 @@ public class RatingTest {
     }
 
     @Test
-    public void orderNumber_null_thenOneConstraintViolation() {
+    void orderNumber_null_thenOneConstraintViolation() {
         // GIVEN
         // WHEN
         rating.setOrderNumber(null);
         // THEN
-        String[][] errorList = {{"orderNumber", "Order number must not be null"}};
+        String[][] errorList = {{"orderNumber", "{constraint.notNull.rating.orderNumber}"}};
         testConstraintViolation.checking(rating, errorList);
     }
 }

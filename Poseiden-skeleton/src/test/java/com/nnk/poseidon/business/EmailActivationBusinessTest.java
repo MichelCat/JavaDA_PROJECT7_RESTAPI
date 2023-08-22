@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class EmailActivationBusinessTest {
+class EmailActivationBusinessTest {
 
     @Autowired
     private EmailActivationBusiness emailActivationBusiness;
@@ -52,7 +52,7 @@ public class EmailActivationBusinessTest {
     // activatedUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void activatedUser_normal_returnUser() throws MyException {
+    void activatedUser_normal_returnUser() throws MyException {
         // GIVEN
         userSave.setEnabled(false);
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
@@ -63,7 +63,7 @@ public class EmailActivationBusinessTest {
     }
 
     @Test
-    public void activatedUser_userNotExist_returnMyException() {
+    void activatedUser_userNotExist_returnMyException() {
         // GIVEN
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.empty());
         // WHEN
@@ -75,7 +75,7 @@ public class EmailActivationBusinessTest {
     }
 
     @Test
-    public void activatedUser_validEmailKeyError_returnMyException() {
+    void activatedUser_validEmailKeyError_returnMyException() {
         // GIVEN
         userSave.setEmailValidationKey("KeyError");
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
@@ -88,7 +88,7 @@ public class EmailActivationBusinessTest {
     }
 
     @Test
-    public void activatedUser_validEmailEndDateError_returnMyException() {
+    void activatedUser_validEmailEndDateError_returnMyException() {
         // GIVEN
         userSave.setValidEmailEndDate(GlobalData.CURRENT_TIMESTAMP);
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
@@ -101,7 +101,7 @@ public class EmailActivationBusinessTest {
     }
 
     @Test
-    public void activatedUser_validedEmail_returnMyException() {
+    void activatedUser_validedEmail_returnMyException() {
         // GIVEN
         when(userRepository.findByEmailValidationKey(keyValue)).thenReturn(Optional.of(userSave));
         // WHEN

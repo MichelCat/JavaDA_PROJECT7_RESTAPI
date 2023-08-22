@@ -46,6 +46,6 @@ public class TestConstraintViolation<T> {
             assertThat(violation.getMessage()).isEqualTo(message);
         }
 
-        assertThat(violations.size()).isEqualTo(errorList.length);
+        assertThat(violations).hasSize(errorList.length);
     }
 }

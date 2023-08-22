@@ -5,9 +5,14 @@ import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-public class RuleTest {
+class RuleTest {
 
     @Autowired
     private Validator validator;
@@ -39,21 +44,21 @@ public class RuleTest {
     // builder method
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void builder_TestBuildAndNew_thenEqual() {
+    void builder_TestBuildAndNew_thenEqual() {
         // GIVEN
         // WHEN
         Rule objBuild = Rule.builder()
                                 .build();
         Rule objNew = new Rule();
         // THEN
-        assertThat(objBuild).usingRecursiveComparison().isEqualTo(objNew);
+        assertThat(objBuild).isEqualTo(objNew);
     }
 
     // -----------------------------------------------------------------------------------------------
     // name attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void name_normal_thenNoConstraintViolation() {
+    void name_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setName("Rule Name");
@@ -63,43 +68,27 @@ public class RuleTest {
         assertThat(rule.getName()).isEqualTo("Rule Name");
     }
 
-    @Test
-    public void name_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setName(" ");
-        // THEN
-        String[][] errorList = {{"name", "Name is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfNameToTest() {
+        String[][] errorSpace = {{"name", "{constraint.notBlank.rule.name}"}};
+        String[][] errorEmpty = {{"name", "{constraint.notBlank.rule.name}"}};
+        String[][] errorNull = {{"name", "{constraint.notBlank.rule.name}"}};
+        String[][] errorSizeTooBig = {{"name", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void name_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Name is {2} ({0}).")
+    @MethodSource("listOfNameToTest")
+    void name_thenConstraintViolation(String name, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setName("");
+        rule.setName(name);
         // THEN
-        String[][] errorList = {{"name", "Name is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void name_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setName(null);
-        // THEN
-        String[][] errorList = {{"name", "Name is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void name_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setName(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"name", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 
@@ -107,7 +96,7 @@ public class RuleTest {
     // description attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void description_normal_thenNoConstraintViolation() {
+    void description_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setDescription("Description");
@@ -117,43 +106,27 @@ public class RuleTest {
         assertThat(rule.getDescription()).isEqualTo("Description");
     }
 
-    @Test
-    public void description_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setDescription(" ");
-        // THEN
-        String[][] errorList = {{"description", "Description is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfDescriptionToTest() {
+        String[][] errorSpace = {{"description", "{constraint.notBlank.rule.description}"}};
+        String[][] errorEmpty = {{"description", "{constraint.notBlank.rule.description}"}};
+        String[][] errorNull = {{"description", "{constraint.notBlank.rule.description}"}};
+        String[][] errorSizeTooBig = {{"description", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void description_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Description is {2} ({0}).")
+    @MethodSource("listOfDescriptionToTest")
+    void description_thenConstraintViolation(String description, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setDescription("");
+        rule.setDescription(description);
         // THEN
-        String[][] errorList = {{"description", "Description is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void description_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setDescription(null);
-        // THEN
-        String[][] errorList = {{"description", "Description is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void description_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setDescription(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"description", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 
@@ -161,7 +134,7 @@ public class RuleTest {
     // json attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void json_normal_thenNoConstraintViolation() {
+    void json_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setJson("Json Test");
@@ -171,43 +144,27 @@ public class RuleTest {
         assertThat(rule.getJson()).isEqualTo("Json Test");
     }
 
-    @Test
-    public void json_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setJson(" ");
-        // THEN
-        String[][] errorList = {{"json", "Json is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfJsonToTest() {
+        String[][] errorSpace = {{"json", "{constraint.notBlank.rule.json}"}};
+        String[][] errorEmpty = {{"json", "{constraint.notBlank.rule.json}"}};
+        String[][] errorNull = {{"json", "{constraint.notBlank.rule.json}"}};
+        String[][] errorSizeTooBig = {{"json", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void json_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Json is {2} ({0}).")
+    @MethodSource("listOfJsonToTest")
+    void json_thenConstraintViolation(String json, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setJson("");
+        rule.setJson(json);
         // THEN
-        String[][] errorList = {{"json", "Json is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void json_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setJson(null);
-        // THEN
-        String[][] errorList = {{"json", "Json is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void json_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setJson(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"json", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 
@@ -215,7 +172,7 @@ public class RuleTest {
     // template attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void template_normal_thenNoConstraintViolation() {
+    void template_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setTemplate("Template");
@@ -225,43 +182,27 @@ public class RuleTest {
         assertThat(rule.getTemplate()).isEqualTo("Template");
     }
 
-    @Test
-    public void template_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setTemplate(" ");
-        // THEN
-        String[][] errorList = {{"template", "Template is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfTemplateToTest() {
+        String[][] errorSpace = {{"template", "{constraint.notBlank.rule.template}"}};
+        String[][] errorEmpty = {{"template", "{constraint.notBlank.rule.template}"}};
+        String[][] errorNull = {{"template", "{constraint.notBlank.rule.template}"}};
+        String[][] errorSizeTooBig = {{"template", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void template_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "Template is {2} ({0}).")
+    @MethodSource("listOfTemplateToTest")
+    void template_thenConstraintViolation(String template, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setTemplate("");
+        rule.setTemplate(template);
         // THEN
-        String[][] errorList = {{"template", "Template is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void template_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setTemplate(null);
-        // THEN
-        String[][] errorList = {{"template", "Template is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void template_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setTemplate(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"template", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 
@@ -269,7 +210,7 @@ public class RuleTest {
     // sqlStr attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sqlStr_normal_thenNoConstraintViolation() {
+    void sqlStr_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setSqlStr("SQL");
@@ -279,43 +220,27 @@ public class RuleTest {
         assertThat(rule.getSqlStr()).isEqualTo("SQL");
     }
 
-    @Test
-    public void sqlStr_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlStr(" ");
-        // THEN
-        String[][] errorList = {{"sqlStr", "SqlStr is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfSqlStrToTest() {
+        String[][] errorSpace = {{"sqlStr", "{constraint.notBlank.rule.sqlStr}"}};
+        String[][] errorEmpty = {{"sqlStr", "{constraint.notBlank.rule.sqlStr}"}};
+        String[][] errorNull = {{"sqlStr", "{constraint.notBlank.rule.sqlStr}"}};
+        String[][] errorSizeTooBig = {{"sqlStr", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void sqlStr_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "SqlStr is {2} ({0}).")
+    @MethodSource("listOfSqlStrToTest")
+    void sqlStr_thenConstraintViolation(String sqlStr, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setSqlStr("");
+        rule.setSqlStr(sqlStr);
         // THEN
-        String[][] errorList = {{"sqlStr", "SqlStr is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void sqlStr_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlStr(null);
-        // THEN
-        String[][] errorList = {{"sqlStr", "SqlStr is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void sqlStr_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlStr(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"sqlStr", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 
@@ -323,7 +248,7 @@ public class RuleTest {
     // sqlPart attribute
     // -----------------------------------------------------------------------------------------------
     @Test
-    public void sqlPart_normal_thenNoConstraintViolation() {
+    void sqlPart_normal_thenNoConstraintViolation() {
         // GIVEN
         // WHEN
         rule.setSqlPart("SQL Part");
@@ -333,43 +258,27 @@ public class RuleTest {
         assertThat(rule.getSqlPart()).isEqualTo("SQL Part");
     }
 
-    @Test
-    public void sqlPart_blank_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlPart(" ");
-        // THEN
-        String[][] errorList = {{"sqlPart", "SqlPart is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
+    private static Stream<Arguments> listOfSqlPartToTest() {
+        String[][] errorSpace = {{"sqlPart", "{constraint.notBlank.rule.sqlPart}"}};
+        String[][] errorEmpty = {{"sqlPart", "{constraint.notBlank.rule.sqlPart}"}};
+        String[][] errorNull = {{"sqlPart", "{constraint.notBlank.rule.sqlPart}"}};
+        String[][] errorSizeTooBig = {{"sqlPart", "{constraint.size.global}"}};
+
+        return Stream.of(
+                Arguments.of(" ", errorSpace, "space")
+                , Arguments.of("", errorEmpty, "empty")
+                , Arguments.of(null, errorNull, "null")
+                , Arguments.of(StringUtils.repeat('a', 126), errorSizeTooBig, "size too big")
+        );
     }
 
-    @Test
-    public void sqlPart_empty_thenOneConstraintViolation() {
+    @ParameterizedTest(name = "SqlPart is {2} ({0}).")
+    @MethodSource("listOfSqlPartToTest")
+    void sqlPart_thenConstraintViolation(String sqlPart, String[][] errorList, String message) {
         // GIVEN
         // WHEN
-        rule.setSqlPart("");
+        rule.setSqlPart(sqlPart);
         // THEN
-        String[][] errorList = {{"sqlPart", "SqlPart is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void sqlPart_null_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlPart(null);
-        // THEN
-        String[][] errorList = {{"sqlPart", "SqlPart is mandatory"}};
-        testConstraintViolation.checking(rule, errorList);
-    }
-
-    @Test
-    public void sqlPart_sizeTooBig_thenOneConstraintViolation() {
-        // GIVEN
-        // WHEN
-        rule.setSqlPart(StringUtils.repeat('a', 126));
-        // THEN
-        String[][] errorList = {{"sqlPart", "Maximum length of 125 characters"}};
         testConstraintViolation.checking(rule, errorList);
     }
 }

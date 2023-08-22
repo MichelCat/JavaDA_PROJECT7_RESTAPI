@@ -17,18 +17,24 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * UserDaoIT is the integration test class handling User
+ *
+ * @author MC
+ * @version 1.0
+ */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class UserDaoIT {
+class UserDaoIT {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void userTest() {
+    void userTest() {
         User oldUser;
         User user = UserData.getUserSource();
 
@@ -43,14 +49,14 @@ public class UserDaoIT {
         user.setFullname("User Update");
         oldUser = user;
         user = userRepository.save(user);
-        assertThat(user).isNotNull();
-        assertThat(user).usingRecursiveComparison().isEqualTo(oldUser);
+        assertThat(user).isNotNull()
+                            .isEqualTo(oldUser);
 
         // Find
         List<User> listResult = userRepository.findAll();
-        assertThat(listResult).isNotNull();
-        assertThat(listResult).hasSize(1);
-        assertThat(listResult.get(0)).usingRecursiveComparison().isEqualTo(user);
+        assertThat(listResult).isNotNull()
+                                .hasSize(1)
+                                .contains(user);
 
         // Delete
         Integer id = user.getId();

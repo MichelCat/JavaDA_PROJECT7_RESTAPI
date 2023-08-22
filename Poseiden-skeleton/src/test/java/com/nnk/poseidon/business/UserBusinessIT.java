@@ -1,10 +1,11 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.data.RuleData;
-import com.nnk.poseidon.model.Rule;
+import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.exception.MyExceptionBadRequestException;
 import com.nnk.poseidon.exception.MyExceptionNotFoundException;
 import com.nnk.poseidon.data.GlobalData;
+import com.nnk.poseidon.model.Register;
+import com.nnk.poseidon.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +21,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 /**
- * RuleNameBusinessIT is a class of integration tests on Rules service.
+ * UserBusinessIT is a class of integration tests on Users service.
  *
  * @author MC
  * @version 1.0
@@ -30,141 +32,163 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class RuleNameBusinessIT {
+class UserBusinessIT {
 
     @Autowired
-    private RuleNameBusiness ruleNameBusiness;
+    private UserBusiness userBusiness;
 
-    private Rule ruleSource;
-    private Rule ruleSave;
-    private Integer ruleId;
+    private User userSave;
+    private Register registerSource;
+    private Register registerSave;
+    private Register alexRegisterSave;
+    private Register adminRegisterSave;
+    private String encryptedPassword;
+    private Integer userId;
 
 
     @BeforeEach
     public void setUpBefore() {
-        ruleSource = RuleData.getRuleSource();
-        ruleSave = RuleData.getRuleSave();
+        userSave = UserData.getUserSave();
 
-        ruleId = ruleSave.getId();
+        registerSource = UserData.getRegisterSource();
+
+        registerSave = UserData.getRegisterSave();
+        alexRegisterSave = UserData.getAlexRegisterSave();
+        adminRegisterSave = UserData.getAdminegisterSave();
+
+        encryptedPassword = userSave.getPassword();
+
+        userId = userSave.getId();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // getRulesList method
+    // getUsersList method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = RuleData.scriptCreateRule)
-    void getRulesList_findAllNormal() {
+    @Sql(scripts = UserData.scriptCreateUser)
+    void getUsersList_findAllNormal() {
         // GIVEN
+        registerSave.setPassword(encryptedPassword);
+        alexRegisterSave.setPassword(encryptedPassword);
+        adminRegisterSave.setPassword(encryptedPassword);
         // WHEN
-        List<Rule> result = ruleNameBusiness.getRulesList();
+        List<Register> result = userBusiness.getUsersList();
         // THEN
-        assertThat(result).hasSize(1)
-                            .contains(ruleSave);
+        assertThat(result).hasSize(3)
+                            .contains(registerSave)
+                            .contains(alexRegisterSave)
+                            .contains(adminRegisterSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void getRulesList_findAllEmpty() {
+    void getUsersList_findAllEmpty() {
         // GIVEN
         // WHEN
-        List<Rule> result = ruleNameBusiness.getRulesList();
+        List<Register> result = userBusiness.getUsersList();
         // THEN
         assertThat(result).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // createRule method
+    // createUser method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createRule_ruleNotExist() {
+    void createUser_userNotExist() {
         // GIVEN
         // WHEN
-        Rule result = ruleNameBusiness.createRule(ruleSource);
+        User result = userBusiness.createUser(registerSource);
         // THEN
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("creationDate")
-                .isEqualTo(ruleSave);
+                .ignoringFields("password")
+                .ignoringFields("emailValidationKey")
+                .ignoringFields("validEmailEndDate")
+                .isEqualTo(userSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = RuleData.scriptCreateRule)
-    void createRule_ruleExist() {
+    @Sql(scripts = UserData.scriptCreateUser)
+    void createUser_userExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.createRule(ruleSave));
+        assertThrows(MyExceptionBadRequestException.class, () -> userBusiness.createUser(registerSave));
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // getRuleById method
+    // getUserById method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = RuleData.scriptCreateRule)
-    void getRuleById_ruleExist() {
+    @Sql(scripts = UserData.scriptCreateUser)
+    void getUserById_userExist() {
         // GIVEN
         // WHEN
-        assertThat(ruleNameBusiness.getRuleById(ruleId)).isEqualTo(ruleSave);
-        // THEN
-    }
-
-    @Test
-    @Sql(scripts = GlobalData.scriptClearDataBase)
-    void getRuleById_ruleNotExist() {
-        // GIVEN
-        // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(ruleId));
-        // THEN
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // updateRule method
-    // -----------------------------------------------------------------------------------------------
-    @Test
-    @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = RuleData.scriptCreateRule)
-    void updateRule_ruleExist() {
-        // GIVEN
-        // WHEN
-        Rule result = ruleNameBusiness.updateRule(ruleId, ruleSave);
+        Register result = userBusiness.getRegisterById(userId);
         // THEN
         assertThat(result).usingRecursiveComparison()
-                .ignoringFields("asOfDate")
-                .isEqualTo(ruleSave);
+                .ignoringFields("password")
+                .isEqualTo(registerSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void updateRule_ruleNotExist() {
+    void getUserById_userNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(ruleId, ruleSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.getRegisterById(userId));
         // THEN
     }
 
     // -----------------------------------------------------------------------------------------------
-    // deleteRule method
+    // updateUser method
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    @Sql(scripts = RuleData.scriptCreateRule)
-    void deleteRule_ruleExist() {
+    @Sql(scripts = UserData.scriptCreateUser)
+    void updateUser_userExist() {
         // GIVEN
         // WHEN
-        ruleNameBusiness.deleteRule(ruleId);
+        User result = userBusiness.updateUser(userId, registerSave);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(ruleId));
+        assertThat(result).usingRecursiveComparison()
+                .ignoringFields("password")
+                .ignoringFields("validEmailEndDate")
+                .isEqualTo(userSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void deleteRule_ruleNotExist() {
+    void updateUser_userNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(ruleId));
+        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.updateUser(userId, registerSave));
+        // THEN
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // deleteUser method
+    // -----------------------------------------------------------------------------------------------
+    @Test
+    @Sql(scripts = GlobalData.scriptClearDataBase)
+    @Sql(scripts = UserData.scriptCreateUser)
+    void deleteUser_userExist() {
+        // GIVEN
+        // WHEN
+        userBusiness.deleteUser(userId);
+        // THEN
+        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.getRegisterById(userId));
+    }
+
+    @Test
+    @Sql(scripts = GlobalData.scriptClearDataBase)
+    void deleteUser_userNotExist() {
+        // GIVEN
+        // WHEN
+        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.deleteUser(userId));
         // THEN
     }
 }

@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WebMvcTest(controllers = BidListController.class)
 @ActiveProfiles("test")
-public class BidListControllerTest {
+class BidListControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -78,7 +78,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void home_getBids_return200() throws Exception {
+    void home_getBids_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         // WHEN
@@ -98,7 +98,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void addBidForm_return200() throws Exception {
+    void addBidForm_return200() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(get("/bidList/add")
@@ -116,7 +116,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_bidNotExist_return302() throws Exception {
+    void validate_bidNotExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.createBid(bidSource)).thenReturn(bidSave);
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
@@ -137,7 +137,7 @@ public class BidListControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void validate_bidNotValid() throws Exception {
+    void validate_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(post("/bidList/validate")
@@ -163,7 +163,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void showUpdateForm_bidExist_return200() throws Exception {
+    void showUpdateForm_bidExist_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidById(1)).thenReturn(bidSave);
         // WHEN
@@ -183,7 +183,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void updateBid_bidExist_return302() throws Exception {
+    void updateBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.updateBid(1, bidSave)).thenReturn(bidSave);
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
@@ -204,7 +204,7 @@ public class BidListControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void updateBid_bidNotValid() throws Exception {
+    void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/bidList/update/{id}", 1)
@@ -227,7 +227,7 @@ public class BidListControllerTest {
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    public void deleteBid_bidExist_return302() throws Exception {
+    void deleteBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         doNothing().when(bidListBusiness).deleteBid(any(Integer.class));

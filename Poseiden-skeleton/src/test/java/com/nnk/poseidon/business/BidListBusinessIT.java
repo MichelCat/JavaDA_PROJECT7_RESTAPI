@@ -31,19 +31,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class BidListBusinessIT {
+class BidListBusinessIT {
 
     @Autowired
     private BidListBusiness bidListBusiness;
 
     private Bid bidSource;
     private Bid bidSave;
-
+    private Integer bidId;
 
     @BeforeEach
     public void setUpBefore() {
         bidSource = BidData.getBidSource();
         bidSave = BidData.getBidSave();
+
+        bidId = bidSave.getBidListId();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -52,23 +54,23 @@ public class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    public void getBidsList_findAllNormal() {
+    void getBidsList_findAllNormal() {
         // GIVEN
         // WHEN
         List<Bid> result = bidListBusiness.getBidsList();
         // THEN
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).isEqualTo(bidSave);
+        assertThat(result).hasSize(1)
+                            .contains(bidSave);
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getBidsList_findAllEmpty() {
+    void getBidsList_findAllEmpty() {
         // GIVEN
         // WHEN
         List<Bid> result = bidListBusiness.getBidsList();
         // THEN
-        assertThat(result.size()).isEqualTo(0);
+        assertThat(result).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -76,7 +78,7 @@ public class BidListBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void createBid_bidNotExist() {
+    void createBid_bidNotExist() {
         // GIVEN
         // WHEN
         Bid result = bidListBusiness.createBid(bidSource);
@@ -89,7 +91,7 @@ public class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    public void createBid_bidExist() {
+    void createBid_bidExist() {
         // GIVEN
         // WHEN
         assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(bidSave));
@@ -102,19 +104,19 @@ public class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    public void getBidById_bidExist() {
+    void getBidById_bidExist() {
         // GIVEN
         // WHEN
-        assertThat(bidListBusiness.getBidById(bidSave.getBidListId())).isEqualTo(bidSave);
+        assertThat(bidListBusiness.getBidById(bidId)).isEqualTo(bidSave);
         // THEN
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void getBidById_bidNotExist() {
+    void getBidById_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidId));
         // THEN
     }
 
@@ -124,10 +126,10 @@ public class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    public void updateBid_bidExist() {
+    void updateBid_bidExist() {
         // GIVEN
         // WHEN
-        Bid result = bidListBusiness.updateBid(bidSave.getBidListId(), bidSave);
+        Bid result = bidListBusiness.updateBid(bidId, bidSave);
         // THEN
         assertThat(result).usingRecursiveComparison()
                 .ignoringFields("revisionDate")
@@ -136,10 +138,10 @@ public class BidListBusinessIT {
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void updateBid_bidNotExist() {
+    void updateBid_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(bidSave.getBidListId(), bidSave));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(bidId, bidSave));
         // THEN
     }
 
@@ -149,20 +151,20 @@ public class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    public void deleteBid_bidExist() {
+    void deleteBid_bidExist() {
         // GIVEN
         // WHEN
-        bidListBusiness.deleteBid(bidSave.getBidListId());
+        bidListBusiness.deleteBid(bidId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidId));
     }
 
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    public void deleteBid_bidNotExist() {
+    void deleteBid_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(bidSave.getBidListId()));
+        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(bidId));
         // THEN
     }
 }
