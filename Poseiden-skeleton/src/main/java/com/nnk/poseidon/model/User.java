@@ -1,5 +1,6 @@
 package com.nnk.poseidon.model;
 
+import com.nnk.poseidon.enumerator.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -72,7 +73,7 @@ public class User implements UserDetails {
      */
     @NotNull(message = "{constraint.notNull.user.role}")
     @Enumerated(value = EnumType.STRING)
-    Role role;
+    UserRole role;
 
     /**
      * User account expired
@@ -141,17 +142,6 @@ public class User implements UserDetails {
         this.credentialsExpired = false;
         this.enabled = true;
     }
-
-    /**
-     * Test Contains a role
-     *
-     * @param role Role to search
-     * @return Boolean Role belongs to user
-     */
-    public boolean isContainsRole(String role) {
-        return role.equals(role);
-    }
-
 
     // -----------------------------------------------------------------------------------------------
     // Email validation

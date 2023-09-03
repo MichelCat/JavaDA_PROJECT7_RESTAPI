@@ -6,38 +6,29 @@
 -->
 
 <!-- CurvePoint table -->
-<div class="container my-3">
-    <div class="row">
-        <div class="table-responsive">
-            <table class="table table-striped table-sm table-hover table-bordered">
-                <!-- CurvePoint title -->
-               <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>CurvePointId</th>
-                        <th>Term</th>
-                        <th>Value</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <!-- CurvePoint detail -->
-                <tbody>
-                    <tr th:each="curvePoint : ${curvePoints}">
-                        <td style="width: 10%" th:text="${curvePoint.id}"></td>
-                        <td th:text="${curvePoint.curveId}"></td>
-                        <td th:text="${curvePoint.term}"></td>
-                        <td th:text="${curvePoint.value}"></td>
-                        <td style="width: 15%" class="text-center">
-                            <a class="btn btn-info btn-sm mx-1"
-                                th:href="@{/curvePoint/update/{id}(id=${curvePoint.id})}">
-                                <spam class="bi bi-pencil" /></a>
-                            <a class="btn btn-danger btn-sm mx-1"
-                                th:href="@{/curvePoint/delete/{id}(id=${curvePoint.id})}">
-                                <spam class="bi bi-trash" /></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+
+<!-- CurvePoint title -->
+<thead>
+    <tr>
+        <th th:text="#{label.curvePoint.attribute.id}"></th>
+        <th th:text="#{label.curvePoint.attribute.curveId}"></th>
+        <th th:text="#{label.curvePoint.attribute.term}"></th>
+        <th th:text="#{label.curvePoint.attribute.value}"></th>
+        <th th:text="#{label.column.action}"></th>
+    </tr>
+</thead>
+<!-- CurvePoint detail -->
+<tbody>
+    <tr th:each="curvePoint : ${curvePoints}">
+        <td style="width: 10%" th:text="${curvePoint.id}"></td>
+        <td th:text="${curvePoint.curveId}"></td>
+        <td th:text="${curvePoint.term}"></td>
+        <td th:text="${curvePoint.value}"></td>
+        <td style="width: 15%" class="text-center">
+            <!-- Update and Delete button -->
+            <div th:replace="fragments/input-type :: updateDeleteButton(
+                                                        '/curvePoint/update/{id}(id=${curvePoint.id})'
+                                                        , '/curvePoint/delete/{id}(id=${curvePoint.id})')"></div>
+        </td>
+    </tr>
+</tbody>

@@ -1,7 +1,7 @@
 package com.nnk.poseidon.data;
 
 import com.nnk.poseidon.model.Register;
-import com.nnk.poseidon.model.Role;
+import com.nnk.poseidon.enumerator.UserRole;
 import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.mapper.MultiValueMapMapper;
 import org.springframework.util.MultiValueMap;
@@ -29,7 +29,7 @@ public class UserData {
                 .username("user@gmail.com")
                 .password(encryptedPassword)
                 .fullname("User")
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .expired(false)
                 .locked(false)
                 .credentialsExpired(false)
@@ -53,7 +53,7 @@ public class UserData {
                 .username("alex@gmail.com")
                 .password(encryptedPassword)
                 .fullname("Alex")
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .expired(false)
                 .locked(false)
                 .credentialsExpired(false)
@@ -77,7 +77,7 @@ public class UserData {
                 .username("user@gmail.com")
                 .password(encryptedPassword)
                 .fullname("User")
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .build();
     }
 
@@ -95,7 +95,7 @@ public class UserData {
                 .username("user@gmail.com")
                 .password(unencryptedPassword)
                 .fullname("User")
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .build();
     }
 
@@ -114,7 +114,7 @@ public class UserData {
                 .username("alex@gmail.com")
                 .password(encryptedPassword)
                 .fullname("Alex")
-                .role(Role.USER)
+                .role(UserRole.USER)
                 .build();
     }
 
@@ -124,7 +124,7 @@ public class UserData {
                 .username("admin@gmail.com")
                 .password(encryptedPassword)
                 .fullname("Administrator")
-                .role(Role.ADMIN)
+                .role(UserRole.ADMIN)
                 .build();
     }
 

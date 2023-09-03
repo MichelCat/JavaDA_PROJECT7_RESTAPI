@@ -22,20 +22,16 @@
 
 	<div class="container">
 		<!-- Rating List -->
-		<div class="row"><h2 th:text="#{label.rating.titleList}" /></div>
+		<header th:insert="fragments/general :: headerNormal('label.rating.titleList')"></header>
 
-		<!-- Error message -->
-		<div th:replace="~{fragments/error-message}"></div>
+		<!-- Global message -->
+		<div th:replace="fragments/global-message"></div>
 
-		<!-- Add New -->
-		<div class="row">
-			<div class="col-2">
-				<a th:href="@{/rating/add}" class="btn btn-primary btn-sm">Add New</a>
-			</div>
-		</div>
+		<!-- Add new button -->
+		<div th:replace="fragments/input-type :: addNewButton('/rating/add')"></div>
 
 		<!-- Bid List -->
-		<div th:replace="~{rating/list-detail}"></div>
+		<div th:replace="fragments/general :: tableList('rating/list-detail')"></div>
 	</div>
 
 </main>

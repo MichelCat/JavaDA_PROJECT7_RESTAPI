@@ -1,12 +1,13 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.business.UserBusiness;
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.User;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,8 @@ public class UserController {
 
     @Autowired
     private UserBusiness userBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of registers.
@@ -38,7 +41,9 @@ public class UserController {
     public String home(Model model)
     {
         // Find all User, add to model
-        log.debug("HTTP GET, display user list form.");
+        String msgSource = messageSource.getMessage("debug.user.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("registers", userBusiness.getUsersList());
         return "user/list";
     }
@@ -51,7 +56,9 @@ public class UserController {
      */
     @GetMapping("/add")
     public String addUser(Register register) {
-        log.debug("HTTP GET, display User add form.");
+        String msgSource = messageSource.getMessage("debug.user.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "user/add";
     }
 
@@ -75,18 +82,24 @@ public class UserController {
         // Check null role
         if (register.getRole() == null) {
             result.addError(new FieldError("register", "role"
-                            , MessagePropertieFormat.getMessage("constraint.notNull.user.role")));
+                            , messageSource.getMessage("constraint.notNull.user.role"
+                            , null, LocaleContextHolder.getLocale())));
         }
         // User parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for User ({}).", register);
+            String msgSource = messageSource.getMessage("debug.user.validation"
+                                    , new Object[] { register }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "user/add";
         }
         try {
             // Save User
-            User userSave = userBusiness.createUser(register);
-            log.info("HTTP GET, SUCCESSFUL ({}).", userSave);
-            redirectAttributes.addFlashAttribute("successMessage", "User created successfully.");
+            userBusiness.createUser(register);
+            String msgSource = messageSource.getMessage("info.user.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("registers", userBusiness.getUsersList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -110,7 +123,9 @@ public class UserController {
         try {
             Register register = userBusiness.getRegisterById(id);
             register.setPassword("");
-            log.debug("HTTP GET, display User update form ({}).", register);
+            String msgSource = messageSource.getMessage("debug.user.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("register", register);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -140,14 +155,19 @@ public class UserController {
 
         // User parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for User ({}).", register);
+            String msgSource = messageSource.getMessage("debug.user.validation"
+                                    , new Object[] { register }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "user/update";
         }
         try {
             // Modify User
-            User userSave = userBusiness.updateUser(id, register);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", userSave);
-            redirectAttributes.addFlashAttribute("successMessage", "User updated successfully.");
+            userBusiness.updateUser(id, register);
+            String msgSource = messageSource.getMessage("info.user.updated"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("registers", userBusiness.getUsersList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -173,8 +193,10 @@ public class UserController {
         try {
             // Delete User
             userBusiness.deleteUser(id);
-            log.info("HTTP DELETE, SUCCESSFUL (User ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully.");
+            String msgSource = messageSource.getMessage("info.user.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("registers", userBusiness.getUsersList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

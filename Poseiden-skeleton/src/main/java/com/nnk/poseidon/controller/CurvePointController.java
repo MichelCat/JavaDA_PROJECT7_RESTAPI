@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.CurvePoint;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CurvePointController {
     @Autowired
     private CurvePointBusiness curvePointBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of CurvePoints.
@@ -34,7 +38,9 @@ public class CurvePointController {
     public String home(Model model)
     {
         // Find all Curve Point, add to model
-        log.debug("HTTP GET, display curve point list form.");
+        String msgSource = messageSource.getMessage("debug.curvePoint.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         return "curvePoint/list";
     }
@@ -47,7 +53,9 @@ public class CurvePointController {
      */
     @GetMapping("/add")
     public String addCurvePointForm(CurvePoint curvePoint) {
-        log.debug("HTTP GET, display CurvePoint add form.");
+        String msgSource = messageSource.getMessage("debug.curvePoint.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "curvePoint/add";
     }
 
@@ -70,14 +78,19 @@ public class CurvePointController {
 
         // CurvePoint parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for CurvePoint ({}).", curvePoint);
+            String msgSource = messageSource.getMessage("debug.curvePoint.validation"
+                                    , new Object[] { curvePoint }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "curvePoint/add";
         }
         try {
             // Save CurvePoint
-            CurvePoint curvePointSave = curvePointBusiness.createCurvePoint(curvePoint);
-            log.info("HTTP GET, SUCCESSFUL ({}).", curvePointSave);
-            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint created successfully.");
+            curvePointBusiness.createCurvePoint(curvePoint);
+            String msgSource = messageSource.getMessage("info.curvePoint.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -100,7 +113,9 @@ public class CurvePointController {
         // Get CurvePoint by Id and to model then show to the form
         try {
             CurvePoint curvePoint = curvePointBusiness.getCurvePointById(id);
-            log.debug("HTTP GET, display CurvePoint update form ({}).", curvePoint);
+            String msgSource = messageSource.getMessage("debug.curvePoint.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("curvePoint", curvePoint);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -130,14 +145,19 @@ public class CurvePointController {
 
         // CurvePoint parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for CurvePoint ({}).", curvePoint);
+            String msgSource = messageSource.getMessage("debug.curvePoint.validation"
+                                    , new Object[] { curvePoint }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "curvePoint/update";
         }
         try {
             // Modify CurvePoint
-            CurvePoint curvePointSave = curvePointBusiness.updateCurvePoint(id, curvePoint);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", curvePointSave);
-            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint updated successfully.");
+            curvePointBusiness.updateCurvePoint(id, curvePoint);
+            String msgSource = messageSource.getMessage("info.curvePoint.updated"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -163,8 +183,10 @@ public class CurvePointController {
         try {
             // Delete CurvePoint
             curvePointBusiness.deleteCurvePoint(id);
-            log.info("HTTP DELETE, SUCCESSFUL (CurvePoint ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "CurvePoint deleted successfully.");
+            String msgSource = messageSource.getMessage("info.curvePoint.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

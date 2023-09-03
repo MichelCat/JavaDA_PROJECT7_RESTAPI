@@ -1,6 +1,6 @@
 package com.nnk.poseidon.controller;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.business.LoginBusiness;
 import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.model.Register;
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,6 +50,8 @@ class LoginControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+    @Autowired
+    private MessageSource messageSource;
 
     @MockBean
     private LoginBusiness loginBusiness;
@@ -154,7 +158,10 @@ class LoginControllerTest {
     @WithMockUser(roles = "USER")
     void postRegister_userExist_return302() throws Exception {
         // GIVEN
-        doThrow(new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", registerSource.getUsername()))
+        String msgSource = messageSource.getMessage("exception.EmailAccountAlreadyExists"
+                            , new Object[] { registerSource.getUsername() }
+                            , LocaleContextHolder.getLocale());
+        doThrow(new MyException(msgSource))
                 .when(loginBusiness).addUser(registerSource);
         // WHEN
         mockMvc.perform(post("/app/register")

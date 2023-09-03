@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 class UserRegisterMapperTest {
 
     @Autowired
-    private UserRegisterMapper userRegisterMapper;
+    private RegisterMapper registerMapper;
     @MockBean
     private PasswordEncoder passwordEncoder;
 
@@ -63,7 +63,7 @@ class UserRegisterMapperTest {
         // GIVEN
         registerSave.setPassword(encryptedPassword);
         // WHEN
-        Register result = userRegisterMapper.from(userSave);
+        Register result = registerMapper.from(userSave);
         // THEN
         assertThat(result).isEqualTo(registerSave);
     }
@@ -72,7 +72,7 @@ class UserRegisterMapperTest {
     void from_whenNull_returnNull() {
         // GIVEN
         // WHEN
-        Register result = userRegisterMapper.from(null);
+        Register result = registerMapper.from(null);
         // THEN
         assertThat(result).isNull();
     }
@@ -87,7 +87,7 @@ class UserRegisterMapperTest {
         registerSave.setPassword(encryptedPassword);
         registerSaves.add(registerSave);
         // WHEN
-        List<Register> result = userRegisterMapper.listFrom(userSaves);
+        List<Register> result = registerMapper.listFrom(userSaves);
         // THEN
         assertIterableEquals(result, registerSaves);
     }
@@ -96,7 +96,7 @@ class UserRegisterMapperTest {
     void listFrom_whenEmptyList_returnEmptyList() {
         // GIVEN
         // WHEN
-        List<Register> result = userRegisterMapper.listFrom(userSaves);
+        List<Register> result = registerMapper.listFrom(userSaves);
         // THEN
         assertIterableEquals(result, registerSaves);
     }
@@ -109,7 +109,7 @@ class UserRegisterMapperTest {
         // GIVEN
         when(passwordEncoder.encode(any(String.class))).thenReturn(encryptedPassword);
         // WHEN
-        User result = userRegisterMapper.addUserFrom(registerSource);
+        User result = registerMapper.addUserFrom(registerSource);
         // THEN
         assertThat(result).isEqualTo(loginSource);
     }
@@ -118,7 +118,7 @@ class UserRegisterMapperTest {
     void addUserFrom_whenNull_returnNull() {
         // GIVEN
         // WHEN
-        User result = userRegisterMapper.addUserFrom(null);
+        User result = registerMapper.addUserFrom(null);
         // THEN
         assertThat(result).isNull();
     }
@@ -131,7 +131,7 @@ class UserRegisterMapperTest {
         // GIVEN
         when(passwordEncoder.encode(any(String.class))).thenReturn(encryptedPassword);
         // WHEN
-        User result = userRegisterMapper.updateUserFrom(registerSave, userSave);
+        User result = registerMapper.updateUserFrom(registerSave, userSave);
         // THEN
         assertThat(result).isEqualTo(userSave);
         assertSame(result, userSave);

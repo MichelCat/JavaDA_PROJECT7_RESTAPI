@@ -22,20 +22,16 @@
 
 	<div class="container">
 		<!-- Curve Point List -->
-		<div class="row"><h2 th:text="#{label.curvePoint.titleList}" /></div>
+		<header th:insert="fragments/general :: headerNormal('label.curvePoint.titleList')"></header>
 
-		<!-- Error message -->
-		<div th:replace="~{fragments/error-message}"></div>
+		<!-- Global message -->
+		<div th:replace="fragments/global-message"></div>
 
-		<!-- Add New -->
-		<div class="row">
-			<div class="col-2">
-				<a th:href="@{/curvePoint/add}" class="btn btn-primary btn-sm">Add New</a>
-			</div>
-		</div>
+		<!-- Add new button -->
+		<div th:replace="fragments/input-type :: addNewButton('/curvePoint/add')"></div>
 
 		<!-- CurvePoint List -->
-		<div th:replace="~{curvePoint/list-detail}"></div>
+		<div th:replace="fragments/general :: tableList('curvePoint/list-detail')"></div>
 	</div>
 
 </main>

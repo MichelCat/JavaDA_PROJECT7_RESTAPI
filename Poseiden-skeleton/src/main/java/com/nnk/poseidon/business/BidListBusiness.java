@@ -1,12 +1,13 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.model.Bid;
 import com.nnk.poseidon.repository.BidRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public class BidListBusiness {
 
     @Autowired
     private BidRepository bidRepository;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Find list of bids
@@ -41,23 +44,28 @@ public class BidListBusiness {
      * @param bid The bid object added
      *
      * @return Bid added
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Bid createBid(final Bid bid)
-                                throws MyExceptionBadRequestException {
+                                throws MyException {
         // Bid parameter is null
         if (bid == null) {
-            log.debug("THROW, Bid is null.");
-            throw new MyExceptionBadRequestException("throw.bid.nullBid");
+            String msgSource = messageSource.getMessage("exception.bid.nullBid"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Bid exist
         Integer id = bid.getBidListId();
         if (id != null) {
             Optional<Bid> optBidEntity = bidRepository.findById(id);
             if (optBidEntity.isPresent()) {
-                log.debug("THROW, Bid exist ({}).", optBidEntity.get());
-                throw new MyExceptionBadRequestException("throw.bid.bidExists");
+                String msgSource = messageSource.getMessage("exception.bid.bidExists"
+                                    , new Object[] { id }
+                                    , LocaleContextHolder.getLocale());
+                log.debug("Exception, " + msgSource);
+                throw new MyException(msgSource);
             }
         }
         // Bid saved
@@ -71,15 +79,18 @@ public class BidListBusiness {
      * @param id Bid ID founded
      *
      * @return Bid founded
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     public Bid getBidById(final Integer id)
-                                throws MyExceptionNotFoundException {
+                                throws MyException {
         // Bid does not exist
         Optional<Bid> optBidEntity = bidRepository.findById(id);
-        if (optBidEntity.isPresent() == false) {
-            log.debug("THROW, Bid not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.bid.unknown", id);
+        if (optBidEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.bid.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Bid found
         return optBidEntity.get();
@@ -92,24 +103,28 @@ public class BidListBusiness {
      * @param bid The bid object updated
      *
      * @return Bid updated
-     * @throws MyExceptionNotFoundException Exception not found
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Bid updateBid(final Integer id
                             , final Bid bid)
-                            throws MyExceptionNotFoundException {
+                            throws MyException {
         // Bid does not exist
         Optional<Bid> optBidEntity = bidRepository.findById(id);
-        if (optBidEntity.isPresent() == false) {
-            log.debug("THROW, Bid not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.bid.unknown", id);
+        if (optBidEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.bid.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Bid parameter is null
         if (bid == null) {
-            log.debug("THROW, Bid is null.");
-            throw new MyExceptionBadRequestException("throw.bid.nullBid");
-        }
+            String msgSource = messageSource.getMessage("exception.bid.nullBid"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
+       }
         // Bid updated
         Bid bidEntity = optBidEntity.get();
         bidEntity.setAccount(bid.getAccount());
@@ -125,15 +140,18 @@ public class BidListBusiness {
      * @param id Bid ID deleted
      *
      * @return void
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteBid(final Integer id)
-                            throws MyExceptionNotFoundException {
+                            throws MyException {
         // Bid does not exist
         if (bidRepository.existsById(id) == false) {
-            log.debug("THROW, Bid not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.bid.unknown", id);
+            String msgSource = messageSource.getMessage("exception.bid.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Bid deleted
         bidRepository.deleteById(id);

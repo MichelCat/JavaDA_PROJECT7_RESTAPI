@@ -1,11 +1,13 @@
 package com.nnk.poseidon.configuration;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -22,6 +24,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class PoseidonAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Autowired
+    private MessageSource messageSource;
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -48,7 +53,10 @@ public class PoseidonAuthenticationSuccessHandler implements AuthenticationSucce
         String targetUrl = determineTargetUrl(authentication);
 
         if (response.isCommitted()) {
-            log.debug(MessagePropertieFormat.getMessage("logger.AlreadyCommittedUnableRedirect", targetUrl));
+            String error = messageSource.getMessage("logger.AlreadyCommittedUnableRedirect"
+                                , new Object[] { targetUrl }
+                                , LocaleContextHolder.getLocale());
+            log.debug(error);
             return;
         }
 

@@ -9,5 +9,5 @@
 
 <!-- ADMIN -->
 <th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
-    <div th:replace="~{fragments/navigational-hierarchy-admin}"></div>
+    <div th:replace="fragments/navigational-hierarchy-admin"></div>
 </th:block>

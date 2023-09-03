@@ -1,6 +1,6 @@
 package com.nnk.poseidon.configuration;
 
-import com.nnk.poseidon.model.Role;
+import com.nnk.poseidon.enumerator.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,11 +17,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class PoseidonSecurityConfiguration {
 
   private static final String[] AUTH_WHITELIST_ADMIN = {
-//          "/home", "/user/**" };
           "/home", "/user" };
 
   private static final String[] AUTH_WHITELIST_USER = {
-//          "/bidList/**","/curvePoint/**", "/rating/**", "/ruleName/**", "/trade/**" };
           "/bidList","/curvePoint", "/rating", "/ruleName", "/trade" };
 
   @Bean
@@ -30,8 +28,8 @@ public class PoseidonSecurityConfiguration {
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(AUTH_WHITELIST_ADMIN).hasAuthority(Role.ADMIN.name())
-                    .requestMatchers(AUTH_WHITELIST_USER).hasAuthority(Role.USER.name())
+                    .requestMatchers(AUTH_WHITELIST_ADMIN).hasAuthority(UserRole.ADMIN.name())
+                    .requestMatchers(AUTH_WHITELIST_USER).hasAuthority(UserRole.USER.name())
                     .anyRequest().permitAll()
             );
 
@@ -43,7 +41,6 @@ public class PoseidonSecurityConfiguration {
                     .permitAll());
 
     http
-//            .logout(withDefaults());
             .logout()
             .logoutUrl("/app/logout")
             .logoutSuccessUrl("/app/login")

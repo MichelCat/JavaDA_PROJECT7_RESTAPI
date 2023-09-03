@@ -1,7 +1,6 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.BidData;
 import com.nnk.poseidon.model.Bid;
 import com.nnk.poseidon.repository.BidRepository;
@@ -12,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -38,10 +38,13 @@ class BidListBusinessTest {
 
     @Autowired
     private BidListBusiness bidListBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     @MockBean
     private BidRepository bidRepository;
 
+    private TestMessageSource testMessageSource;
     private Bid bidSource;
     private Bid bidSave;
     public List<Bid> bidsList;
@@ -49,6 +52,8 @@ class BidListBusinessTest {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         bidSource = BidData.getBidSource();
         bidSave = BidData.getBidSave();
 
@@ -83,7 +88,7 @@ class BidListBusinessTest {
     // createBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void createBid_saveNormal() {
+    void createBid_saveNormal() throws MyException {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(bidRepository.save(bidSource)).thenReturn(bidSave);
@@ -98,18 +103,22 @@ class BidListBusinessTest {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(null));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.createBid(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.nullBid", null);
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
     @Test
-    void createBid_bidExist_returnBadRequest() {
+    void createBid_bidExist_returnMyException() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(bidSave));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.createBid(bidSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.bidExists", new Object[] { bidSave.getBidListId() });
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
@@ -117,7 +126,7 @@ class BidListBusinessTest {
     // getBidById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void getBidById_findByIdNormal() {
+    void getBidById_findByIdNormal() throws MyException {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
@@ -127,12 +136,14 @@ class BidListBusinessTest {
     }
 
     @Test
-    void getBidById_nullIdParameter_returnNotFound() {
+    void getBidById_nullIdParameter_returnMyException() {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(null));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.getBidById(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { null });
         verify(bidRepository, Mockito.times(1)).findById(null);
     }
 
@@ -140,7 +151,7 @@ class BidListBusinessTest {
     // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void updateBid_updateNormal() {
+    void updateBid_updateNormal() throws MyException {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         when(bidRepository.save(bidSave)).thenReturn(bidSave);
@@ -151,42 +162,50 @@ class BidListBusinessTest {
     }
 
     @Test
-    void updateBid_bidNotExist_returnNotFound() {
+    void updateBid_bidNotExist_returnMyException() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(2, bidSource));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.updateBid(2, bidSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { 2 });
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
     @Test
-    void updateBid_nullIdParameter_returnNotFound() {
+    void updateBid_nullIdParameter_returnMyException() {
         // GIVEN
         when(bidRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(null, bidSource));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.updateBid(null, bidSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { null });
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
     @Test
-    void updateBid_zeroIdParameter_returnNotFound() {
+    void updateBid_zeroIdParameter_returnMyException() {
         // GIVEN
         when(bidRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(0, bidSource));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.updateBid(0, bidSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { 0 });
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
     @Test
-    void updateBid_nullBidParameter_returnNotFound() {
+    void updateBid_nullBidParameter_returnMyException() {
         // GIVEN
         when(bidRepository.findById(any(Integer.class))).thenReturn(Optional.of(bidSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.updateBid(1, null));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.updateBid(1, null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.nullBid", null);
         verify(bidRepository, Mockito.times(0)).save(any(Bid.class));
     }
 
@@ -194,7 +213,7 @@ class BidListBusinessTest {
     // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void deleteBid_deleteNormal() {
+    void deleteBid_deleteNormal() throws MyException {
         // GIVEN
         when(bidRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(bidRepository).deleteById(any(Integer.class));
@@ -205,32 +224,38 @@ class BidListBusinessTest {
     }
 
     @Test
-    void deleteBid_bidNotExist_returnNotFound() {
+    void deleteBid_bidNotExist_returnMyException() {
         // GIVEN
         when(bidRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(2));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.deleteBid(2));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { 2 });
         verify(bidRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteBid_nullIdParameter_returnNotFound() {
+    void deleteBid_nullIdParameter_returnMyException() {
         // GIVEN
         when(bidRepository.existsById(null)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(null));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.deleteBid(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { null });
         verify(bidRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteBid_zeroIdParameter_returnNotFound() {
+    void deleteBid_zeroIdParameter_returnMyException() {
         // GIVEN
         when(bidRepository.existsById(0)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(0));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.deleteBid(0));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { 0 });
         verify(bidRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 }

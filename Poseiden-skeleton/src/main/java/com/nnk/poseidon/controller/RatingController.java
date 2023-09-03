@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.Rating;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class RatingController {
     @Autowired
     private RatingBusiness ratingBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of Ratings.
@@ -34,7 +38,9 @@ public class RatingController {
     public String home(Model model)
     {
         // Find all Rating, add to model
-        log.debug("HTTP GET, display rating list form.");
+        String msgSource = messageSource.getMessage("debug.rating.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("ratings", ratingBusiness.getRatingsList());
         return "rating/list";
     }
@@ -47,7 +53,9 @@ public class RatingController {
      */
     @GetMapping("/add")
     public String addRatingForm(Rating rating) {
-        log.debug("HTTP GET, display Rating add form.");
+        String msgSource = messageSource.getMessage("debug.rating.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "rating/add";
     }
 
@@ -70,14 +78,19 @@ public class RatingController {
 
         // Rating parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for Rating ({}).", rating);
+            String msgSource = messageSource.getMessage("debug.rating.validation"
+                                    , new Object[] { rating }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "rating/add";
         }
         try {
             // Save Rating
-            Rating ratingSave = ratingBusiness.createRating(rating);
-            log.info("HTTP GET, SUCCESSFUL ({}).", ratingSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Rating created successfully.");
+            ratingBusiness.createRating(rating);
+            String msgSource = messageSource.getMessage("info.rating.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -100,7 +113,9 @@ public class RatingController {
         // Get Rating by Id and to model then show to the form
         try {
             Rating rating = ratingBusiness.getRatingById(id);
-            log.debug("HTTP GET, display Rating update form ({}).", rating);
+            String msgSource = messageSource.getMessage("debug.rating.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("rating", rating);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -130,14 +145,19 @@ public class RatingController {
 
         // Rating parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for Rating ({}).", rating);
+            String msgSource = messageSource.getMessage("debug.rating.validation"
+                                    , new Object[] { rating }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "rating/update";
         }
         try {
             // Modify Rating
-            Rating ratingSave = ratingBusiness.updateRating(id, rating);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", ratingSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Rating updated successfully.");
+            ratingBusiness.updateRating(id, rating);
+            String msgSource = messageSource.getMessage("info.rating.updated"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -163,8 +183,10 @@ public class RatingController {
         try {
             // Delete Rating
             ratingBusiness.deleteRating(id);
-            log.info("HTTP DELETE, SUCCESSFUL (Rating ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "Rating deleted successfully.");
+            String msgSource = messageSource.getMessage("info.rating.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("ratings", ratingBusiness.getRatingsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

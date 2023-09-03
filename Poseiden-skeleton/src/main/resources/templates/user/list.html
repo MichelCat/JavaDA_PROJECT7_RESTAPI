@@ -20,23 +20,20 @@
 
 <main layout:fragment="content">
 
-		<div class="container">
-			<!-- User List -->
-			<div class="row"><h2 th:text="#{label.user.titleList}" /></div>
+	<div class="container">
 
-			<!-- Error message -->
-			<div th:replace="~{fragments/error-message}"></div>
+		<!-- User List -->
+		<header th:insert="fragments/general :: headerNormal('label.user.titleList')"></header>
 
-			<!-- Add New -->
-			<div class="row">
-				<div class="col-2">
-					<a th:href="@{/user/add}" class="btn btn-primary btn-sm">Add New</a>
-				</div>
-			</div>
+		<!-- Global message -->
+		<div th:replace="fragments/global-message"></div>
 
-			<!-- CurvePoint List -->
-			<div th:replace="~{user/list-detail}"></div>
-		</div>
+		<!-- Add new button -->
+		<div th:replace="fragments/input-type :: addNewButton('/user/add')"></div>
+
+		<!-- CurvePoint List -->
+		<div th:replace="fragments/general :: tableList('user/list-detail')"></div>
+	</div>
 
 </main>
 

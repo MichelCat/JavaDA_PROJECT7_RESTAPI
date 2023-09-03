@@ -1,6 +1,5 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -34,15 +34,20 @@ class EmailActivationBusinessTest {
 
     @Autowired
     private EmailActivationBusiness emailActivationBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     @MockBean
     private UserRepository userRepository;
 
+    private TestMessageSource testMessageSource;
     private User userSave;
     private String keyValue;
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         userSave = UserData.getUserSave();
         userSave.createValidationEmail();
         keyValue = userSave.getEmailValidationKey();
@@ -70,8 +75,8 @@ class EmailActivationBusinessTest {
         Throwable exception = assertThrows(MyException.class,
                 () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.CustomerNotExist", "");
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.CustomerNotExist", null);
     }
 
     @Test
@@ -83,8 +88,8 @@ class EmailActivationBusinessTest {
         Throwable exception = assertThrows(MyException.class,
                 () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.InvalidEmailKey");
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.InvalidEmailKey", null);
     }
 
     @Test
@@ -96,8 +101,8 @@ class EmailActivationBusinessTest {
         Throwable exception = assertThrows(MyException.class,
                 () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.EmailTimeExceeded");
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.EmailTimeExceeded", null);
     }
 
     @Test
@@ -108,7 +113,7 @@ class EmailActivationBusinessTest {
         Throwable exception = assertThrows(MyException.class,
                 () -> {emailActivationBusiness.activatedUser(keyValue);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.AccountAlreadyActivated");
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.AccountAlreadyActivated", null);
     }
 }

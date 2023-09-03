@@ -27,11 +27,6 @@ public class LocalConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public ResourceBundleMessageSource messageSource() {
-        // ReloadableResourceBundleMessageSource if our localized messages will be changed at runtime.
-        // ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        // messageSource.setBasename("classpath:messages");
-        // messageSource.setDefaultEncoding("UTF-8");
-
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("lang/messages");
         messageSource.setDefaultEncoding("UTF-8");
@@ -69,13 +64,4 @@ public class LocalConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
-
-//    @Bean
-//    public LocalValidatorFactoryBean getValidator() {
-//        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-//        bean.setValidationMessageSource(messageSource());
-//        return bean;
-//    }
-
-
 }

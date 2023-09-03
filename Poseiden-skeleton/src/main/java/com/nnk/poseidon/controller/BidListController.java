@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.Bid;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BidListController {
     @Autowired
     private BidListBusiness bidListBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of bids.
@@ -35,7 +39,9 @@ public class BidListController {
     public String home(Model model)
     {
         // Call service find all bids to show to the view
-        log.debug("HTTP GET, display bid list form.");
+        String msgSource = messageSource.getMessage("debug.bid.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("bids", bidListBusiness.getBidsList());
         return "bidList/list";
     }
@@ -48,7 +54,9 @@ public class BidListController {
      */
     @GetMapping("/add")
     public String addBidForm(Bid bid) {
-        log.debug("HTTP GET, display bid add form.");
+        String msgSource = messageSource.getMessage("debug.bid.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "bidList/add";
     }
 
@@ -71,14 +79,19 @@ public class BidListController {
 
         // Bid parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for bid ({}).", bid);
+            String msgSource = messageSource.getMessage("debug.bid.validation"
+                                    , new Object[] { bid }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "bidList/add";
         }
         try {
             // Save bid
-            Bid bidSave = bidListBusiness.createBid(bid);
-            log.info("HTTP GET, SUCCESSFUL ({}).", bidSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Bid created successfully.");
+            bidListBusiness.createBid(bid);
+            String msgSource = messageSource.getMessage("info.bid.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -101,7 +114,9 @@ public class BidListController {
         // Get Bid by Id and to model then show to the form
         try {
             Bid bid = bidListBusiness.getBidById(id);
-            log.debug("HTTP GET, display bid update form ({}).", bid);
+            String msgSource = messageSource.getMessage("debug.bid.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("bid", bid);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -131,14 +146,19 @@ public class BidListController {
 
         // Bid parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for bid ({}).", bid);
+            String msgSource = messageSource.getMessage("debug.bid.validation"
+                                    , new Object[] { bid }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "bidList/update";
         }
         try {
             // Modify bid
-            Bid bidSave = bidListBusiness.updateBid(id, bid);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", bidSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Bid updated successfully.");
+            bidListBusiness.updateBid(id, bid);
+            String msgSource = messageSource.getMessage("info.bid.updated"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -164,8 +184,10 @@ public class BidListController {
         try {
             // Delete bid
             bidListBusiness.deleteBid(id);
-            log.info("HTTP DELETE, SUCCESSFUL (Bid ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "Bid deleted successfully.");
+            String msgSource = messageSource.getMessage("info.bid.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("bids", bidListBusiness.getBidsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

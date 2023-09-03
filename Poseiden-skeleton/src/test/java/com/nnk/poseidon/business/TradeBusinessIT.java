@@ -2,14 +2,14 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.TradeData;
 import com.nnk.poseidon.model.Trade;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.GlobalData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +35,10 @@ class TradeBusinessIT {
 
     @Autowired
     private TradeBusiness tradeBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private Trade tradeSource;
     private Trade tradeSave;
     private Integer tradeId;
@@ -43,6 +46,8 @@ class TradeBusinessIT {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         tradeSource = TradeData.getTradeSource();
         tradeSave = TradeData.getTradeSave();
 
@@ -79,7 +84,7 @@ class TradeBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createTrade_tradeNotExist() {
+    void createTrade_tradeNotExist() throws MyException {
         // GIVEN
         // WHEN
         Trade result = tradeBusiness.createTrade(tradeSource);
@@ -95,8 +100,10 @@ class TradeBusinessIT {
     void createTrade_tradeExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> tradeBusiness.createTrade(tradeSave));
+        Throwable exception = assertThrows(MyException.class, () -> tradeBusiness.createTrade(tradeSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.trade.tradeExists", new Object[] { tradeSave.getTradeId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -105,7 +112,7 @@ class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    void getTradeById_tradeExist() {
+    void getTradeById_tradeExist() throws MyException {
         // GIVEN
         // WHEN
         assertThat(tradeBusiness.getTradeById(tradeId)).isEqualTo(tradeSave);
@@ -117,8 +124,10 @@ class TradeBusinessIT {
     void getTradeById_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeId));
+        Throwable exception = assertThrows(MyException.class, () -> tradeBusiness.getTradeById(tradeId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.trade.unknown", new Object[] { tradeId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -127,7 +136,7 @@ class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    void updateTrade_tradeExist() {
+    void updateTrade_tradeExist() throws MyException {
         // GIVEN
         // WHEN
         Trade result = tradeBusiness.updateTrade(tradeId, tradeSave);
@@ -142,8 +151,10 @@ class TradeBusinessIT {
     void updateTrade_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.updateTrade(tradeId, tradeSave));
+        Throwable exception = assertThrows(MyException.class, () -> tradeBusiness.updateTrade(tradeId, tradeSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.trade.unknown", new Object[] { tradeId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -152,12 +163,14 @@ class TradeBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
-    void deleteTrade_tradeExist() {
+    void deleteTrade_tradeExist() throws MyException {
         // GIVEN
         // WHEN
         tradeBusiness.deleteTrade(tradeId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.getTradeById(tradeId));
+        Throwable exception = assertThrows(MyException.class, () -> tradeBusiness.getTradeById(tradeId));
+        testMessageSource.compare(exception
+                            , "exception.trade.unknown", new Object[] { tradeId });
     }
 
     @Test
@@ -165,7 +178,9 @@ class TradeBusinessIT {
     void deleteTrade_tradeNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> tradeBusiness.deleteTrade(tradeId));
+        Throwable exception = assertThrows(MyException.class, () -> tradeBusiness.deleteTrade(tradeId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.trade.unknown", new Object[] { tradeId });
     }
 }

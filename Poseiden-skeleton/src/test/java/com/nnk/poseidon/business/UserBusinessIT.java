@@ -1,8 +1,7 @@
 package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.UserData;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.User;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,7 +36,10 @@ class UserBusinessIT {
 
     @Autowired
     private UserBusiness userBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private User userSave;
     private Register registerSource;
     private Register registerSave;
@@ -48,6 +51,8 @@ class UserBusinessIT {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         userSave = UserData.getUserSave();
 
         registerSource = UserData.getRegisterSource();
@@ -96,7 +101,7 @@ class UserBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createUser_userNotExist() {
+    void createUser_userNotExist() throws MyException {
         // GIVEN
         // WHEN
         User result = userBusiness.createUser(registerSource);
@@ -114,8 +119,10 @@ class UserBusinessIT {
     void createUser_userExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> userBusiness.createUser(registerSave));
+        Throwable exception = assertThrows(MyException.class, () -> userBusiness.createUser(registerSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.user.userExists", new Object[] { registerSave.getId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -124,7 +131,7 @@ class UserBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    void getUserById_userExist() {
+    void getUserById_userExist() throws MyException {
         // GIVEN
         // WHEN
         Register result = userBusiness.getRegisterById(userId);
@@ -139,8 +146,10 @@ class UserBusinessIT {
     void getUserById_userNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.getRegisterById(userId));
+        Throwable exception = assertThrows(MyException.class, () -> userBusiness.getRegisterById(userId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.user.unknown", new Object[] { userId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -149,7 +158,7 @@ class UserBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    void updateUser_userExist() {
+    void updateUser_userExist() throws MyException {
         // GIVEN
         // WHEN
         User result = userBusiness.updateUser(userId, registerSave);
@@ -165,8 +174,10 @@ class UserBusinessIT {
     void updateUser_userNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.updateUser(userId, registerSave));
+        Throwable exception = assertThrows(MyException.class, () -> userBusiness.updateUser(userId, registerSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.user.unknown", new Object[] { userId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -175,12 +186,14 @@ class UserBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
-    void deleteUser_userExist() {
+    void deleteUser_userExist() throws MyException {
         // GIVEN
         // WHEN
         userBusiness.deleteUser(userId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.getRegisterById(userId));
+        Throwable exception =assertThrows(MyException.class, () -> userBusiness.getRegisterById(userId));
+        testMessageSource.compare(exception
+                            , "exception.user.unknown", new Object[] { userId });
     }
 
     @Test
@@ -188,7 +201,9 @@ class UserBusinessIT {
     void deleteUser_userNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> userBusiness.deleteUser(userId));
+        Throwable exception =assertThrows(MyException.class, () -> userBusiness.deleteUser(userId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.user.unknown", new Object[] { userId });
     }
 }

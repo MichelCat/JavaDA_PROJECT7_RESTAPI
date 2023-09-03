@@ -1,0 +1,108 @@
+<!--
+/**
+ * input-type
+ * @description Fragment for imput
+ */
+-->
+
+
+<!--
+/**
+ * Text input.
+ * @param {string} fieldName - Field name
+ * @param {string} fieldLabel - Field label
+ */
+-->
+<div class="form-group" th:fragment="inputText (fieldName, fieldLabel)">
+    <label th:for="${fieldName}" class="col-sm-2 control-label" th:text="#{${fieldLabel}}"></label>
+    <div class="col-sm-10">
+        <input type="text" th:field="*{__${fieldName}__}" th:id="${fieldName}" th:placeholder="#{${fieldLabel}}" class="col-4">
+        <p class="text-danger" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}"></p>
+    </div>
+</div>
+
+<!--
+/**
+ * Number input.
+ * @param {string} fieldName - Field name
+ * @param {string} fieldLabel - Field label
+ */
+-->
+<div class="form-group" th:fragment="inputNumber (fieldName, fieldLabel)">
+    <label th:for="${fieldName}" class="col-sm-2 control-label" th:text="#{${fieldLabel}}"></label>
+    <div class="col-sm-10">
+        <input type="number" th:field="*{__${fieldName}__}" th:id="${fieldName}" th:placeholder="#{${fieldLabel}}" class="col-4">
+        <p class="text-danger" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}"></p>
+    </div>
+</div>
+
+<!--
+/**
+ * Password input.
+ * @param {string} fieldName - Field name
+ * @param {string} fieldLabel - Field label
+ */
+-->
+<div class="form-group" th:fragment="inputPassword (fieldName, fieldLabel)">
+    <label th:for="${fieldName}" class="col-sm-2 control-label" th:text="#{${fieldLabel}}"></label>
+    <div class="col-sm-10">
+        <input type="password" th:field="*{__${fieldName}__}" th:id="${fieldName}" th:placeholder="#{${fieldLabel}}" class="col-4">
+        <p class="text-danger" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}"></p>
+    </div>
+</div>
+
+<!--
+/**
+ * User role radio button.
+ * @param {string} fieldName - Field name
+ * @param {string} fieldLabel - Field label
+ */
+-->
+<div class="form-group" th:fragment="userRoleRadioButton (fieldName, fieldLabel)">
+    <label th:for="${fieldName}" class="col-sm-2 control-label" th:text="#{${fieldLabel}}"></label>
+    <div class="col-sm-10">
+        <label class="radio-inline"><input type="radio" th:field="*{__${fieldName}__}" th:value="ADMIN" th:text="#{label.user.role.admin}"></label>
+        <label class="radio-inline"><input type="radio" th:field="*{__${fieldName}__}" th:value="USER" th:text="#{label.user.role.user}"></label>
+        <p class="text-danger" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}"></p>
+    </div>
+</div>
+
+<!--
+/**
+ * Cancel and submit (Add/Update) button
+ * @param {string} cancelLink - Cancel link
+ * @param {string} submitLabel - Submit label
+ */
+-->
+<div class="form-group" th:fragment="cancelSubmitButton (cancelLink, submitLabel)">
+    <div class="col-sm-12">
+        <a class="btn btn-danger btn-sm" th:href="@{${cancelLink}}" th:text="#{label.button.cancel}"></a>
+        <input class="btn btn-primary btn-sm" type="submit" th:value="#{${submitLabel}}">
+    </div>
+</div>
+
+<!--
+/**
+ * Add new button
+ * @param {string} addNewLink - Add new link
+ */
+-->
+<div class="row" th:fragment="addNewButton (addNewLink)">
+    <div class="col-2">
+        <a th:href="@{${addNewLink}}" class="btn btn-primary btn-sm" th:text="#{label.button.addNew}"></a>
+    </div>
+</div>
+
+<!--
+/**
+ * Update and delete button
+ * @param {string} updateLink - Update link
+ * @param {string} deleteLink - Delete link
+ */
+-->
+<th:block th:fragment="updateDeleteButton (updateLink, deleteLink)">
+    <a class="btn btn-info btn-sm mx-1" th:href="@{__${updateLink}__}">
+        <spam class="bi bi-pencil" /></a>
+    <a class="btn btn-danger btn-sm mx-1" th:href="@{__${deleteLink}__}">
+        <spam class="bi bi-trash" /></a>
+</th:block>

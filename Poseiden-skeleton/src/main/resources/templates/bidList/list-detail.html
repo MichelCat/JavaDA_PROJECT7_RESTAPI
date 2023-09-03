@@ -6,38 +6,29 @@
 -->
 
 <!-- Bid table -->
-<div class="container my-3">
-    <div class="row">
-        <div class="table-responsive">
-            <table class="table table-striped table-sm table-hover table-bordered">
-                <!-- Bid title -->
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Account</th>
-                        <th>Type</th>
-                        <th>Bid Quantity</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <!-- Bid detail -->
-                <tbody>
-                    <tr th:each="bid : ${bids}">
-                        <td style="width: 10%" th:text="${bid.bidListId}"></td>
-                        <td th:text="${bid.account}"></td>
-                        <td th:text="${bid.type}"></td>
-                        <td th:text="${bid.bidQuantity}"></td>
-                        <td style="width: 15%" class="text-center">
-                            <a class="btn btn-info btn-sm mx-1"
-                               th:href="@{/bidList/update/{id}(id=${bid.bidListId})}">
-                                <spam class="bi bi-pencil" /></a>
-                            <a class="btn btn-danger btn-sm mx-1"
-                               th:href="@{/bidList/delete/{id}(id=${bid.bidListId})}">
-                                <spam class="bi bi-trash" /></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+
+<!-- Bid title -->
+<thead>
+    <tr>
+        <th th:text="#{label.bid.attribute.bidListId}"></th>
+        <th th:text="#{label.bid.attribute.account}"></th>
+        <th th:text="#{label.bid.attribute.type}"></th>
+        <th th:text="#{label.bid.attribute.bidQuantity}"></th>
+        <th th:text="#{label.column.action}"></th>
+    </tr>
+</thead>
+<!-- Bid detail -->
+<tbody>
+    <tr th:each="bid : ${bids}">
+        <td style="width: 10%" th:text="${bid.bidListId}"></td>
+        <td th:text="${bid.account}"></td>
+        <td th:text="${bid.type}"></td>
+        <td th:text="${bid.bidQuantity}"></td>
+        <td style="width: 15%" class="text-center">
+            <!-- Update and Delete button -->
+            <div th:replace="fragments/input-type :: updateDeleteButton(
+                                                        '/bidList/update/{id}(id=${bid.bidListId})'
+                                                        , '/bidList/delete/{id}(id=${bid.bidListId})')"></div>
+        </td>
+    </tr>
+</tbody>

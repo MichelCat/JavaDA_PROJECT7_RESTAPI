@@ -1,7 +1,6 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.CurvePointData;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.model.CurvePoint;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +35,10 @@ class CurvePointBusinessIT {
 
     @Autowired
     private CurvePointBusiness curvePointBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private CurvePoint curvePointSource;
     private CurvePoint curvePointSave;
     private Integer curvePointId;
@@ -43,6 +46,8 @@ class CurvePointBusinessIT {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         curvePointSource = CurvePointData.getCurvePointSource();
         curvePointSave = CurvePointData.getCurvePointSave();
 
@@ -79,7 +84,7 @@ class CurvePointBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createCurvePoint_curvePointNotExist() {
+    void createCurvePoint_curvePointNotExist() throws MyException {
         // GIVEN
         // WHEN
         CurvePoint result = curvePointBusiness.createCurvePoint(curvePointSource);
@@ -95,8 +100,10 @@ class CurvePointBusinessIT {
     void createCurvePoint_curvePointExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> curvePointBusiness.createCurvePoint(curvePointSave));
+        Throwable exception = assertThrows(MyException.class, () -> curvePointBusiness.createCurvePoint(curvePointSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.curvePoint.curvePointExists", new Object[] { curvePointSave.getId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -105,7 +112,7 @@ class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    void getCurvePointById_curvePointExist() {
+    void getCurvePointById_curvePointExist() throws MyException {
         // GIVEN
         // WHEN
         assertThat(curvePointBusiness.getCurvePointById(curvePointId)).isEqualTo(curvePointSave);
@@ -117,9 +124,11 @@ class CurvePointBusinessIT {
     void getCurvePointById_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
+        Throwable exception = assertThrows(MyException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
         // THEN
-    }
+        testMessageSource.compare(exception
+                            , "exception.curvePoint.unknown", new Object[] { curvePointId });
+   }
 
     // -----------------------------------------------------------------------------------------------
     // updateCurvePoint method
@@ -127,7 +136,7 @@ class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    void updateCurvePoint_curvePointExist() {
+    void updateCurvePoint_curvePointExist() throws MyException {
         // GIVEN
         // WHEN
         CurvePoint result = curvePointBusiness.updateCurvePoint(curvePointId, curvePointSave);
@@ -142,8 +151,10 @@ class CurvePointBusinessIT {
     void updateCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.updateCurvePoint(curvePointId, curvePointSave));
+        Throwable exception = assertThrows(MyException.class, () -> curvePointBusiness.updateCurvePoint(curvePointId, curvePointSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.curvePoint.unknown", new Object[] { curvePointId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -152,12 +163,14 @@ class CurvePointBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
-    void deleteCurvePoint_curvePointExist() {
+    void deleteCurvePoint_curvePointExist() throws MyException {
         // GIVEN
         // WHEN
         curvePointBusiness.deleteCurvePoint(curvePointId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
+        Throwable exception = assertThrows(MyException.class, () -> curvePointBusiness.getCurvePointById(curvePointId));
+        testMessageSource.compare(exception
+                            , "exception.curvePoint.unknown", new Object[] { curvePointId });
     }
 
     @Test
@@ -165,7 +178,9 @@ class CurvePointBusinessIT {
     void deleteCurvePoint_curvePointNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> curvePointBusiness.deleteCurvePoint(curvePointId));
+        Throwable exception = assertThrows(MyException.class, () -> curvePointBusiness.deleteCurvePoint(curvePointId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.curvePoint.unknown", new Object[] { curvePointId });
     }
 }

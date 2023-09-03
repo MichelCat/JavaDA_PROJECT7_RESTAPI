@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.Trade;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TradeController {
     @Autowired
     private TradeBusiness tradeBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of Trades.
@@ -34,7 +38,9 @@ public class TradeController {
     public String home(Model model)
     {
         // Find all Trade, add to model
-        log.debug("HTTP GET, display trade list form.");
+        String msgSource = messageSource.getMessage("debug.trade.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("trades", tradeBusiness.getTradesList());
         return "trade/list";
     }
@@ -47,7 +53,9 @@ public class TradeController {
      */
     @GetMapping("/add")
     public String addTradeForm(Trade trade) {
-        log.debug("HTTP GET, display Trade add form.");
+        String msgSource = messageSource.getMessage("debug.trade.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "trade/add";
     }
 
@@ -70,14 +78,19 @@ public class TradeController {
 
         // Trade parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for Trade ({}).", trade);
+            String msgSource = messageSource.getMessage("debug.trade.validation"
+                                    , new Object[] { trade }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "trade/add";
         }
         try {
             // Save Trade
-            Trade tradeSave = tradeBusiness.createTrade(trade);
-            log.info("HTTP GET, SUCCESSFUL ({}).", tradeSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Trade created successfully.");
+            tradeBusiness.createTrade(trade);
+            String msgSource = messageSource.getMessage("info.trade.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -100,7 +113,9 @@ public class TradeController {
         // Get Trade by Id and to model then show to the form
         try {
             Trade trade = tradeBusiness.getTradeById(id);
-            log.debug("HTTP GET, display Trade update form ({}).", trade);
+            String msgSource = messageSource.getMessage("debug.trade.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("trade", trade);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -130,14 +145,19 @@ public class TradeController {
 
         // Trade parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for Trade ({}).", trade);
+            String msgSource = messageSource.getMessage("debug.trade.validation"
+                                    , new Object[] { trade }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "trade/update";
         }
         try {
             // Modify Trade
-            Trade tradeSave = tradeBusiness.updateTrade(id, trade);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", tradeSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Trade updated successfully.");
+            tradeBusiness.updateTrade(id, trade);
+            String msgSource = messageSource.getMessage("info.trade.updated"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -163,8 +183,10 @@ public class TradeController {
         try {
             // Delete Trade
             tradeBusiness.deleteTrade(id);
-            log.info("HTTP DELETE, SUCCESSFUL (Trade ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "Trade deleted successfully.");
+            String msgSource = messageSource.getMessage("info.trade.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("trades", tradeBusiness.getTradesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

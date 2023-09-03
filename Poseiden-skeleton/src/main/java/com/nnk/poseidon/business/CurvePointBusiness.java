@@ -1,12 +1,13 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.model.CurvePoint;
 import com.nnk.poseidon.repository.CurvePointRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public class CurvePointBusiness {
 
     @Autowired
     private CurvePointRepository curvePointRepository;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Find list of CurvePoints
@@ -41,23 +44,28 @@ public class CurvePointBusiness {
      * @param curvePoint The CurvePoint object added
      *
      * @return CurvePoint added
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public CurvePoint createCurvePoint(final CurvePoint curvePoint)
-                                        throws MyExceptionBadRequestException {
+                                        throws MyException {
         // CurvePoint parameter is null
         if (curvePoint == null) {
-            log.debug("THROW, CurvePoint is null.");
-            throw new MyExceptionBadRequestException("throw.curvePoint.nullCurvePoint");
+            String msgSource = messageSource.getMessage("exception.curvePoint.nullCurvePoint"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // CurvePoint exist
         Integer id = curvePoint.getId();
         if (id != null) {
             Optional<CurvePoint> optCurvePointEntity = curvePointRepository.findById(id);
             if (optCurvePointEntity.isPresent()) {
-                log.debug("THROW, CurvePoint exist ({}).", optCurvePointEntity.get());
-                throw new MyExceptionBadRequestException("throw.curvePoint.curvePointExists");
+                String msgSource = messageSource.getMessage("exception.curvePoint.curvePointExists"
+                                    , new Object[] { id }
+                                    , LocaleContextHolder.getLocale());
+                log.debug("Exception, " + msgSource);
+                throw new MyException(msgSource);
             }
         }
         // CurvePoint saved
@@ -71,15 +79,18 @@ public class CurvePointBusiness {
      * @param id CurvePoint ID founded
      *
      * @return CurvePoint founded
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     public CurvePoint getCurvePointById(final Integer id)
-                                        throws MyExceptionNotFoundException {
+                                        throws MyException {
         // CurvePoint does not exist
         Optional<CurvePoint> optCurvePointEntity = curvePointRepository.findById(id);
-        if (optCurvePointEntity.isPresent() == false) {
-            log.debug("THROW, CurvePoint not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.curvePoint.unknown", id);
+        if (optCurvePointEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.curvePoint.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // CurvePoint found
         return optCurvePointEntity.get();
@@ -92,23 +103,27 @@ public class CurvePointBusiness {
      * @param curvePoint The CurvePoint object updated
      *
      * @return CurvePoint updated
-     * @throws MyExceptionNotFoundException Exception not found
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public CurvePoint updateCurvePoint(final Integer id
                                         , final CurvePoint curvePoint)
-                                        throws MyExceptionNotFoundException {
+                                        throws MyException {
         // CurvePoint does not exist
         Optional<CurvePoint> optCurvePointEntity = curvePointRepository.findById(id);
-        if (optCurvePointEntity.isPresent() == false) {
-            log.debug("THROW, CurvePoint not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.curvePoint.unknown", id);
+        if (optCurvePointEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.curvePoint.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // CurvePoint parameter is null
         if (curvePoint == null) {
-            log.debug("THROW, CurvePoint is null.");
-            throw new MyExceptionBadRequestException("throw.curvePoint.nullCurvePoint");
+            String msgSource = messageSource.getMessage("exception.curvePoint.nullCurvePoint"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // CurvePoint updated
         CurvePoint curvePointEntity = optCurvePointEntity.get();
@@ -125,15 +140,18 @@ public class CurvePointBusiness {
      * @param id CurvePoint ID deleted
      *
      * @return void
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteCurvePoint(final Integer id)
-                                    throws MyExceptionNotFoundException {
+                                    throws MyException {
         // CurvePoint does not exist
         if (curvePointRepository.existsById(id) == false) {
-            log.debug("THROW, CurvePoint not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.curvePoint.unknown", id);
+            String msgSource = messageSource.getMessage("exception.curvePoint.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // CurvePoint deleted
         curvePointRepository.deleteById(id);

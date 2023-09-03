@@ -87,7 +87,7 @@ class UserControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void home_getUsers_return200() throws Exception {
         // GIVEN
         when(userBusiness.getUsersList()).thenReturn(registerSaves);
@@ -107,7 +107,7 @@ class UserControllerTest {
     // addUserForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void addUserForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -125,7 +125,7 @@ class UserControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void validate_userNotExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.createUser(registerSource)).thenReturn(userSave);
@@ -146,7 +146,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void validate_userNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -163,7 +163,8 @@ class UserControllerTest {
                 .andExpect(view().name("user/add"))
                 .andExpect(model().attributeHasFieldErrorCode("register","username","NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("register","fullname","NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("register","password","PasswordConstraint"))
+//                .andExpect(model().attributeHasFieldErrorCode("register","password","PasswordConstraint"))
+                .andExpect(model().attributeHasFieldErrorCode("register","password","Pattern"))
                 .andDo(print());
         // THEN
         verify(userBusiness, Mockito.times(0)).createUser(any(Register.class));
@@ -173,7 +174,7 @@ class UserControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void showUpdateForm_userExist_return200() throws Exception {
         // GIVEN
         when(userBusiness.getRegisterById(1)).thenReturn(registerSave);
@@ -193,7 +194,7 @@ class UserControllerTest {
     // updateUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void updateUser_userExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.updateUser(1, registerSave)).thenReturn(userSave);
@@ -214,8 +215,8 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void updateUser_userNotValid() throws Exception {
+    @WithMockUser(roles = "ADMIN")
+    void updateUser_userNull() throws Exception {
         // GIVEN
         // WHEN
         mockMvc.perform(patch("/user/update/{id}", 1)
@@ -227,7 +228,31 @@ class UserControllerTest {
                 .andExpect(view().name("user/update"))
                 .andExpect(model().attributeHasFieldErrorCode("register","username","NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("register","fullname","NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("register","password","PasswordConstraint"))
+//                .andExpect(model().attributeHasFieldErrorCode("register","password","PasswordConstraint"))
+                .andExpect(model().attributeHasFieldErrorCode("register","password","NotNull"))
+                .andDo(print());
+        // THEN
+        verify(userBusiness, Mockito.times(0)).updateUser(any(Integer.class), any(Register.class));
+    }
+
+    void updateUser_userlank() throws Exception {
+        // GIVEN
+        // WHEN
+        mockMvc.perform(patch("/user/update/{id}", 1)
+                                .with(csrf().asHeader())
+                        .param("username", "")
+                        .param("password", "")
+                        .param("fullname", "")
+                        .param("role", "")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(3))
+                .andExpect(view().name("user/update"))
+                .andExpect(model().attributeHasFieldErrorCode("register","username","NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("register","fullname","NotBlank"))
+//                .andExpect(model().attributeHasFieldErrorCode("register","password","PasswordConstraint"))
+                .andExpect(model().attributeHasFieldErrorCode("register","password","Pattern"))
                 .andDo(print());
         // THEN
         verify(userBusiness, Mockito.times(0)).updateUser(any(Integer.class), any(Register.class));
@@ -237,7 +262,7 @@ class UserControllerTest {
     // deleteUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     void deleteUser_userExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.getUsersList()).thenReturn(registerSaves);

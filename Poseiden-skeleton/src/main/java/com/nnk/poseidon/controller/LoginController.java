@@ -6,10 +6,13 @@ import com.nnk.poseidon.model.User;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
@@ -25,35 +28,19 @@ import java.util.Map;
 @RequestMapping("app")
 public class LoginController {
 
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @GetMapping("login")
-//    public ModelAndView login() {
-//        ModelAndView mav = new ModelAndView();
-//        mav.setViewName("login");
-//        return mav;
-//    }
-//
-//    @GetMapping("secure/article-details")
-//    public ModelAndView getAllUserArticles() {
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("users", userRepository.findAll());
-//        mav.setViewName("user/list");
-//        return mav;
-//    }
-//
-//    @GetMapping("error")
-//    public ModelAndView error() {
-//        ModelAndView mav = new ModelAndView();
-//        String errorMessage= "You are not authorized for the requested data.";
-//        mav.addObject("errorMsg", errorMessage);
-//        mav.setViewName("403");
-//        return mav;
-//    }
-
     @Autowired
     private LoginBusiness loginBusiness;
+    @Autowired
+    private MessageSource messageSource;
+
+    @GetMapping("error")
+    public ModelAndView error() {
+        ModelAndView mav = new ModelAndView();
+        String errorMessage= "You are not authorized for the requested data.";
+        mav.addObject("errorMsg", errorMessage);
+        mav.setViewName("403");
+        return mav;
+    }
 
     /**
      * Read - Get Login Page
@@ -106,14 +93,19 @@ public class LoginController {
                                 , Model model
                                 , RedirectAttributes redirectAttributes) {
     if (result.hasErrors()) {
-        log.debug("HTTP POST, Validation failed for register ({}).", register);
+        String msgSource = messageSource.getMessage("debug.register.validation"
+                                , new Object[] { register }
+                                , LocaleContextHolder.getLocale());
+        log.debug("HTTP POST, " + msgSource);
         return "register";
     }
 
     try {
         // Adding the new user
         loginBusiness.addUser(register);
-        log.info("HTTP POST, SUCCESSFUL ({}).", register);
+        String msgSource = messageSource.getMessage("info.register.created"
+                                , null, LocaleContextHolder.getLocale());
+        log.info("HTTP POST, " + msgSource);
     } catch (Exception e) {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/app/register";

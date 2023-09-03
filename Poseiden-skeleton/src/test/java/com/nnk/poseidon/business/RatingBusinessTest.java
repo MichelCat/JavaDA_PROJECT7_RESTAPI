@@ -2,8 +2,7 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.RatingData;
 import com.nnk.poseidon.model.Rating;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.repository.RatingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -38,10 +38,13 @@ class RatingBusinessTest {
 
     @Autowired
     private RatingBusiness ratingBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     @MockBean
     private RatingRepository ratingRepository;
 
+    private TestMessageSource testMessageSource;
     private Rating ratingSource;
     private Rating ratingSave;
     public List<Rating> ratingsList;
@@ -49,6 +52,8 @@ class RatingBusinessTest {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         ratingSource = RatingData.getRatingSource();
         ratingSave = RatingData.getRatingSave();
 
@@ -83,7 +88,7 @@ class RatingBusinessTest {
     // createRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void createRating_saveNormal() {
+    void createRating_saveNormal() throws MyException {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(ratingRepository.save(ratingSource)).thenReturn(ratingSave);
@@ -98,18 +103,22 @@ class RatingBusinessTest {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.createRating(null));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.createRating(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.nullRating", null);
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
     @Test
-    void createRating_ratingExist_returnBadRequest() {
+    void createRating_ratingExist_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.createRating(ratingSave));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.createRating(ratingSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.ratingExists", new Object[] { ratingSave.getId() });
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
@@ -117,7 +126,7 @@ class RatingBusinessTest {
     // getRatingById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void getRatingById_findByIdNormal() {
+    void getRatingById_findByIdNormal() throws MyException {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
@@ -127,12 +136,14 @@ class RatingBusinessTest {
     }
 
     @Test
-    void getRatingById_nullIdParameter_returnNotFound() {
+    void getRatingById_nullIdParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(null));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.getRatingById(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { null });
         verify(ratingRepository, Mockito.times(1)).findById(null);
     }
 
@@ -140,7 +151,7 @@ class RatingBusinessTest {
     // updateRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void updateRating_updateNormal() {
+    void updateRating_updateNormal() throws MyException {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         when(ratingRepository.save(ratingSave)).thenReturn(ratingSave);
@@ -151,42 +162,50 @@ class RatingBusinessTest {
     }
 
     @Test
-    void updateRating_ratingNotExist_returnNotFound() {
+    void updateRating_ratingNotExist_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(2, ratingSource));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.updateRating(2, ratingSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { 2 });
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
     @Test
-    void updateRating_nullIdParameter_returnNotFound() {
+    void updateRating_nullIdParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(null, ratingSource));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.updateRating(null, ratingSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { null });
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
     @Test
-    void updateRating_zeroIdParameter_returnNotFound() {
+    void updateRating_zeroIdParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(0, ratingSource));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.updateRating(0, ratingSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { 0 });
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
     @Test
-    void updateRating_nullRatingParameter_returnNotFound() {
+    void updateRating_nullRatingParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.findById(any(Integer.class))).thenReturn(Optional.of(ratingSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.updateRating(1, null));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.updateRating(1, null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.nullRating", null);
         verify(ratingRepository, Mockito.times(0)).save(any(Rating.class));
     }
 
@@ -194,7 +213,7 @@ class RatingBusinessTest {
     // deleteRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void deleteRating_deleteNormal() {
+    void deleteRating_deleteNormal() throws MyException {
         // GIVEN
         when(ratingRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ratingRepository).deleteById(any(Integer.class));
@@ -205,32 +224,38 @@ class RatingBusinessTest {
     }
 
     @Test
-    void deleteRating_ratingNotExist_returnNotFound() {
+    void deleteRating_ratingNotExist_returnMyException() {
         // GIVEN
         when(ratingRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(2));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.deleteRating(2));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { 2 });
         verify(ratingRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteRating_nullIdParameter_returnNotFound() {
+    void deleteRating_nullIdParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.existsById(null)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(null));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.deleteRating(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { null });
         verify(ratingRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteRating_zeroIdParameter_returnNotFound() {
+    void deleteRating_zeroIdParameter_returnMyException() {
         // GIVEN
         when(ratingRepository.existsById(0)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(0));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.deleteRating(0));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { 0 });
         verify(ratingRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 }

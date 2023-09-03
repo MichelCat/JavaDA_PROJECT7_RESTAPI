@@ -2,14 +2,14 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.RuleData;
 import com.nnk.poseidon.model.Rule;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.GlobalData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -34,7 +34,10 @@ class RuleNameBusinessIT {
 
     @Autowired
     private RuleNameBusiness ruleNameBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private Rule ruleSource;
     private Rule ruleSave;
     private Integer ruleId;
@@ -42,6 +45,8 @@ class RuleNameBusinessIT {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         ruleSource = RuleData.getRuleSource();
         ruleSave = RuleData.getRuleSave();
 
@@ -78,7 +83,7 @@ class RuleNameBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createRule_ruleNotExist() {
+    void createRule_ruleNotExist() throws MyException {
         // GIVEN
         // WHEN
         Rule result = ruleNameBusiness.createRule(ruleSource);
@@ -94,8 +99,10 @@ class RuleNameBusinessIT {
     void createRule_ruleExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.createRule(ruleSave));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.createRule(ruleSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.ruleExists", new Object[] { ruleSave.getId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -104,7 +111,7 @@ class RuleNameBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    void getRuleById_ruleExist() {
+    void getRuleById_ruleExist() throws MyException {
         // GIVEN
         // WHEN
         assertThat(ruleNameBusiness.getRuleById(ruleId)).isEqualTo(ruleSave);
@@ -116,8 +123,10 @@ class RuleNameBusinessIT {
     void getRuleById_ruleNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(ruleId));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.getRuleById(ruleId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { ruleId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -126,7 +135,7 @@ class RuleNameBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    void updateRule_ruleExist() {
+    void updateRule_ruleExist() throws MyException {
         // GIVEN
         // WHEN
         Rule result = ruleNameBusiness.updateRule(ruleId, ruleSave);
@@ -141,8 +150,10 @@ class RuleNameBusinessIT {
     void updateRule_ruleNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(ruleId, ruleSave));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.updateRule(ruleId, ruleSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { ruleId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -151,12 +162,14 @@ class RuleNameBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RuleData.scriptCreateRule)
-    void deleteRule_ruleExist() {
+    void deleteRule_ruleExist() throws MyException {
         // GIVEN
         // WHEN
         ruleNameBusiness.deleteRule(ruleId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(ruleId));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.getRuleById(ruleId));
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { ruleId });
     }
 
     @Test
@@ -164,7 +177,9 @@ class RuleNameBusinessIT {
     void deleteRule_ruleNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(ruleId));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.deleteRule(ruleId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { ruleId });
     }
 }

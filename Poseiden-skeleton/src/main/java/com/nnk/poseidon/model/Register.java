@@ -1,11 +1,10 @@
 package com.nnk.poseidon.model;
 
-import com.nnk.poseidon.validator.PasswordConstraint;
+import com.nnk.poseidon.constant.PasswordConstraint;
+import com.nnk.poseidon.enumerator.UserRole;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,7 +14,6 @@ import lombok.experimental.FieldDefaults;
  * @author MC
  * @version 1.0
  */
-//@Validated
 @Data
 @FieldDefaults(level= AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -41,7 +39,9 @@ public class Register {
      * User password
      */
     @ToString.Exclude
-    @PasswordConstraint
+//    @PasswordConstraint
+    @NotNull(message = PasswordConstraint.MESSAGE)
+    @Pattern(regexp = PasswordConstraint.REGEXP, message = PasswordConstraint.MESSAGE)
     @Size(max = 125, message = "{constraint.size.global}")
     String password;
 
@@ -56,5 +56,5 @@ public class Register {
      * User role
      */
     @Enumerated(value = EnumType.STRING)
-    Role role;
+    UserRole role;
 }

@@ -1,17 +1,17 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
 import com.nnk.poseidon.exception.MyException;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.mapper.UserRegisterMapper;
+import com.nnk.poseidon.mapper.RegisterMapper;
 import com.nnk.poseidon.model.Register;
-import com.nnk.poseidon.model.Role;
+import com.nnk.poseidon.enumerator.UserRole;
 import com.nnk.poseidon.repository.UserRepository;
 import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.model.AppUserPrincipal;
 import com.nnk.poseidon.utils.EmailBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,7 +37,9 @@ public class LoginBusiness implements UserDetailsService
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserRegisterMapper userRegisterMapper;
+    private RegisterMapper registerMapper;
+    @Autowired
+    private MessageSource messageSource;
 
 
     @Override
@@ -48,30 +50,45 @@ public class LoginBusiness implements UserDetailsService
 
         Optional<User> optUser = userRepository.findByUsername(username);
         if (optUser.isEmpty()) {
-            log.debug(MessagePropertieFormat.getMessage("throw.UserNotFound", username));
-            throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.UserNotFound", username));
+            String msgSource = messageSource.getMessage("exception.UserNotFound"
+                                , new Object[] { username }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new UsernameNotFoundException(msgSource);
         }
         User user = optUser.get();
 
         // Activated user
         if (!user.isEnabled()) {
-            log.debug(MessagePropertieFormat.getMessage("throw.AccountNotActivated", username));
-            throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountNotActivated", username));
+            String msgSource = messageSource.getMessage("exception.AccountNotActivated"
+                                , new Object[] { username }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new UsernameNotFoundException(msgSource);
         }
         // User account expired
         if (!user.isAccountNonExpired()) {
-            log.debug(MessagePropertieFormat.getMessage("throw.AccountExpired", username));
-            throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountExpired", username));
+            String msgSource = messageSource.getMessage("exception.AccountExpired"
+                                , new Object[] { username }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new UsernameNotFoundException(msgSource);
         }
         // User locked
         if (!user.isAccountNonLocked()) {
-            log.debug(MessagePropertieFormat.getMessage("throw.AccountLocked", username));
-            throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.AccountLocked", username));
+            String msgSource = messageSource.getMessage("exception.AccountLocked"
+                                , new Object[] { username }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new UsernameNotFoundException(msgSource);
         }
         // User credentials (password) expired
         if (!user.isCredentialsNonExpired()) {
-            log.debug(MessagePropertieFormat.getMessage("throw.PasswordExpired", username));
-            throw new UsernameNotFoundException(MessagePropertieFormat.getMessage("throw.PasswordExpired", username));
+            String msgSource = messageSource.getMessage("exception.PasswordExpired"
+                                , new Object[] { username }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new UsernameNotFoundException(msgSource);
         }
 
         return new AppUserPrincipal(user);
@@ -84,20 +101,22 @@ public class LoginBusiness implements UserDetailsService
      * @param register New user to add
      *
      * @return void
-     * @throws MyException Exception message
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
-    public void addUser(Register register) throws MyExceptionBadRequestException {
+    public void addUser(Register register) throws MyException {
         // User does not exist
         if (userRepository.existsByUsername(register.getUsername())) {
-            log.debug(MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", register.getUsername()));
-            throw new MyExceptionBadRequestException("throw.EmailAccountAlreadyExists", register.getUsername());
+            String msgSource = messageSource.getMessage("exception.EmailAccountAlreadyExists"
+                                , new Object[] { register.getUsername() }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new MyException(msgSource);
         }
 
         //Add user
-        User newUserEntity = userRegisterMapper.addUserFrom(register);
-        newUserEntity.setRole(Role.USER);
-//        newUserEntity.setCreationDate(MyDateUtils.getcurrentTime())
+        User newUserEntity = registerMapper.addUserFrom(register);
+        newUserEntity.setRole(UserRole.USER);
         newUserEntity.createAuthorization();
         newUserEntity.createValidationEmail();
         newUserEntity = userRepository.save(newUserEntity);
@@ -109,8 +128,11 @@ public class LoginBusiness implements UserDetailsService
         try {
             emailBusiness.sendEmail("contact@gmail.com", register.getUsername(), subject, message);
         } catch (MailException e) {
-            log.debug(MessagePropertieFormat.getMessage("throw.ErrorSendEmail", register.getUsername()));
-            throw new MyExceptionBadRequestException("throw.ErrorSendEmail", register.getUsername());
+            String msgSource = messageSource.getMessage("exception.ErrorSendEmail"
+                                , new Object[] { register.getUsername() }
+                                , LocaleContextHolder.getLocale());
+            log.debug(msgSource);
+            throw new MyException(msgSource);
         }
     }
 }

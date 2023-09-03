@@ -2,14 +2,14 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.RatingData;
 import com.nnk.poseidon.model.Rating;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.GlobalData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,7 +35,10 @@ class RatingBusinessIT {
 
     @Autowired
     private RatingBusiness ratingBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private Rating ratingSource;
     private Rating ratingSave;
     private Integer ratingId;
@@ -43,6 +46,8 @@ class RatingBusinessIT {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         ratingSource = RatingData.getRatingSource();
         ratingSave = RatingData.getRatingSave();
 
@@ -79,7 +84,7 @@ class RatingBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createRating_ratingNotExist() {
+    void createRating_ratingNotExist() throws MyException {
         // GIVEN
         // WHEN
         Rating result = ratingBusiness.createRating(ratingSource);
@@ -95,8 +100,10 @@ class RatingBusinessIT {
     void createRating_ratingExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ratingBusiness.createRating(ratingSave));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.createRating(ratingSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.ratingExists", new Object[] { ratingSave.getId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -105,7 +112,7 @@ class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    void getRatingById_ratingExist() {
+    void getRatingById_ratingExist() throws MyException {
         // GIVEN
         // WHEN
         assertThat(ratingBusiness.getRatingById(ratingId)).isEqualTo(ratingSave);
@@ -117,8 +124,10 @@ class RatingBusinessIT {
     void getRatingById_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingId));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.getRatingById(ratingId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { ratingId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -127,7 +136,7 @@ class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    void updateRating_ratingExist() {
+    void updateRating_ratingExist() throws MyException {
         // GIVEN
         // WHEN
         Rating result = ratingBusiness.updateRating(ratingId, ratingSave);
@@ -142,8 +151,10 @@ class RatingBusinessIT {
     void updateRating_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.updateRating(ratingId, ratingSave));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.updateRating(ratingId, ratingSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { ratingId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -152,12 +163,14 @@ class RatingBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = RatingData.scriptCreateRating)
-    void deleteRating_ratingExist() {
+    void deleteRating_ratingExist() throws MyException {
         // GIVEN
         // WHEN
         ratingBusiness.deleteRating(ratingId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.getRatingById(ratingId));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.getRatingById(ratingId));
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { ratingId });
     }
 
     @Test
@@ -165,7 +178,9 @@ class RatingBusinessIT {
     void deleteRating_ratingNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ratingBusiness.deleteRating(ratingId));
+        Throwable exception = assertThrows(MyException.class, () -> ratingBusiness.deleteRating(ratingId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rating.unknown", new Object[] { ratingId });
     }
 }

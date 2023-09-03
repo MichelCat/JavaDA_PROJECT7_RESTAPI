@@ -1,12 +1,13 @@
 package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.model.Trade;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.repository.TradeRepository;
 import com.nnk.poseidon.utils.MyDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public class TradeBusiness {
 
     @Autowired
     private TradeRepository tradeRepository;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Find list of Trades
@@ -41,23 +44,28 @@ public class TradeBusiness {
      * @param trade The Trade object added
      *
      * @return Trade added
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Trade createTrade(final Trade trade)
-                                throws MyExceptionBadRequestException {
+                                throws MyException {
         // Trade parameter is null
         if (trade == null) {
-            log.debug("THROW, Trade is null.");
-            throw new MyExceptionBadRequestException("throw.trade.nullTrade");
+            String msgSource = messageSource.getMessage("exception.trade.nullTrade"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Trade exist
         Integer id = trade.getTradeId();
         if (id != null) {
             Optional<Trade> optTradeEntity = tradeRepository.findById(id);
             if (optTradeEntity.isPresent()) {
-                log.debug("THROW, Trade exist ({}).", optTradeEntity.get());
-                throw new MyExceptionBadRequestException("throw.trade.tradeExists");
+                String msgSource = messageSource.getMessage("exception.trade.tradeExists"
+                                    , new Object[] { id }
+                                    , LocaleContextHolder.getLocale());
+                log.debug("Exception, " + msgSource);
+                throw new MyException(msgSource);
             }
         }
         // Trade saved
@@ -71,15 +79,18 @@ public class TradeBusiness {
      * @param id Trade ID founded
      *
      * @return Trade founded
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     public Trade getTradeById(final Integer id)
-                                throws MyExceptionNotFoundException {
+                                throws MyException {
         // Trade does not exist
         Optional<Trade> optTradeEntity = tradeRepository.findById(id);
-        if (optTradeEntity.isPresent() == false) {
-            log.debug("THROW, Trade not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.trade.unknown", id);
+        if (optTradeEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.trade.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Trade found
         return optTradeEntity.get();
@@ -92,23 +103,27 @@ public class TradeBusiness {
      * @param trade The Trade object updated
      *
      * @return Trade updated
-     * @throws MyExceptionNotFoundException Exception not found
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Trade updateTrade(final Integer id
                                 , final Trade trade)
-                                throws MyExceptionNotFoundException {
+                                throws MyException {
         // Trade does not exist
         Optional<Trade> optTradeEntity = tradeRepository.findById(id);
-        if (optTradeEntity.isPresent() == false) {
-            log.debug("THROW, Trade not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.trade.unknown", id);
+        if (optTradeEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.trade.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Trade parameter is null
         if (trade == null) {
-            log.debug("THROW, Trade is null.");
-            throw new MyExceptionBadRequestException("throw.trade.nullTrade");
+            String msgSource = messageSource.getMessage("exception.trade.nullTrade"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Trade updated
         Trade tradeEntity = optTradeEntity.get();
@@ -126,15 +141,18 @@ public class TradeBusiness {
      * @param id Trade ID deleted
      *
      * @return void
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteTrade(final Integer id)
-                            throws MyExceptionNotFoundException {
+                            throws MyException {
         // Trade does not exist
         if (tradeRepository.existsById(id) == false) {
-            log.debug("THROW, Trade not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.trade.unknown", id);
+            String msgSource = messageSource.getMessage("exception.trade.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Trade deleted
         tradeRepository.deleteById(id);

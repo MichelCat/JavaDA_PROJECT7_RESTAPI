@@ -87,7 +87,7 @@ class UserControllerIT {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void home_getUsers_return200() throws Exception {
@@ -109,7 +109,7 @@ class UserControllerIT {
     // addUserForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void addUserForm_return200() throws Exception {
         // GIVEN
@@ -129,7 +129,7 @@ class UserControllerIT {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void validate_userNotExist_return302() throws Exception {
         // GIVEN
@@ -148,7 +148,7 @@ class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void validate_userExist_return302() throws Exception {
@@ -171,7 +171,7 @@ class UserControllerIT {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void showUpdateForm_userExist_return200() throws Exception {
@@ -195,7 +195,7 @@ class UserControllerIT {
     // updateUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void updateUser_userExist_return302() throws Exception {
@@ -215,7 +215,7 @@ class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void updateUser_userNotExist_return302() throws Exception {
         // GIVEN
@@ -237,7 +237,7 @@ class UserControllerIT {
     // deleteUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void deleteUser_userExist_return302() throws Exception {
@@ -255,7 +255,7 @@ class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void deleteUser_userNotExist_return302() throws Exception {
         // GIVEN

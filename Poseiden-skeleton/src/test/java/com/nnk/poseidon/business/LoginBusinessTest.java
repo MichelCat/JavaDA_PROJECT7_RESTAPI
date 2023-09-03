@@ -1,9 +1,8 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MessagePropertieFormat;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.UserData;
-import com.nnk.poseidon.mapper.UserRegisterMapper;
+import com.nnk.poseidon.mapper.RegisterMapper;
 import com.nnk.poseidon.model.Register;
 import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.repository.UserRepository;
@@ -15,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,8 +46,11 @@ class LoginBusinessTest {
     @MockBean
     private EmailBusiness emailBusiness;
     @MockBean
-    private UserRegisterMapper userRegisterMapper;
+    private RegisterMapper registerMapper;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private User userSave;
     private User loginSource;
     private Register registerSource;
@@ -56,6 +59,8 @@ class LoginBusinessTest {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         userSave = UserData.getUserSave();
 
         loginSource = UserData.getLoginSource();
@@ -69,19 +74,19 @@ class LoginBusinessTest {
     // loadUserByUsername method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void loadUserByUsername_userNotExist_returnNotFound() {
+    void loadUserByUsername_userNotExist_returnMyException() {
         // GIVEN
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.empty());
         // WHEN
         Throwable exception = assertThrows(UsernameNotFoundException.class,
                 () -> {loginBusiness.loadUserByUsername(userEmail);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.UserNotFound", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.UserNotFound", new Object[] { userEmail });
     }
 
     @Test
-    void loadUserByUsername_enabledFalse_returnNotFound() {
+    void loadUserByUsername_enabledFalse_returnMyException() {
         // GIVEN
         userSave.setEnabled(false);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -89,12 +94,12 @@ class LoginBusinessTest {
         Throwable exception = assertThrows(UsernameNotFoundException.class,
                 () -> {loginBusiness.loadUserByUsername(userEmail);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.AccountNotActivated", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.AccountNotActivated", new Object[] { userEmail });
     }
 
     @Test
-    void loadUserByUsername_expiredTrue_returnNotFound() {
+    void loadUserByUsername_expiredTrue_returnMyException() {
         // GIVEN
         userSave.setExpired(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -102,12 +107,12 @@ class LoginBusinessTest {
         Throwable exception = assertThrows(UsernameNotFoundException.class,
                 () -> {loginBusiness.loadUserByUsername(userEmail);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.AccountExpired", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.AccountExpired", new Object[] { userEmail });
     }
 
     @Test
-    void loadUserByUsername_lockedTrue_returnNotFound() {
+    void loadUserByUsername_lockedTrue_returnMyException() {
         // GIVEN
         userSave.setLocked(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -115,12 +120,12 @@ class LoginBusinessTest {
         Throwable exception = assertThrows(UsernameNotFoundException.class,
                 () -> {loginBusiness.loadUserByUsername(userEmail);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.AccountLocked", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.AccountLocked", new Object[] { userEmail });
     }
 
     @Test
-    void loadUserByUsername_credentialsExpiredTrue_returnNotFound() {
+    void loadUserByUsername_credentialsExpiredTrue_returnMyException() {
         // GIVEN
         userSave.setCredentialsExpired(true);
         when(userRepository.findByUsername(userEmail)).thenReturn(Optional.of(userSave));
@@ -128,8 +133,8 @@ class LoginBusinessTest {
         Throwable exception = assertThrows(UsernameNotFoundException.class,
                 () -> {loginBusiness.loadUserByUsername(userEmail);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.PasswordExpired", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.PasswordExpired", new Object[] { userEmail });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -139,7 +144,7 @@ class LoginBusinessTest {
     void addUser_normal() throws Exception {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(false);
-        when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
+        when(registerMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
         when(userRepository.save(any(User.class))).thenReturn(userSave);
         doNothing().when(emailBusiness).sendEmail(any(String.class), any(String.class), any(String.class), any(String.class));
         // WHEN
@@ -150,30 +155,32 @@ class LoginBusinessTest {
     }
 
     @Test
-    void addUser_userExist_returnBadRequestException() {
+    void addUser_userExist_returnMyException() {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(true);
         // WHEN
-        Throwable exception = assertThrows(MyExceptionBadRequestException.class,
-                () -> {loginBusiness.addUser(registerSource);});
+        Throwable exception = assertThrows(MyException.class, () -> {loginBusiness.addUser(registerSource);});
         // THEN
-        String messageError = MessagePropertieFormat.getMessage("throw.EmailAccountAlreadyExists", userEmail);
-        assertThat(exception.getMessage()).isEqualTo(messageError);
+        testMessageSource.compare(exception
+                            , "exception.EmailAccountAlreadyExists", new Object[] { userEmail });
+        verify(emailBusiness, Mockito.times(0))
+                .sendEmail(any(String.class), any(String.class), any(String.class), any(String.class));
     }
 
     @Test
-    void addUser_sendErrorMailSendException_returnBadRequestException() throws Exception {
+    void addUser_sendErrorMailSendException_returnMyException() throws Exception {
         // GIVEN
         when(userRepository.existsByUsername(userEmail)).thenReturn(false);
-        when(userRegisterMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
+        when(registerMapper.addUserFrom(any(Register.class))).thenReturn(loginSource);
         when(userRepository.save(any(User.class))).thenReturn(userSave);
         doThrow(new MailSendException("Test message"))
             .when(emailBusiness).sendEmail(any(String.class), any(String.class)
                 , any(String.class), any(String.class));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class,
-                () -> {loginBusiness.addUser(registerSource);});
+        Throwable exception = assertThrows(MyException.class, () -> {loginBusiness.addUser(registerSource);});
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.ErrorSendEmail", new Object[] { userEmail });
         verify(emailBusiness, Mockito.times(1))
                 .sendEmail(any(String.class), any(String.class), any(String.class), any(String.class));
     }

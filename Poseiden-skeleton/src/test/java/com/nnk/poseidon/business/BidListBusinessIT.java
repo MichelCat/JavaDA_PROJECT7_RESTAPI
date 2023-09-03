@@ -1,7 +1,6 @@
 package com.nnk.poseidon.business;
 
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.data.BidData;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.model.Bid;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,13 +35,18 @@ class BidListBusinessIT {
 
     @Autowired
     private BidListBusiness bidListBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
+    private TestMessageSource testMessageSource;
     private Bid bidSource;
     private Bid bidSave;
     private Integer bidId;
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         bidSource = BidData.getBidSource();
         bidSave = BidData.getBidSave();
 
@@ -78,7 +83,7 @@ class BidListBusinessIT {
     // -----------------------------------------------------------------------------------------------
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
-    void createBid_bidNotExist() {
+    void createBid_bidNotExist() throws MyException {
         // GIVEN
         // WHEN
         Bid result = bidListBusiness.createBid(bidSource);
@@ -94,8 +99,10 @@ class BidListBusinessIT {
     void createBid_bidExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> bidListBusiness.createBid(bidSave));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.createBid(bidSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.bidExists", new Object[] { bidSave.getBidListId() });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -104,7 +111,7 @@ class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    void getBidById_bidExist() {
+    void getBidById_bidExist() throws MyException {
         // GIVEN
         // WHEN
         assertThat(bidListBusiness.getBidById(bidId)).isEqualTo(bidSave);
@@ -116,8 +123,10 @@ class BidListBusinessIT {
     void getBidById_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidId));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.getBidById(bidId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { bidId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -126,7 +135,7 @@ class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    void updateBid_bidExist() {
+    void updateBid_bidExist() throws MyException {
         // GIVEN
         // WHEN
         Bid result = bidListBusiness.updateBid(bidId, bidSave);
@@ -141,8 +150,10 @@ class BidListBusinessIT {
     void updateBid_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.updateBid(bidId, bidSave));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.updateBid(bidId, bidSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { bidId });
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -151,12 +162,14 @@ class BidListBusinessIT {
     @Test
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = BidData.scriptCreateBid)
-    void deleteBid_bidExist() {
+    void deleteBid_bidExist() throws MyException {
         // GIVEN
         // WHEN
         bidListBusiness.deleteBid(bidId);
         // THEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.getBidById(bidId));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.getBidById(bidId));
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { bidId });
     }
 
     @Test
@@ -164,7 +177,9 @@ class BidListBusinessIT {
     void deleteBid_bidNotExist() {
         // GIVEN
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> bidListBusiness.deleteBid(bidId));
+        Throwable exception = assertThrows(MyException.class, () -> bidListBusiness.deleteBid(bidId));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.bid.unknown", new Object[] { bidId });
     }
 }

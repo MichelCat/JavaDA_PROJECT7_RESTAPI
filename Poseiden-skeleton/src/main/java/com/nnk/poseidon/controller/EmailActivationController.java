@@ -3,6 +3,8 @@ package com.nnk.poseidon.controller;
 import com.nnk.poseidon.business.EmailActivationBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ public class EmailActivationController {
 
     @Autowired
     private EmailActivationBusiness emailActivationBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Update - account activation
@@ -40,7 +44,11 @@ public class EmailActivationController {
         try {
             // Account activation
             emailActivationBusiness.activatedUser(validationKey);
-            log.info("HTTP GET, SUCCESSFUL ACCOUNT ACTIVATION");
+
+            String msgSource = messageSource.getMessage("info.email.activation"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP GET, " + msgSource);
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

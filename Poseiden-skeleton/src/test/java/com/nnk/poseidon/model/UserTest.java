@@ -2,6 +2,7 @@ package com.nnk.poseidon.model;
 
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
+import com.nnk.poseidon.enumerator.UserRole;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -183,9 +184,11 @@ class UserTest {
     void role_whenURoleUser_thenRoleUser() {
         // GIVEN
         // WHEN
-        user.setRole(Role.USER);
+        user.setRole(UserRole.USER);
         // THEN
-        assertThat(user.getRole()).isEqualTo(Role.USER);
+        String[][] errorList = {};
+        testConstraintViolation.checking(user, errorList);
+        assertThat(user.getRole()).isEqualTo(UserRole.USER);
     }
 
     @Test
@@ -194,6 +197,8 @@ class UserTest {
         // WHEN
         user.setRole(null);
         // THEN
+        String[][] errorList = {{"role", "{constraint.notNull.user.role}"}};
+        testConstraintViolation.checking(user, errorList);
         assertThat(user.getRole()).isNull();
     }
 

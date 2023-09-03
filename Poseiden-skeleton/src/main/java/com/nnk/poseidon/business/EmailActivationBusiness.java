@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.User;
 import com.nnk.poseidon.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ public class EmailActivationBusiness {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MessageSource messageSource;
 
 
     /**
@@ -35,26 +39,34 @@ public class EmailActivationBusiness {
 
         // User does not exist
         Optional<User> optUserEntity = userRepository.findByEmailValidationKey(validationKey);
-        if (optUserEntity.isPresent() == false) {
-            log.debug("THROW, Bid not exist.");
-            throw new MyException("throw.CustomerNotExist", "");
+        if (optUserEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.CustomerNotExist"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         User userEntity = optUserEntity.get();
 
         // Invalid email key for user
         if (!userEntity.isValidEmailKey(validationKey)) {
-            log.debug("THROW, Invalid email.");
-            throw new MyException("throw.InvalidEmailKey");
+            String msgSource = messageSource.getMessage("exception.InvalidEmailKey"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Email validation for user time exceeded
         if (!userEntity.isValidEmailEndDate()) {
-            log.debug("THROW, Email validation for user time exceeded.");
-            throw new MyException("throw.EmailTimeExceeded");
+            String msgSource = messageSource.getMessage("exception.EmailTimeExceeded"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Account already activated
         if (userEntity.isEnabled()) {
-            log.debug("THROW, Account already activated.");
-            throw new MyException("throw.AccountAlreadyActivated");
+            String msgSource = messageSource.getMessage("exception.AccountAlreadyActivated"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
 
         userEntity.setEnabled(true);

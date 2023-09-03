@@ -1,16 +1,10 @@
 package com.nnk.poseidon.controller;
 
-import com.nnk.poseidon.exception.MyException;
-import com.nnk.poseidon.business.EmailActivationBusiness;
-import com.nnk.poseidon.data.UserData;
-import com.nnk.poseidon.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,25 +14,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 /**
- * EmailActivationBusinessTest is a class of Endpoint unit tests on email activation.
+ * HomeControllerTest is a class of Endpoint unit tests on admin login page.
  *
  * @author MC
  * @version 1.0
  */
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@WebMvcTest(controllers = EmailActivationController.class)
+@WebMvcTest(controllers = HomeController.class)
 @ActiveProfiles("test")
-class EmailActivationBusinessTest {
+class HomeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,57 +37,47 @@ class EmailActivationBusinessTest {
     @Autowired
     private WebApplicationContext context;
 
-    @MockBean
-    private EmailActivationBusiness emailActivationBusiness;
-
-    private User userSave;
-
     @BeforeEach
     public void setUpBefore() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-
-        userSave = UserData.getUserSave();
     }
 
     // -----------------------------------------------------------------------------------------------
-    // patchAccountActivation method
+    // home method
+    // -----------------------------------------------------------------------------------------------
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void home_return200() throws Exception {
+        // GIVEN
+        // WHEN
+        mockMvc.perform(get("/admin/home")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("home"))
+                .andExpect(model().errorCount(0))
+                .andDo(print());
+        // THEN
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // adminHome method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    void patchAccountActivation_userExist_return302() throws Exception {
+    void adminHome_return302() throws Exception {
         // GIVEN
-        when(emailActivationBusiness.activatedUser(any(String.class))).thenReturn(userSave);
         // WHEN
-        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
+        mockMvc.perform(get("/user/home")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/bidList/list"))
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/app/login"))
                 .andDo(print());
         // THEN
-        verify(emailActivationBusiness, Mockito.times(1)).activatedUser(any(String.class));
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    void patchAccountActivation_userNoExist_return302() throws Exception {
-        // GIVEN
-        doThrow(new MyException("throw.CustomerNotExist", ""))
-                .when(emailActivationBusiness).activatedUser(any(String.class));
-        // WHEN
-        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/app/login"))
-                .andExpect(flash().attributeExists("errorMessage"))
-                .andDo(print());
-        // THEN
-        verify(emailActivationBusiness, Mockito.times(1)).activatedUser(any(String.class));
     }
 }

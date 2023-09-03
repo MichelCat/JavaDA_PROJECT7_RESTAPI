@@ -1,11 +1,12 @@
 package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.model.Rating;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.repository.RatingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class RatingBusiness {
 
     @Autowired
     private RatingRepository ratingRepository;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Find list of Ratings
@@ -40,23 +43,28 @@ public class RatingBusiness {
      * @param rating The Rating object added
      *
      * @return Rating added
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Rating createRating(final Rating rating)
-            throws MyExceptionBadRequestException {
+            throws MyException {
         // Rating parameter is null
         if (rating == null) {
-            log.debug("THROW, Rating is null.");
-            throw new MyExceptionBadRequestException("throw.rating.nullRating");
+            String msgSource = messageSource.getMessage("exception.rating.nullRating"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Rating exist
         Integer id = rating.getId();
         if (id != null) {
             Optional<Rating> optRatingEntity = ratingRepository.findById(id);
             if (optRatingEntity.isPresent()) {
-                log.debug("THROW, Rating exist ({}).", optRatingEntity.get());
-                throw new MyExceptionBadRequestException("throw.rating.ratingExists");
+                String msgSource = messageSource.getMessage("exception.rating.ratingExists"
+                                    , new Object[] { id }
+                                    , LocaleContextHolder.getLocale());
+                log.debug("Exception, " + msgSource);
+                throw new MyException(msgSource);
             }
         }
         // Rating saved
@@ -69,15 +77,18 @@ public class RatingBusiness {
      * @param id Rating ID founded
      *
      * @return Rating founded
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     public Rating getRatingById(final Integer id)
-            throws MyExceptionNotFoundException {
+            throws MyException {
         // Rating does not exist
         Optional<Rating> optRatingEntity = ratingRepository.findById(id);
-        if (optRatingEntity.isPresent() == false) {
-            log.debug("THROW, Rating not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.rating.unknown", id);
+        if (optRatingEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.rating.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Rating found
         return optRatingEntity.get();
@@ -90,23 +101,27 @@ public class RatingBusiness {
      * @param rating The Rating object updated
      *
      * @return Rating updated
-     * @throws MyExceptionNotFoundException Exception not found
-     * @throws MyExceptionBadRequestException Exception bad request
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public Rating updateRating(final Integer id
             , final Rating rating)
-            throws MyExceptionNotFoundException {
+            throws MyException {
         // Rating does not exist
         Optional<Rating> optRatingEntity = ratingRepository.findById(id);
-        if (optRatingEntity.isPresent() == false) {
-            log.debug("THROW, Rating not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.rating.unknown", id);
+        if (optRatingEntity.isEmpty()) {
+            String msgSource = messageSource.getMessage("exception.rating.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Rating parameter is null
         if (rating == null) {
-            log.debug("THROW, Rating is null.");
-            throw new MyExceptionBadRequestException("throw.rating.nullRating");
+            String msgSource = messageSource.getMessage("exception.rating.nullRating"
+                                , null, LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Rating updated
         Rating ratingEntity = optRatingEntity.get();
@@ -123,15 +138,18 @@ public class RatingBusiness {
      * @param id Rating ID deleted
      *
      * @return void
-     * @throws MyExceptionNotFoundException Exception not found
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteRating(final Integer id)
-            throws MyExceptionNotFoundException {
+            throws MyException {
         // Rating does not exist
         if (ratingRepository.existsById(id) == false) {
-            log.debug("THROW, Rating not exist ({}).", id);
-            throw new MyExceptionNotFoundException("throw.rating.unknown", id);
+            String msgSource = messageSource.getMessage("exception.rating.unknown"
+                                , new Object[] { id }
+                                , LocaleContextHolder.getLocale());
+            log.debug("Exception, " + msgSource);
+            throw new MyException(msgSource);
         }
         // Rating deleted
         ratingRepository.deleteById(id);

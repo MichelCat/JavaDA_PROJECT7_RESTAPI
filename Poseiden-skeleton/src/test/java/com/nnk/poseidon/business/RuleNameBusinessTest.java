@@ -2,8 +2,7 @@ package com.nnk.poseidon.business;
 
 import com.nnk.poseidon.data.RuleData;
 import com.nnk.poseidon.model.Rule;
-import com.nnk.poseidon.exception.MyExceptionBadRequestException;
-import com.nnk.poseidon.exception.MyExceptionNotFoundException;
+import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.repository.RuleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -37,10 +37,13 @@ class RuleNameBusinessTest {
 
     @Autowired
     private RuleNameBusiness ruleNameBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     @MockBean
     private RuleRepository ruleRepository;
 
+    private TestMessageSource testMessageSource;
     private Rule ruleSource;
     private Rule ruleSave;
     public List<Rule> ruleList;
@@ -48,6 +51,8 @@ class RuleNameBusinessTest {
 
     @BeforeEach
     public void setUpBefore() {
+        testMessageSource = new TestMessageSource(messageSource);
+
         ruleSource = RuleData.getRuleSource();
         ruleSave = RuleData.getRuleSave();
 
@@ -82,7 +87,7 @@ class RuleNameBusinessTest {
     // createRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void createRule_saveNormal() {
+    void createRule_saveNormal() throws MyException {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         when(ruleRepository.save(ruleSource)).thenReturn(ruleSave);
@@ -97,18 +102,22 @@ class RuleNameBusinessTest {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.createRule(null));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.createRule(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.nullRule", null);
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
     @Test
-    void createRule_ruleExist_returnBadRequest() {
+    void createRule_ruleExist_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.createRule(ruleSave));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.createRule(ruleSave));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.ruleExists", new Object[] { ruleSave.getId() });
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
@@ -116,7 +125,7 @@ class RuleNameBusinessTest {
     // getRuleById method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void getRuleById_findByIdNormal() {
+    void getRuleById_findByIdNormal() throws MyException {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
@@ -126,12 +135,14 @@ class RuleNameBusinessTest {
     }
 
     @Test
-    void getRuleById_nullIdParameter_returnNotFound() {
+    void getRuleById_nullIdParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.getRuleById(null));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.getRuleById(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { null });
         verify(ruleRepository, Mockito.times(1)).findById(null);
     }
 
@@ -139,7 +150,7 @@ class RuleNameBusinessTest {
     // updateRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void updateRule_updateNormal() {
+    void updateRule_updateNormal() throws MyException {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         when(ruleRepository.save(ruleSave)).thenReturn(ruleSave);
@@ -150,42 +161,50 @@ class RuleNameBusinessTest {
     }
 
     @Test
-    void updateRule_RuleNotExist_returnNotFound() {
+    void updateRule_RuleNotExist_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(2, ruleSource));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.updateRule(2, ruleSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { 2 });
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
     @Test
-    void updateRule_nullIdParameter_returnNotFound() {
+    void updateRule_nullIdParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(null)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(null, ruleSource));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.updateRule(null, ruleSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { null });
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
     @Test
-    void updateRule_zeroIdParameter_returnNotFound() {
+    void updateRule_zeroIdParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(0)).thenReturn(Optional.empty());
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.updateRule(0, ruleSource));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.updateRule(0, ruleSource));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown",  new Object[] { 0 });
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
     @Test
-    void updateRule_nullRuleParameter_returnNotFound() {
+    void updateRule_nullRuleParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.findById(any(Integer.class))).thenReturn(Optional.of(ruleSave));
         // WHEN
-        assertThrows(MyExceptionBadRequestException.class, () -> ruleNameBusiness.updateRule(1, null));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.updateRule(1, null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.nullRule", null);
         verify(ruleRepository, Mockito.times(0)).save(any(Rule.class));
     }
 
@@ -193,7 +212,7 @@ class RuleNameBusinessTest {
     // deleteRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    void deleteRule_deleteNormal() {
+    void deleteRule_deleteNormal() throws MyException {
         // GIVEN
         when(ruleRepository.existsById(any(Integer.class))).thenReturn(true);
         doNothing().when(ruleRepository).deleteById(any(Integer.class));
@@ -204,32 +223,38 @@ class RuleNameBusinessTest {
     }
 
     @Test
-    void deleteRule_RuleNotExist_returnNotFound() {
+    void deleteRule_RuleNotExist_returnMyException() {
         // GIVEN
         when(ruleRepository.existsById(any(Integer.class))).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(2));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.deleteRule(2));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { 2 });
         verify(ruleRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteRule_nullIdParameter_returnNotFound() {
+    void deleteRule_nullIdParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.existsById(null)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(null));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.deleteRule(null));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { null });
         verify(ruleRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 
     @Test
-    void deleteRule_zeroIdParameter_returnNotFound() {
+    void deleteRule_zeroIdParameter_returnMyException() {
         // GIVEN
         when(ruleRepository.existsById(0)).thenReturn(false);
         // WHEN
-        assertThrows(MyExceptionNotFoundException.class, () -> ruleNameBusiness.deleteRule(0));
+        Throwable exception = assertThrows(MyException.class, () -> ruleNameBusiness.deleteRule(0));
         // THEN
+        testMessageSource.compare(exception
+                            , "exception.rule.unknown", new Object[] { 0 });
         verify(ruleRepository, Mockito.times(0)).deleteById(any(Integer.class));
     }
 }

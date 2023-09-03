@@ -1,22 +1,21 @@
 package com.nnk.poseidon.exception;
 
+/**
+ * MyException is the exception
+ *
+ * @author MC
+ * @version 1.0
+ */
 public class MyException extends Exception {
 
     /**
+     * Exception initialization
      *
+     * @param message Message
+     *
+     * @return void
      */
-    private static final long serialVersionUID = 1L;
-
-    private final String messsage;
-    private final Object[] parameters;
-
-    public MyException(String messsage, Object... parameters) {
-        this.messsage = messsage;
-        this.parameters = parameters;
-    }
-
-    @Override
-    public String getMessage() {
-        return MessagePropertieFormat.getMessage(messsage, parameters);
+    public MyException(String message) {
+        super(message);
     }
 }

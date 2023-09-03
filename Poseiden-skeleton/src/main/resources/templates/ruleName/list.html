@@ -21,21 +21,18 @@
 <main layout:fragment="content">
 
 	<div class="container">
-		<!-- Rule List -->
-		<div class="row"><h2 th:text="#{label.rule.titleList}" /></div>
-
-		<!-- Error message -->
-		<div th:replace="~{fragments/error-message}"></div>
-
-		<!-- Add New -->
-		<div class="row">
-			<div class="col-2">
-				<a th:href="@{/ruleName/add}" class="btn btn-primary btn-sm">Add New</a>
-			</div>
-		</div>
 
 		<!-- Rule List -->
-		<div th:replace="~{ruleName/list-detail}"></div>
+		<header th:insert="fragments/general :: headerNormal('label.rule.titleList')"></header>
+
+		<!-- Global message -->
+		<div th:replace="fragments/global-message"></div>
+
+		<!-- Add new button -->
+		<div th:replace="fragments/input-type :: addNewButton('/ruleName/add')"></div>
+
+		<!-- Rule List -->
+		<div th:replace="fragments/general :: tableList('ruleName/list-detail')"></div>
 	</div>
 
 </main>

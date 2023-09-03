@@ -36,14 +36,14 @@ public class TestConstraintViolation<T> {
             String message = "";
             for (String errorElement[] : errorList) {
                 if (violation.getPropertyPath().toString().equals(errorElement[0])
-                        && violation.getMessage().toString().equals(errorElement[1])) {
+                        && violation.getMessageTemplate().toString().equals(errorElement[1])) {
                     attribute = errorElement[0];
                     message = errorElement[1];
                     break;
                 }
             }
-            assertThat(violation.getPropertyPath().toString()).isEqualTo(attribute);
-            assertThat(violation.getMessage()).isEqualTo(message);
+            assertThat(violation.getPropertyPath()).hasToString(attribute);
+            assertThat(violation.getMessageTemplate()).isEqualTo(message);
         }
 
         assertThat(violations).hasSize(errorList.length);

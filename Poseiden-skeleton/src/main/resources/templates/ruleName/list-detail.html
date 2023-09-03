@@ -6,44 +6,35 @@
 -->
 
 <!-- Rule table -->
-<div class="container my-3">
-    <div class="row">
-        <div class="table-responsive">
-            <table class="table table-striped table-sm table-hover table-bordered">
-                <!-- Rule title -->
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>json</th>
-                        <th>template</th>
-                        <th>sql</th>
-                        <th>sqlPart</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <!-- Rule detail -->
-                <tbody>
-                    <tr th:each="rule : ${rules}">
-                        <td style="width: 10%" th:text="${rule.id}"></td>
-                        <td th:text="${rule.name}"></td>
-                        <td th:text="${rule.description}"></td>
-                        <td th:text="${rule.json}"></td>
-                        <td th:text="${rule.template}"></td>
-                        <td th:text="${rule.sqlStr}"></td>
-                        <td th:text="${rule.sqlPart}"></td>
-                        <td style="width: 15%" class="text-center">
-                            <a class="btn btn-info btn-sm mx-1"
-                               th:href="@{/ruleName/update/{id}(id=${rule.id})}">
-                                <spam class="bi bi-pencil" /></a>
-                            <a class="btn btn-danger btn-sm mx-1"
-                               th:href="@{/ruleName/delete/{id}(id=${rule.id})}">
-                                <spam class="bi bi-trash" /></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+
+<!-- Rule title -->
+<thead>
+    <tr>
+        <th th:text="#{label.rule.attribute.id}"></th>
+        <th th:text="#{label.rule.attribute.name}"></th>
+        <th th:text="#{label.rule.attribute.description}"></th>
+        <th th:text="#{label.rule.attribute.json}"></th>
+        <th th:text="#{label.rule.attribute.template}"></th>
+        <th th:text="#{label.rule.attribute.sqlStr}"></th>
+        <th th:text="#{label.rule.attribute.sqlPart}"></th>
+        <th th:text="#{label.column.action}"></th>
+    </tr>
+</thead>
+<!-- Rule detail -->
+<tbody>
+    <tr th:each="rule : ${rules}">
+        <td style="width: 10%" th:text="${rule.id}"></td>
+        <td th:text="${rule.name}"></td>
+        <td th:text="${rule.description}"></td>
+        <td th:text="${rule.json}"></td>
+        <td th:text="${rule.template}"></td>
+        <td th:text="${rule.sqlStr}"></td>
+        <td th:text="${rule.sqlPart}"></td>
+        <td style="width: 15%" class="text-center">
+            <!-- Update and Delete button -->
+            <div th:replace="fragments/input-type :: updateDeleteButton(
+                                                        '/ruleName/update/{id}(id=${rule.id})'
+                                                        , '/ruleName/delete/{id}(id=${rule.id})')"></div>
+        </td>
+    </tr>
+</tbody>

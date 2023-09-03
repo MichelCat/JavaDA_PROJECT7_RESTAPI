@@ -11,27 +11,27 @@
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
-	<head th:insert="fragments/head">
-		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Poseidon</title>
+	<head th:insert="fragments/general :: headFiles">
+		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">[[#{label.company.name}]]</title>
 	</head>
-	
+
 <body>
 
 	<div class="container-fluid">
 		<header>
 			<!-- Menu -->
-		    <div th:replace="~{fragments/menu}"></div>
+		    <div th:replace="fragments/menu"></div>
 
 			<!-- Navigational hierarchy -->
-			<div th:replace="~{fragments/navigational-hierarchy}"></div>
+			<div th:replace="fragments/navigational-hierarchy"></div>
 		</header>
 	</div>
     
     <main class="container" id="mainContent">
         <div layout:fragment="content"></div>
     </main>
-    
-    <div th:replace="~{fragments/footer}"></div>
-	
+
+	<footer th:replace="fragments/general :: footer"></footer>
+
 </body>
 </html>

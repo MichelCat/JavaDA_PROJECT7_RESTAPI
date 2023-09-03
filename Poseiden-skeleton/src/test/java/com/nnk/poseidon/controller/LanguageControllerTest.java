@@ -1,45 +1,52 @@
 package com.nnk.poseidon.controller;
 
-import com.nnk.poseidon.Application;
-import com.nnk.poseidon.data.GlobalData;
-import com.nnk.poseidon.data.UserData;
-import com.nnk.poseidon.model.User;
+import com.nnk.poseidon.business.LanguageBusiness;
+import com.nnk.poseidon.enumerator.ApplicationLanguage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * EmailActivationBusinessIT is a class of Endpoint integration tests on email activation.
+ * LanguageControllerTest is a class of Endpoint unit tests on language change .
  *
  * @author MC
  * @version 1.0
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Application.class)
+@WebAppConfiguration
+@WebMvcTest(controllers = LanguageController.class)
 @ActiveProfiles("test")
-class EmailActivationBusinessIT {
+class LanguageControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
 
-    private User userSave;
+    @MockBean
+    private LanguageBusiness languageBusiness;
 
     @BeforeEach
     public void setUpBefore() {
@@ -47,27 +54,28 @@ class EmailActivationBusinessIT {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-
-        userSave = UserData.getUserSave();
-   }
+    }
 
     // -----------------------------------------------------------------------------------------------
-    // patchAccountActivation method
+    // changeLanguage method
     // -----------------------------------------------------------------------------------------------
     @Test
     @WithMockUser(roles = "USER")
-    @Sql(scripts = GlobalData.scriptClearDataBase)
-    void patchAccountActivation_userNotExist_return302() throws Exception {
+    void changeLanguage_return302() throws Exception {
         // GIVEN
+        doNothing().when(languageBusiness).changeLanguage(Optional.of(ApplicationLanguage.en.toString()));
         // WHEN
-        mockMvc.perform(get("/app/register/{key}", userSave.getEmailValidationKey())
+        mockMvc.perform(get("/change-language")
+                        .param("lang",ApplicationLanguage.en.toString())
+                        .param("source-page","/bidList/list")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/app/login"))
-                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attributeExists("successMessage"))
+                .andExpect(view().name("redirect:/bidList/list"))
                 .andDo(print());
         // THEN
+        verify(languageBusiness, Mockito.times(1)).changeLanguage(any(Optional.class));
     }
 }

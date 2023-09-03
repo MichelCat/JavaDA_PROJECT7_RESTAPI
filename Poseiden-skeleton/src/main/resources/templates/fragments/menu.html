@@ -14,12 +14,12 @@
 
 					<!-- USER -->
 					<th:block th:if="${#authorization.expression('hasAuthority(''USER'')')}">
-						<div th:replace="~{fragments/menu-user}"></div>
+						<div th:replace="fragments/menu-user"></div>
 					</th:block>
 
 					<!-- ADMIN -->
 					<th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
-						<div th:replace="~{fragments/menu-admin}"></div>
+						<div th:replace="fragments/menu-admin"></div>
 					</th:block>
 
 				</ul>
@@ -29,8 +29,10 @@
 
 	<!-- Right menu -->
 	<div class="col-6 d-flex justify-content-end">
+		<div th:replace="fragments/general :: changeLanguage"></div>
+
 		<div>
-			Logged in user: <span sec:authentication="name" />
+			[[#{label.loggedInUser}]] <span sec:authentication="name" />
 			<form th:action="@{/app/logout}" method="POST">
 				<input type="submit" value="Logout"/>
 			</form>

@@ -5,6 +5,8 @@ import com.nnk.poseidon.model.Rule;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class RuleNameController {
     @Autowired
     private RuleNameBusiness ruleNameBusiness;
+    @Autowired
+    private MessageSource messageSource;
 
     /**
      * Read - Get the list of Rules.
@@ -34,7 +38,9 @@ public class RuleNameController {
     public String home(Model model)
     {
         // Find all Rule, add to model
-        log.debug("HTTP GET, display rule name list form.");
+        String msgSource = messageSource.getMessage("debug.rule.listForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         model.addAttribute("rules", ruleNameBusiness.getRulesList());
         return "ruleName/list";
     }
@@ -47,7 +53,9 @@ public class RuleNameController {
      */
     @GetMapping("/add")
     public String addRuleForm(Rule rule) {
-        log.debug("HTTP GET, display Rule add form.");
+        String msgSource = messageSource.getMessage("debug.rule.addForm"
+                                , null, LocaleContextHolder.getLocale());
+        log.debug("HTTP GET, " + msgSource);
         return "ruleName/add";
     }
 
@@ -70,14 +78,19 @@ public class RuleNameController {
 
         // Rule parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP GET, Validation failed for Rule ({}).", rule);
+            String msgSource = messageSource.getMessage("debug.rule.validation"
+                                    , new Object[] { rule }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP POST, " + msgSource);
             return "ruleName/add";
         }
         try {
             // Save Rule
-            Rule ruleSave = ruleNameBusiness.createRule(rule);
-            log.info("HTTP GET, SUCCESSFUL ({}).", ruleSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Rule created successfully.");
+            ruleNameBusiness.createRule(rule);
+            String msgSource = messageSource.getMessage("info.rule.created"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP POST, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -100,7 +113,9 @@ public class RuleNameController {
         // Get Rule by Id and to model then show to the form
         try {
             Rule rule = ruleNameBusiness.getRuleById(id);
-            log.debug("HTTP GET, display Rule update form ({}).", rule);
+            String msgSource = messageSource.getMessage("debug.rule.updateForm"
+                                    , null, LocaleContextHolder.getLocale());
+            log.debug("HTTP GET, " + msgSource);
             model.addAttribute("rule", rule);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -130,14 +145,19 @@ public class RuleNameController {
 
         // Rule parameter is not valid
         if (result.hasErrors()) {
-            log.debug("HTTP PATCH, Validation failed for Rule ({}).", rule);
+            String msgSource = messageSource.getMessage("debug.rule.validation"
+                                    , new Object[] { rule }
+                                    , LocaleContextHolder.getLocale());
+            log.debug("HTTP PATCH, " + msgSource);
             return "ruleName/update";
         }
         try {
             // Modify Rule
-            Rule ruleSave = ruleNameBusiness.updateRule(id, rule);
-            log.info("HTTP PATCH, SUCCESSFUL ({}).", ruleSave);
-            redirectAttributes.addFlashAttribute("successMessage", "Rule updated successfully.");
+            ruleNameBusiness.updateRule(id, rule);
+            String msgSource = messageSource.getMessage("info.rule.updated"
+                                        , null, LocaleContextHolder.getLocale());
+            log.info("HTTP PATCH, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -163,8 +183,10 @@ public class RuleNameController {
         try {
             // Delete Rule
             ruleNameBusiness.deleteRule(id);
-            log.info("HTTP DELETE, SUCCESSFUL (Rule ID : {}).", id);
-            redirectAttributes.addFlashAttribute("successMessage", "Rule deleted successfully.");
+            String msgSource = messageSource.getMessage("info.rule.deleted"
+                                    , null, LocaleContextHolder.getLocale());
+            log.info("HTTP DELETE, " + msgSource);
+            redirectAttributes.addFlashAttribute("successMessage", msgSource);
             model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
