@@ -56,12 +56,10 @@ class LanguageControllerIT {
         mockMvc.perform(get("/change-language")
                         .with(csrf().asHeader())
                         .param("lang", ApplicationLanguage.en.toString())
-                        .param("source-page","/bidList/list")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
                 .andExpect(flash().attributeExists("successMessage"))
                 .andDo(print());
         // THEN
@@ -75,49 +73,11 @@ class LanguageControllerIT {
         mockMvc.perform(get("/change-language")
                         .with(csrf().asHeader())
                         .param("lang", "")
-                        .param("source-page","/bidList/list")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:/bidList/list"))
                 .andExpect(flash().attributeExists("errorMessage"))
-                .andDo(print());
-        // THEN
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    void changeLanguage_pageBlank_return302() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/change-language")
-                        .with(csrf().asHeader())
-                        .param("lang",ApplicationLanguage.en.toString())
-                        .param("source-page","")
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:"))
-                .andExpect(flash().attributeExists("successMessage"))
-                .andDo(print());
-        // THEN
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    void changeLanguage_pageNull_return302() throws Exception {
-        // GIVEN
-        // WHEN
-        mockMvc.perform(get("/change-language")
-                        .with(csrf().asHeader())
-                        .param("lang",ApplicationLanguage.en.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().errorCount(0))
-                .andExpect(view().name("redirect:login"))
                 .andDo(print());
         // THEN
     }

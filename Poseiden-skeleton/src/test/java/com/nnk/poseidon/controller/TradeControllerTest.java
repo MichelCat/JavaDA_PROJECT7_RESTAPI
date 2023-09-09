@@ -119,7 +119,6 @@ class TradeControllerTest {
     void validate_tradeNotExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.createTrade(tradeSource)).thenReturn(tradeSave);
-        when(tradeBusiness.getTradesList()).thenReturn(tradeList);
         // WHEN
         mockMvc.perform(post("/trade/validate")
                         .with(csrf().asHeader())
@@ -186,7 +185,6 @@ class TradeControllerTest {
     void updateTrade_tradeExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.updateTrade(1, tradeSave)).thenReturn(tradeSave);
-        when(tradeBusiness.getTradesList()).thenReturn(tradeList);
         // WHEN
         mockMvc.perform(patch("/trade/update/{id}", 1)
                         .with(csrf().asHeader())
@@ -229,7 +227,6 @@ class TradeControllerTest {
     @WithMockUser(roles = "USER")
     void deleteTrade_tradeExist_return302() throws Exception {
         // GIVEN
-        when(tradeBusiness.getTradesList()).thenReturn(tradeList);
         doNothing().when(tradeBusiness).deleteTrade(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/trade/delete/{id}", 1)

@@ -5,9 +5,48 @@
  */
 -->
 
-<!-- USER -->
+<th:block th:fragment="menu">
 
-<!-- ADMIN -->
-<th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
-    <div th:replace="fragments/navigational-hierarchy-admin"></div>
+    <!-- USER -->
+
+    <!-- ADMIN -->
+    <th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+        <div th:replace="fragments/navigational-hierarchy :: breadcrumbMenu('menu-admin')"></div>
+    </th:block>
+
+</th:block>
+
+<!--
+/**
+ * breadcrumb menu
+ * @param {string} fragmentMenu - Fragment menu displayed (Callback function)
+ */
+-->
+<div class="row bg-light" th:fragment="breadcrumbMenu (fragmentMenu)">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <div th:replace="fragments/navigational-hierarchy :: ${fragmentMenu} (${#ctx.springRequestContext.requestUri})"></div>
+        </ol>
+    </nav>
+</div>
+
+<!--
+/**
+ * Menu admin
+ * @param {string} currentPage - Current page
+ */
+-->
+<th:block th:fragment="menu-admin (currentPage)">
+
+    <!-- Home page -->
+    <th:block th:if="${currentPage == '/admin/home'}">
+        <li class="breadcrumb-item active" aria-current="page" th:text="#{label.menu.adminHome}"></li>
+    </th:block>
+
+    <!-- User List page -->
+    <th:block th:if="${currentPage == '/user/list'}">
+        <li class="breadcrumb-item"><a th:href="@{/admin/home}" th:text="#{label.menu.adminHome}"></a></li>
+        <li class="breadcrumb-item active" aria-current="page" th:text="#{label.menu.user}"></li>
+    </th:block>
+
 </th:block>

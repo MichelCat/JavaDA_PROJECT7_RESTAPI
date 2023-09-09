@@ -9,6 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+/**
+ * Application is the class to run app
+ *
+ * @author MC
+ * @version 1.0
+ */
 @SpringBootApplication
 public class Application {
 
@@ -22,6 +28,9 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
+	/**
+	 * Create an instance of TemplateResolver and configure its properties.
+	 */
 	@Bean
 	public ITemplateResolver defaultTemplateResolver() {
 		FileTemplateResolver resolver = new FileTemplateResolver();

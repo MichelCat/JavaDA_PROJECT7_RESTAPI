@@ -119,7 +119,6 @@ class CurvePointControllerTest {
     void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.createCurvePoint(curvePointSource)).thenReturn(curvePointSave);
-        when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
         mockMvc.perform(post("/curvePoint/validate")
                         .with(csrf().asHeader())
@@ -186,7 +185,6 @@ class CurvePointControllerTest {
     void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.updateCurvePoint(1, curvePointSave)).thenReturn(curvePointSave);
-        when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
         // WHEN
         mockMvc.perform(patch("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
@@ -229,7 +227,6 @@ class CurvePointControllerTest {
     @WithMockUser(roles = "USER")
     void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
-        when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
         doNothing().when(curvePointBusiness).deleteCurvePoint(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/curvePoint/delete/{id}", 1)

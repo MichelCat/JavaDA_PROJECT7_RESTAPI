@@ -3,21 +3,20 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>net.guides.springboothelloworld</groupId>
-	<artifactId>spring-boot-skeleton</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
-	<name>spring-boot-skeleton</name>
-	<description>Demo project for Spring Boot</description>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
+	<groupId>com.nnk</groupId>
+	<artifactId>spring-boot-skeleton</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>poseidon</name>
+	<description>Application for generating financial transactions</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,13 +64,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.33</version>
-		</dependency>
-        -->
 		<!-- JDBC Type 4 driver for MySQL -->
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -104,58 +96,12 @@
 			<version>${lombok-mapstruct-binding.version}</version>
 		</dependency>
 
-
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-oauth2-client</artifactId>
-		</dependency>
-		-->
-
-<!--
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.3</version>
-			<scope>test</scope>
-		</dependency>
-<dependency>
-	<groupId>org.junit.jupiter</groupId>
-	<artifactId>junit-jupiter-engine</artifactId>
-	<version>5.9.3</version>
-	<scope>test</scope>
-</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>6.0.9</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.24.2</version>
-			<scope>test</scope>
-		</dependency>
--->
-
-
-		<!--
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-library</artifactId>
-			<version>2.2</version>
-			<scope>test</scope>
-		</dependency>
-		-->
-
 
 		<!-- Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy -->
 		<!-- , or are considered to be so standard as to justify existence in java.lang -->
@@ -170,23 +116,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		-->
 		<!-- JUnit Jupiter is the API for writing tests using JUnit 5 -->
-		<!--
-		-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.10.0</version>
 			<scope>test</scope>
 		</dependency>
-
 
 		<!-- Core Jackson processing abstractions (aka Streaming API), implementation for JSON -->
 		<dependency>
@@ -211,8 +147,6 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
-		<!--
-		-->
 		<!-- Thymeleaf Spring6 -->
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
@@ -226,41 +160,17 @@
 			<version>3.2.1</version>
 		</dependency>
 
-		<!--
-		-->
 		<!-- WebJar for Bootstrap -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>5.2.3</version>
+			<version>5.3.1</version>
 		</dependency>
-
-
-
-		<!--
-		<!- Hibernate Validator Engine Relocation Artifact ->
-		<!- How to create custom validations in Spring Boot ->
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>8.0.1.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.2</version>
-		</dependency>
-        -->
-
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -276,6 +186,7 @@
                 -->
 			</plugin>
 
+			<!-- The Compiler Plugin is used to compile the sources of your project -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -302,7 +213,75 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<!-- Maven Surefire MOJO in maven-surefire-plugin for unit testing -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+			<!-- Maven Failsafe MOJO in maven-failsafe-plugin for integration testing -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>**/*IT.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- The JaCoCo Maven Plugin provides the JaCoCo runtime agent to your tests and allows basic report creation -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.9</version>
+				<executions>
+					<!-- Prepare the JaCoCo agent for unit testing -->
+					<execution>
+						<id>pre-unit-tests</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- Generating the unit test code coverage report -->
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<!-- Prepare the JaCoCo agent for integration testing -->
+					<execution>
+						<id>pre-integration-tests</id>
+						<goals>
+							<goal>prepare-agent-integration</goal>
+						</goals>
+					</execution>
+					<!-- Generation of the integration test code coverage report -->
+					<execution>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report-integration</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

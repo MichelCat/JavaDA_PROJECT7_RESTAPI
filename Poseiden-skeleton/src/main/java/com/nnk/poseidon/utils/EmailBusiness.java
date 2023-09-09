@@ -25,8 +25,6 @@ public class EmailBusiness {
      * @param recipient Email recipient
      * @param subject Message subject
      * @param message Message detail
-     *
-     * @return void
      */
     public void sendEmail(String sender
             , String recipient

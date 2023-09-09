@@ -119,7 +119,6 @@ class RatingControllerTest {
     void validate_ratingNotExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.createRating(ratingSource)).thenReturn(ratingSave);
-        when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
         // WHEN
         mockMvc.perform(post("/rating/validate")
                         .with(csrf().asHeader())
@@ -187,7 +186,6 @@ class RatingControllerTest {
     void updateRating_ratingExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.updateRating(1, ratingSave)).thenReturn(ratingSave);
-        when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
         // WHEN
         mockMvc.perform(patch("/rating/update/{id}", 1)
                         .with(csrf().asHeader())
@@ -231,7 +229,6 @@ class RatingControllerTest {
     @WithMockUser(roles = "USER")
     void deleteRating_ratingExist_return302() throws Exception {
         // GIVEN
-        when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
         doNothing().when(ratingBusiness).deleteRating(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/rating/delete/{id}", 1)

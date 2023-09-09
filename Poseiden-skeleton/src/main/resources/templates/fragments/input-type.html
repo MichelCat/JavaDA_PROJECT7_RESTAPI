@@ -106,3 +106,15 @@
     <a class="btn btn-danger btn-sm mx-1" th:href="@{__${deleteLink}__}">
         <spam class="bi bi-trash" /></a>
 </th:block>
+
+<!--
+/**
+ * Navbar element
+ * @param {string} pageName - Page name
+ * @param {string} pageTested - Page tested
+ */
+-->
+<li class="nav-item" th:fragment="navbarElement (pageName, pageTested, textPageTested)">
+    <a class="nav-link" th:classappend="${pageName == pageTested ? 'text-primary' : ''}"
+       th:href="@{${pageTested}}" th:text="${textPageTested}"></a>
+</li>

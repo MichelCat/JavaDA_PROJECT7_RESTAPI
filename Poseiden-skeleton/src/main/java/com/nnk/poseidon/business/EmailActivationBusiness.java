@@ -32,7 +32,9 @@ public class EmailActivationBusiness {
      * Account activation
      *
      * @param validationKey Validation key for user
+     *
      * @return New modified user record
+     * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)
     public User activatedUser(String validationKey) throws MyException {

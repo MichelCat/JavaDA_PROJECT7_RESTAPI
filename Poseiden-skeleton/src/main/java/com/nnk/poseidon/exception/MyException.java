@@ -12,8 +12,6 @@ public class MyException extends Exception {
      * Exception initialization
      *
      * @param message Message
-     *
-     * @return void
      */
     public MyException(String message) {
         super(message);

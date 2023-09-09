@@ -5,26 +5,20 @@
  */
 -->
 
-<div class="row">
+<div class="row" th:fragment="lineMenu">
 	<!-- Left menu -->
 	<div class="col-6">
-		<nav class="navbar navbar-expand navbar-light">
-			<div class="collapse navbar-collapse justify-content-start" id="navbarNav">
-				<ul class="navbar-nav" th:with="pageName=${#ctx.springRequestContext.requestUri}">
 
-					<!-- USER -->
-					<th:block th:if="${#authorization.expression('hasAuthority(''USER'')')}">
-						<div th:replace="fragments/menu-user"></div>
-					</th:block>
+		<!-- USER -->
+		<th:block th:if="${#authorization.expression('hasAuthority(''USER'')')}">
+			<nav th:replace="fragments/menu :: navbarMenu('menu-user')"></nav>
+		</th:block>
 
-					<!-- ADMIN -->
-					<th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
-						<div th:replace="fragments/menu-admin"></div>
-					</th:block>
+		<!-- ADMIN -->
+		<th:block th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+			<nav th:replace="fragments/menu :: navbarMenu('menu-admin')"></nav>
+		</th:block>
 
-				</ul>
-			</div>
-		</nav>
 	</div>
 
 	<!-- Right menu -->
@@ -39,3 +33,49 @@
 		</div>
 	</div>
 </div>
+
+<!--
+/**
+ * Navbar menu
+ * @param {string} fragmentMenu - Fragment menu displayed (Callback function)
+*/
+-->
+<nav class="navbar navbar-expand navbar-light" th:fragment="navbarMenu (fragmentMenu)">
+	<div class="collapse navbar-collapse justify-content-start" id="navbarNav">
+		<ul class="navbar-nav">
+			<div th:replace="fragments/menu :: ${fragmentMenu} (${#ctx.springRequestContext.requestUri})"></div>
+		</ul>
+	</div>
+</nav>
+
+<!--
+/**
+ * Menu user
+ * @param {string} currentPage - Current page
+ */
+-->
+<th:block th:fragment="menu-user (currentPage)">
+	<!-- Bid page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/bidList/list', #{label.menu.bid})"></li>
+	<!-- Curve Points page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/curvePoint/list', #{label.menu.curvePoint})"></li>
+	<!-- Ratings page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/rating/list', #{label.menu.rating})"></li>
+	<!-- Trade page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/trade/list', #{label.menu.trade})"></li>
+	<!-- Rule page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/ruleName/list', #{label.menu.rule})"></li>
+</th:block>
+
+<!--
+/**
+ * Menu admin
+ * @param {string} currentPage - Current page
+ */
+-->
+<th:block th:fragment="menu-admin (currentPage)">
+	<!-- Home page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/admin/home', #{label.menu.adminHome})"></li>
+	<!-- User page -->
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/user/list', #{label.menu.user})"></li>
+</th:block>

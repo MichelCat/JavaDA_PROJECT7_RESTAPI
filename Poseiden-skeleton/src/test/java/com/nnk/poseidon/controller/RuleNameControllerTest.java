@@ -119,7 +119,6 @@ class RuleNameControllerTest {
     void validate_ruleNotExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.createRule(ruleSource)).thenReturn(ruleSave);
-        when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
         // WHEN
         mockMvc.perform(post("/ruleName/validate")
                         .with(csrf().asHeader())
@@ -192,7 +191,6 @@ class RuleNameControllerTest {
     void updateRule_ruleExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.updateRule(1, ruleSave)).thenReturn(ruleSave);
-        when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
         // WHEN
         mockMvc.perform(patch("/ruleName/update/{id}", 1)
                         .with(csrf().asHeader())
@@ -238,7 +236,6 @@ class RuleNameControllerTest {
     @WithMockUser(roles = "USER")
     void deleteRule_ruleExist_return302() throws Exception {
         // GIVEN
-        when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
         doNothing().when(ruleNameBusiness).deleteRule(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/ruleName/delete/{id}", 1)

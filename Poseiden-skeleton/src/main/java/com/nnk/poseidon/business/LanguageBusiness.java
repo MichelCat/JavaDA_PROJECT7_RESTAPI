@@ -29,7 +29,6 @@ public class LanguageBusiness {
      *
      * @param optLang New language
      *
-     * @return void
      * @throws MyException Exception
      */
     public void changeLanguage(Optional<String> optLang)

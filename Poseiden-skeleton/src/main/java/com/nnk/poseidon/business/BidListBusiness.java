@@ -139,7 +139,6 @@ public class BidListBusiness {
      *
      * @param id Bid ID deleted
      *
-     * @return void
      * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)

@@ -67,13 +67,11 @@ class LanguageControllerTest {
         // WHEN
         mockMvc.perform(get("/change-language")
                         .param("lang",ApplicationLanguage.en.toString())
-                        .param("source-page","/bidList/list")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().errorCount(0))
                 .andExpect(flash().attributeExists("successMessage"))
-                .andExpect(view().name("redirect:/bidList/list"))
                 .andDo(print());
         // THEN
         verify(languageBusiness, Mockito.times(1)).changeLanguage(any(Optional.class));

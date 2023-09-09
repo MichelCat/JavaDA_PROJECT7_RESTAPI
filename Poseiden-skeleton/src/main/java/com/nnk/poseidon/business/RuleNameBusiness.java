@@ -139,7 +139,6 @@ public class RuleNameBusiness {
      *
      * @param id Rule ID deleted
      *
-     * @return void
      * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)

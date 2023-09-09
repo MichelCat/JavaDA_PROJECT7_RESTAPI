@@ -119,7 +119,6 @@ class BidListControllerTest {
     void validate_bidNotExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.createBid(bidSource)).thenReturn(bidSave);
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         // WHEN
         mockMvc.perform(post("/bidList/validate")
                     .with(csrf().asHeader())
@@ -186,7 +185,6 @@ class BidListControllerTest {
     void updateBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.updateBid(1, bidSave)).thenReturn(bidSave);
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         // WHEN
         mockMvc.perform(patch("/bidList/update/{id}", 1)
                     .with(csrf().asHeader())
@@ -229,7 +227,6 @@ class BidListControllerTest {
     @WithMockUser(roles = "USER")
     void deleteBid_bidExist_return302() throws Exception {
         // GIVEN
-        when(bidListBusiness.getBidsList()).thenReturn(bidsList);
         doNothing().when(bidListBusiness).deleteBid(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/bidList/delete/{id}", 1)

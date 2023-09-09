@@ -78,7 +78,7 @@ target/
 .classpath
 
 # JavaDoc
-#  doc/
+javadoc/
 
 # Work files
 /src/main/resources/work/*

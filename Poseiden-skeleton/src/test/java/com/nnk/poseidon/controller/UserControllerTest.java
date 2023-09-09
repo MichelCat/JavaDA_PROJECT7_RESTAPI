@@ -129,7 +129,6 @@ class UserControllerTest {
     void validate_userNotExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.createUser(registerSource)).thenReturn(userSave);
-        when(userBusiness.getUsersList()).thenReturn(registerSaves);
         // WHEN
         mockMvc.perform(post("/user/validate")
                         .with(csrf().asHeader())
@@ -198,7 +197,6 @@ class UserControllerTest {
     void updateUser_userExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.updateUser(1, registerSave)).thenReturn(userSave);
-        when(userBusiness.getUsersList()).thenReturn(registerSaves);
         // WHEN
         mockMvc.perform(patch("/user/update/{id}", 1)
                         .with(csrf().asHeader())
@@ -265,7 +263,6 @@ class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     void deleteUser_userExist_return302() throws Exception {
         // GIVEN
-        when(userBusiness.getUsersList()).thenReturn(registerSaves);
         doNothing().when(userBusiness).deleteUser(any(Integer.class));
         // WHEN
         mockMvc.perform(get("/user/delete/{id}", 1)

@@ -5,11 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * AppUserPrincipal is an implementation of UserDetails
+ *
+ * @author MC
+ * @version 1.0
+ */
 public class AppUserPrincipal implements UserDetails {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
 

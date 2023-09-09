@@ -91,7 +91,6 @@ public class CurvePointController {
                                     , null, LocaleContextHolder.getLocale());
             log.info("HTTP POST, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -158,7 +157,6 @@ public class CurvePointController {
                                     , null, LocaleContextHolder.getLocale());
             log.info("HTTP PATCH, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -187,7 +185,6 @@ public class CurvePointController {
                                     , null, LocaleContextHolder.getLocale());
             log.info("HTTP DELETE, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("curvePoints", curvePointBusiness.getCurvePointsList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

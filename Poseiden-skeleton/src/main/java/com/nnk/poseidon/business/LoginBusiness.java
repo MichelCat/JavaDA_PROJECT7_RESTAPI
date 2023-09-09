@@ -100,7 +100,6 @@ public class LoginBusiness implements UserDetailsService
      *
      * @param register New user to add
      *
-     * @return void
      * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)

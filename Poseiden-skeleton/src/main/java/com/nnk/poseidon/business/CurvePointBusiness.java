@@ -139,7 +139,6 @@ public class CurvePointBusiness {
      *
      * @param id CurvePoint ID deleted
      *
-     * @return void
      * @throws MyException Exception
      */
     @Transactional(rollbackFor = Exception.class)

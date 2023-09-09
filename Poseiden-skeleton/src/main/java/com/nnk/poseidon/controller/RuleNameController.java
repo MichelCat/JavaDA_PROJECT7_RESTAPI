@@ -91,7 +91,6 @@ public class RuleNameController {
                                     , null, LocaleContextHolder.getLocale());
             log.info("HTTP POST, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -158,7 +157,6 @@ public class RuleNameController {
                                         , null, LocaleContextHolder.getLocale());
             log.info("HTTP PATCH, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -187,7 +185,6 @@ public class RuleNameController {
                                     , null, LocaleContextHolder.getLocale());
             log.info("HTTP DELETE, " + msgSource);
             redirectAttributes.addFlashAttribute("successMessage", msgSource);
-            model.addAttribute("rules", ruleNameBusiness.getRulesList());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
