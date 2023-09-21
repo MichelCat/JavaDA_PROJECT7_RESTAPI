@@ -1,6 +1,8 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
+import com.nnk.poseidon.Retention.TestWithMockUser;
+import com.nnk.poseidon.Retention.WithMockUserRoleUser;
 import com.nnk.poseidon.data.CurvePointData;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.model.CurvePoint;
@@ -10,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,6 +47,8 @@ class CurvePointControllerIT {
     @Autowired
     private WebApplicationContext context;
 
+    private TestWithMockUser testWithMockUser;
+
     public List<CurvePoint> curvePointList;
 
     private CurvePoint curvePointSave;
@@ -57,6 +62,8 @@ class CurvePointControllerIT {
                 .apply(springSecurity())
                 .build();
 
+        testWithMockUser = new TestWithMockUser();
+
         curvePointSave = CurvePointData.getCurvePointSave();
         curvePointSourceController = CurvePointData.getCurvePointSourceController();
         curvePointSaveController = CurvePointData.getCurvePointSaveController();
@@ -69,13 +76,13 @@ class CurvePointControllerIT {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
     void home_getCurvePoints_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/list")
+        ResultActions result = mockMvc.perform(get("/curvePoint/list")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -85,18 +92,19 @@ class CurvePointControllerIT {
                 .andExpect(model().attribute("curvePoints", curvePointList))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // addCurvePointForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void addCurvePointForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/add")
+        ResultActions result = mockMvc.perform(get("/curvePoint/add")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -105,18 +113,19 @@ class CurvePointControllerIT {
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/curvePoint/validate")
+        ResultActions result = mockMvc.perform(post("/curvePoint/validate")
                         .with(csrf().asHeader())
                         .params(curvePointSourceController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,16 +136,17 @@ class CurvePointControllerIT {
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
     void validate_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/curvePoint/validate")
+        ResultActions result = mockMvc.perform(post("/curvePoint/validate")
                         .with(csrf().asHeader())
                         .params(curvePointSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -147,19 +157,20 @@ class CurvePointControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
     void showUpdateForm_curvePointExist_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/update/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(curvePointSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -170,19 +181,20 @@ class CurvePointControllerIT {
                 .andExpect(model().attribute("curvePoint", curvePointSave))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
     void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(curvePointSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -193,15 +205,16 @@ class CurvePointControllerIT {
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void updateCurvePoint_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/curvePoint/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/curvePoint/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(curvePointSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,19 +225,20 @@ class CurvePointControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = CurvePointData.scriptCreateCurvePoint)
     void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/curvePoint/delete/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -233,15 +247,16 @@ class CurvePointControllerIT {
                 .andExpect(view().name("redirect:/curvePoint/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void deleteCurvePoint_curvePointNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/curvePoint/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/curvePoint/delete/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -251,5 +266,6 @@ class CurvePointControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 }

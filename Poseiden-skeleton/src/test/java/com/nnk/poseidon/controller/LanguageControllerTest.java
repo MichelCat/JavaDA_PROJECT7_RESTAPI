@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.LanguageBusiness;
 import com.nnk.poseidon.enumerator.ApplicationLanguage;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -60,7 +60,7 @@ class LanguageControllerTest {
     // changeLanguage method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void changeLanguage_return302() throws Exception {
         // GIVEN
         doNothing().when(languageBusiness).changeLanguage(Optional.of(ApplicationLanguage.en.toString()));

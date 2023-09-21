@@ -1,6 +1,8 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
+import com.nnk.poseidon.Retention.WithMockRoleAdmin;
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.model.Register;
@@ -11,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,7 +62,7 @@ class LoginControllerIT {
     // getLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_normal_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -75,7 +76,7 @@ class LoginControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_error_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -90,7 +91,7 @@ class LoginControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_logout_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -108,7 +109,7 @@ class LoginControllerIT {
     // getRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getRegister_normal_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -125,7 +126,7 @@ class LoginControllerIT {
     // postRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void postRegister_userNotExist_return302() throws Exception {
         // GIVEN
@@ -143,7 +144,7 @@ class LoginControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void postRegister_userExist_return302() throws Exception {
@@ -166,7 +167,7 @@ class LoginControllerIT {
     // formLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void postLogin_userExist_return302() throws Exception {
@@ -175,12 +176,12 @@ class LoginControllerIT {
                 .password("password", "12345678+aA")
                 .acceptMediaType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/home"))
+                .andExpect(redirectedUrl("/home/user"))
                 .andDo(print());
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void postLogin_adminExist_return302() throws Exception {
@@ -189,12 +190,12 @@ class LoginControllerIT {
                         .password("password", "12345678+aA")
                         .acceptMediaType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/admin/home"))
+                .andExpect(redirectedUrl("/home/admin"))
                 .andDo(print());
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void postLogin_userNotExist_return302() throws Exception {
         mockMvc.perform(formLogin("/app/login")

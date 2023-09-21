@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.TradeBusiness;
 import com.nnk.poseidon.data.TradeData;
 import com.nnk.poseidon.model.Trade;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -77,7 +77,7 @@ class TradeControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void home_getTrades_return200() throws Exception {
         // GIVEN
         when(tradeBusiness.getTradesList()).thenReturn(tradeList);
@@ -97,7 +97,7 @@ class TradeControllerTest {
     // addTradeForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void addTradeForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -115,7 +115,7 @@ class TradeControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_tradeNotExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.createTrade(tradeSource)).thenReturn(tradeSave);
@@ -135,7 +135,7 @@ class TradeControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -161,7 +161,7 @@ class TradeControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void showUpdateForm_tradeExist_return200() throws Exception {
         // GIVEN
         when(tradeBusiness.getTradeById(1)).thenReturn(tradeSave);
@@ -181,7 +181,7 @@ class TradeControllerTest {
     // updateTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateTrade_tradeExist_return302() throws Exception {
         // GIVEN
         when(tradeBusiness.updateTrade(1, tradeSave)).thenReturn(tradeSave);
@@ -201,7 +201,7 @@ class TradeControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateTrade_tradeNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -224,7 +224,7 @@ class TradeControllerTest {
     // deleteTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void deleteTrade_tradeExist_return302() throws Exception {
         // GIVEN
         doNothing().when(tradeBusiness).deleteTrade(any(Integer.class));

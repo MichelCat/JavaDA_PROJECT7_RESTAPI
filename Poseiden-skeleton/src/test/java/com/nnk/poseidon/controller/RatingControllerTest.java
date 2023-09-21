@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.RatingBusiness;
 import com.nnk.poseidon.data.RatingData;
 import com.nnk.poseidon.model.Rating;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -77,7 +77,7 @@ class RatingControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void home_getRatings_return200() throws Exception {
         // GIVEN
         when(ratingBusiness.getRatingsList()).thenReturn(ratingList);
@@ -97,7 +97,7 @@ class RatingControllerTest {
     // addRatingForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void addRatingForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -115,7 +115,7 @@ class RatingControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_ratingNotExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.createRating(ratingSource)).thenReturn(ratingSave);
@@ -135,7 +135,7 @@ class RatingControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_ratingNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -162,7 +162,7 @@ class RatingControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void showUpdateForm_ratingExist_return200() throws Exception {
         // GIVEN
         when(ratingBusiness.getRatingById(1)).thenReturn(ratingSave);
@@ -182,7 +182,7 @@ class RatingControllerTest {
     // updateRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateRating_ratingExist_return302() throws Exception {
         // GIVEN
         when(ratingBusiness.updateRating(1, ratingSave)).thenReturn(ratingSave);
@@ -202,7 +202,7 @@ class RatingControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateRating_ratingNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -226,7 +226,7 @@ class RatingControllerTest {
     // deleteRating method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void deleteRating_ratingExist_return302() throws Exception {
         // GIVEN
         doNothing().when(ratingBusiness).deleteRating(any(Integer.class));

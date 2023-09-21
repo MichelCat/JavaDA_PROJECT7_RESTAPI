@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.BidListBusiness;
 import com.nnk.poseidon.data.BidData;
 import com.nnk.poseidon.model.Bid;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -77,7 +77,7 @@ class BidListControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void home_getBids_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidsList()).thenReturn(bidsList);
@@ -97,7 +97,7 @@ class BidListControllerTest {
     // addBidForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void addBidForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -115,7 +115,7 @@ class BidListControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_bidNotExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.createBid(bidSource)).thenReturn(bidSave);
@@ -135,7 +135,7 @@ class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -161,7 +161,7 @@ class BidListControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void showUpdateForm_bidExist_return200() throws Exception {
         // GIVEN
         when(bidListBusiness.getBidById(1)).thenReturn(bidSave);
@@ -181,7 +181,7 @@ class BidListControllerTest {
     // updateBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateBid_bidExist_return302() throws Exception {
         // GIVEN
         when(bidListBusiness.updateBid(1, bidSave)).thenReturn(bidSave);
@@ -201,7 +201,7 @@ class BidListControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateBid_bidNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -224,7 +224,7 @@ class BidListControllerTest {
     // deleteBid method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void deleteBid_bidExist_return302() throws Exception {
         // GIVEN
         doNothing().when(bidListBusiness).deleteBid(any(Integer.class));

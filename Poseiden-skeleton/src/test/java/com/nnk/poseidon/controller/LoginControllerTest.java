@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.business.LoginBusiness;
 import com.nnk.poseidon.data.UserData;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -74,7 +74,7 @@ class LoginControllerTest {
     // getLogin method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_normal_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -88,7 +88,7 @@ class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_error_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -103,7 +103,7 @@ class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getLogin_logout_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -121,7 +121,7 @@ class LoginControllerTest {
     // getRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void getRegister_normal_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -137,7 +137,7 @@ class LoginControllerTest {
     // postRegister method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void postRegister_userNotExist_return302() throws Exception {
         // GIVEN
         doNothing().when(loginBusiness).addUser(any(Register.class));
@@ -155,7 +155,7 @@ class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void postRegister_userExist_return302() throws Exception {
         // GIVEN
         String msgSource = messageSource.getMessage("exception.EmailAccountAlreadyExists"

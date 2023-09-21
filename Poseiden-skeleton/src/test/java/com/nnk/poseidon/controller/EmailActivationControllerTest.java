@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.exception.MyException;
 import com.nnk.poseidon.business.EmailActivationBusiness;
 import com.nnk.poseidon.data.UserData;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -69,7 +69,7 @@ class EmailActivationControllerTest {
     // accountActivation method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void accountActivation_userExist_return302() throws Exception {
         // GIVEN
         when(emailActivationBusiness.activatedUser(any(String.class))).thenReturn(userSave);
@@ -86,7 +86,7 @@ class EmailActivationControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void accountActivation_userNoExist_return302() throws Exception {
         // GIVEN
         String msgSource = messageSource.getMessage("exception.CustomerNotExist"

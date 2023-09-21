@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.RuleNameBusiness;
 import com.nnk.poseidon.data.RuleData;
 import com.nnk.poseidon.model.Rule;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -77,7 +77,7 @@ class RuleNameControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void home_getRules_return200() throws Exception {
         // GIVEN
         when(ruleNameBusiness.getRulesList()).thenReturn(ruleList);
@@ -97,7 +97,7 @@ class RuleNameControllerTest {
     // addRuleForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void addRuleForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -115,7 +115,7 @@ class RuleNameControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_ruleNotExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.createRule(ruleSource)).thenReturn(ruleSave);
@@ -135,7 +135,7 @@ class RuleNameControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -167,7 +167,7 @@ class RuleNameControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void showUpdateForm_ruleExist_return200() throws Exception {
         // GIVEN
         when(ruleNameBusiness.getRuleById(1)).thenReturn(ruleSave);
@@ -187,7 +187,7 @@ class RuleNameControllerTest {
     // updateRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateRule_ruleExist_return302() throws Exception {
         // GIVEN
         when(ruleNameBusiness.updateRule(1, ruleSave)).thenReturn(ruleSave);
@@ -207,7 +207,7 @@ class RuleNameControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateRule_ruleNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -233,7 +233,7 @@ class RuleNameControllerTest {
     // deleteRule method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void deleteRule_ruleExist_return302() throws Exception {
         // GIVEN
         doNothing().when(ruleNameBusiness).deleteRule(any(Integer.class));

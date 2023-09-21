@@ -1,12 +1,13 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleAdmin;
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -49,11 +50,11 @@ class HomeControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void home_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/admin/home")
+        mockMvc.perform(get("/home/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -67,11 +68,11 @@ class HomeControllerTest {
     // adminHome method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void adminHome_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/user/home")
+        mockMvc.perform(get("/home/user")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())

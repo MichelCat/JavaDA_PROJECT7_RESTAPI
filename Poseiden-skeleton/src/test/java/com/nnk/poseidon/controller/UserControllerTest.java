@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleAdmin;
 import com.nnk.poseidon.business.UserBusiness;
 import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.model.Register;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -87,7 +87,7 @@ class UserControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void home_getUsers_return200() throws Exception {
         // GIVEN
         when(userBusiness.getUsersList()).thenReturn(registerSaves);
@@ -107,7 +107,7 @@ class UserControllerTest {
     // addUserForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void addUserForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -125,7 +125,7 @@ class UserControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void validate_userNotExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.createUser(registerSource)).thenReturn(userSave);
@@ -145,7 +145,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void validate_userNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -173,7 +173,7 @@ class UserControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void showUpdateForm_userExist_return200() throws Exception {
         // GIVEN
         when(userBusiness.getRegisterById(1)).thenReturn(registerSave);
@@ -193,7 +193,7 @@ class UserControllerTest {
     // updateUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void updateUser_userExist_return302() throws Exception {
         // GIVEN
         when(userBusiness.updateUser(1, registerSave)).thenReturn(userSave);
@@ -213,7 +213,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void updateUser_userNull() throws Exception {
         // GIVEN
         // WHEN
@@ -260,7 +260,7 @@ class UserControllerTest {
     // deleteUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockRoleAdmin
     void deleteUser_userExist_return302() throws Exception {
         // GIVEN
         doNothing().when(userBusiness).deleteUser(any(Integer.class));

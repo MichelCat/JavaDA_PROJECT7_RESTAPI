@@ -274,7 +274,7 @@
 					</execution>
 					<!-- Generation of the integration test code coverage report -->
 					<execution>
-						<id>post-integration-test</id>
+						<id>post-integration-tests</id>
 						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report-integration</goal>

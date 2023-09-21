@@ -75,7 +75,7 @@
 -->
 <th:block th:fragment="menu-admin (currentPage)">
 	<!-- Home page -->
-	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/admin/home', #{label.menu.adminHome})"></li>
+	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/home/admin', #{label.menu.adminHome})"></li>
 	<!-- User page -->
 	<li th:replace="fragments/input-type :: navbarElement(${currentPage}, '/user/list', #{label.menu.user})"></li>
 </th:block>

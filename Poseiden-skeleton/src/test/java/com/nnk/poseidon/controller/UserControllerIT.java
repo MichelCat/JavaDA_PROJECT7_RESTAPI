@@ -1,6 +1,8 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
+import com.nnk.poseidon.Retention.TestWithMockUser;
+import com.nnk.poseidon.Retention.WithMockAdminRoleAdmin;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.model.Register;
@@ -11,11 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,6 +48,8 @@ class UserControllerIT {
     @Autowired
     private WebApplicationContext context;
 
+    private TestWithMockUser testWithMockUser;
+
     private User userSave;
     private MultiValueMap<String, String> userSourceController;
     private MultiValueMap<String, String> userSaveController;
@@ -61,6 +66,8 @@ class UserControllerIT {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+
+        testWithMockUser = new TestWithMockUser();
 
         userSave = UserData.getUserSave();
         userSourceController = UserData.getRegisterSourceController();
@@ -87,13 +94,13 @@ class UserControllerIT {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void home_getUsers_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/user/list")
+        ResultActions result = mockMvc.perform(get("/user/list")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -103,18 +110,19 @@ class UserControllerIT {
                 .andExpect(model().attribute("registers", registerSaves))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // addUserForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void addUserForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/user/add")
+        ResultActions result = mockMvc.perform(get("/user/add")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -123,18 +131,19 @@ class UserControllerIT {
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void validate_userNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/user/validate")
+        ResultActions result = mockMvc.perform(post("/user/validate")
                         .with(csrf().asHeader())
                         .params(userSourceController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -145,16 +154,17 @@ class UserControllerIT {
                 .andExpect(view().name("redirect:/user/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void validate_userExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/user/validate")
+        ResultActions result = mockMvc.perform(post("/user/validate")
                         .with(csrf().asHeader())
                         .params(userSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -165,20 +175,21 @@ class UserControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void showUpdateForm_userExist_return200() throws Exception {
         // GIVEN
         registerSave.setPassword("");
         // WHEN
-        mockMvc.perform(get("/user/update/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/user/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(userSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -189,19 +200,20 @@ class UserControllerIT {
                 .andExpect(model().attribute("register", registerSave))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // updateUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void updateUser_userExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/user/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/user/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(userSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,15 +224,16 @@ class UserControllerIT {
                 .andExpect(view().name("redirect:/user/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void updateUser_userNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/user/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/user/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(userSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -231,19 +244,20 @@ class UserControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // deleteUser method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = UserData.scriptCreateUser)
     void deleteUser_userExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/user/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/user/delete/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -252,15 +266,16 @@ class UserControllerIT {
                 .andExpect(view().name("redirect:/user/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockAdminRoleAdmin
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void deleteUser_userNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/user/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/user/delete/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -270,5 +285,6 @@ class UserControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkAdminRoleAdmin(result);
     }
 }

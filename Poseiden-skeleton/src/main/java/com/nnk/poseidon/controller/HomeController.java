@@ -28,7 +28,7 @@ public class HomeController
 	 * @param model Model object
 	 * @return View
 	 */
-	@GetMapping("/admin/home")
+	@GetMapping("/home/admin")
 	public String home(Model model)
 	{
 		String msgSource = messageSource.getMessage("debug.home.admin"
@@ -43,7 +43,7 @@ public class HomeController
 	 * @param model Model object
 	 * @return View
 	 */
-	@GetMapping("/user/home")
+	@GetMapping("/home/user")
 	public String adminHome(Model model)
 	{
 		String msgSource = messageSource.getMessage("debug.home.user"

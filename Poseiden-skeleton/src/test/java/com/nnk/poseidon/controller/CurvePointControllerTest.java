@@ -1,5 +1,6 @@
 package com.nnk.poseidon.controller;
 
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.business.CurvePointBusiness;
 import com.nnk.poseidon.data.CurvePointData;
 import com.nnk.poseidon.model.CurvePoint;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -77,7 +77,7 @@ class CurvePointControllerTest {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void home_getCurvePoints_return200() throws Exception {
         // GIVEN
         when(curvePointBusiness.getCurvePointsList()).thenReturn(curvePointList);
@@ -97,7 +97,7 @@ class CurvePointControllerTest {
     // addCurvePointForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void addCurvePointForm_return200() throws Exception {
         // GIVEN
         // WHEN
@@ -115,7 +115,7 @@ class CurvePointControllerTest {
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_curvePointNotExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.createCurvePoint(curvePointSource)).thenReturn(curvePointSave);
@@ -135,7 +135,7 @@ class CurvePointControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void validate_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -161,7 +161,7 @@ class CurvePointControllerTest {
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void showUpdateForm_curvePointExist_return200() throws Exception {
         // GIVEN
         when(curvePointBusiness.getCurvePointById(1)).thenReturn(curvePointSave);
@@ -181,7 +181,7 @@ class CurvePointControllerTest {
     // updateCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         when(curvePointBusiness.updateCurvePoint(1, curvePointSave)).thenReturn(curvePointSave);
@@ -201,7 +201,7 @@ class CurvePointControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void updateCurvePoint_curvePointNotValid() throws Exception {
         // GIVEN
         // WHEN
@@ -224,7 +224,7 @@ class CurvePointControllerTest {
     // deleteCurvePoint method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     void deleteCurvePoint_curvePointExist_return302() throws Exception {
         // GIVEN
         doNothing().when(curvePointBusiness).deleteCurvePoint(any(Integer.class));

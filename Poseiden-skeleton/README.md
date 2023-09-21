@@ -30,7 +30,7 @@ Here are the steps to follow to have a working development and test environment 
    * git clone https://github.com/MichelCat/JavaDA_PROJECT7_RESTAPI.git
 
 2. Place yourself in the directory.
-   * cd JavaDA_PROJECT7_RESTAPI
+   * cd JavaDA_PROJECT7_RESTAPI/Poseiden-skeleton
 
 3. Configure MySql database connection information
    * spring.datasource.url=jdbc:mysql://localhost:3306/PoseidonDev
@@ -41,16 +41,16 @@ Test environment in file "src/main/resources/application-test.properties".
 Production environment in file "src/main/resources/application-prod.properties".
 
 4. Run Maven commands to generate Poseidon packages.
-   * mvnw clean install
-   * mvnw package
+   * mvn clean install
+   * mvn package
 
 4. Run Maven commands for Surefire and Jacoco reports in directory "target/site".
-   * mvnw verify
-   * mvnw surefire-report:report
-   * mvnw site
+   * mvn verify
+   * mvn surefire-report:report
+   * mvn site
 
 5. Run Maven commands for Javadod in directory "target/site/apidocs".
-   * mvnw javadoc:javadoc
+   * mvn javadoc:javadoc
    
 6. Configure MySql
 Development environment

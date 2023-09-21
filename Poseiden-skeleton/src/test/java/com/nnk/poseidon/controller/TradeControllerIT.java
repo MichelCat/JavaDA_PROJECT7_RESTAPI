@@ -1,6 +1,8 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
+import com.nnk.poseidon.Retention.TestWithMockUser;
+import com.nnk.poseidon.Retention.WithMockUserRoleUser;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.TradeData;
 import com.nnk.poseidon.model.Trade;
@@ -10,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,6 +47,8 @@ class TradeControllerIT {
     @Autowired
     private WebApplicationContext context;
 
+    private TestWithMockUser testWithMockUser;
+
     public List<Trade> tradeList;
 
     private Trade tradeSave;
@@ -57,6 +62,8 @@ class TradeControllerIT {
                 .apply(springSecurity())
                 .build();
 
+        testWithMockUser = new TestWithMockUser();
+
         tradeSave = TradeData.getTradeSave();
         tradeSourceController = TradeData.getTradeSourceController();
         tradeSaveController = TradeData.getTradeSaveController();
@@ -69,13 +76,13 @@ class TradeControllerIT {
     // home method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
     void home_getTrades_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/trade/list")
+        ResultActions result = mockMvc.perform(get("/trade/list")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -85,18 +92,19 @@ class TradeControllerIT {
                 .andExpect(model().attribute("trades", tradeList))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // addTradeForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void addTradeForm_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/trade/add")
+        ResultActions result = mockMvc.perform(get("/trade/add")
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -105,18 +113,19 @@ class TradeControllerIT {
                 .andExpect(model().errorCount(0))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // validate method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void validate_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/trade/validate")
+        ResultActions result = mockMvc.perform(post("/trade/validate")
                         .with(csrf().asHeader())
                         .params(tradeSourceController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -127,16 +136,17 @@ class TradeControllerIT {
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
     void validate_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(post("/trade/validate")
+        ResultActions result = mockMvc.perform(post("/trade/validate")
                         .with(csrf().asHeader())
                         .params(tradeSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -147,19 +157,20 @@ class TradeControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // showUpdateForm method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
     void showUpdateForm_tradeExist_return200() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/trade/update/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/trade/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(tradeSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -170,19 +181,20 @@ class TradeControllerIT {
                 .andExpect(model().attribute("trade", tradeSave))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // updateTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
     void updateTrade_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/trade/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/trade/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(tradeSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -193,15 +205,16 @@ class TradeControllerIT {
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void updateTrade_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(patch("/trade/update/{id}", 1)
+        ResultActions result = mockMvc.perform(patch("/trade/update/{id}", 1)
                         .with(csrf().asHeader())
                         .params(tradeSaveController)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,19 +225,20 @@ class TradeControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     // -----------------------------------------------------------------------------------------------
     // deleteTrade method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     @Sql(scripts = TradeData.scriptCreateTrade)
     void deleteTrade_tradeExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/trade/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/trade/delete/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is3xxRedirection())
@@ -233,15 +247,16 @@ class TradeControllerIT {
                 .andExpect(view().name("redirect:/trade/list"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUserRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void deleteTrade_tradeNotExist_return302() throws Exception {
         // GIVEN
         // WHEN
-        mockMvc.perform(get("/trade/delete/{id}", 1)
+        ResultActions result = mockMvc.perform(get("/trade/delete/{id}", 1)
                         .with(csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -251,5 +266,6 @@ class TradeControllerIT {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andDo(print());
         // THEN
+        testWithMockUser.checkUserRoleUser(result);
     }
 }

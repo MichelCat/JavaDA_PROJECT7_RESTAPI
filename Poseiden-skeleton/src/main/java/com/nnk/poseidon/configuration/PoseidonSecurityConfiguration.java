@@ -17,10 +17,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class PoseidonSecurityConfiguration {
 
   private static final String[] AUTH_WHITELIST_ADMIN = {
-          "/home", "/user" };
+          "/home/admin", "/user/**" };
 
   private static final String[] AUTH_WHITELIST_USER = {
-          "/bidList","/curvePoint", "/rating", "/ruleName", "/trade" };
+          "/home/user", "/bidList/**","/curvePoint/**", "/rating/**", "/ruleName/**", "/trade/**" };
+
+  private static final String[] AUTH_WHITELIST_PUBLIC = {
+          "/css/**","/error/**", "/img/**", "/js/**", "/fragments/**", "/login", "/app/register" };
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,9 +31,10 @@ public class PoseidonSecurityConfiguration {
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(AUTH_WHITELIST_PUBLIC).permitAll()
                     .requestMatchers(AUTH_WHITELIST_ADMIN).hasAuthority(UserRole.ADMIN.name())
                     .requestMatchers(AUTH_WHITELIST_USER).hasAuthority(UserRole.USER.name())
-                    .anyRequest().permitAll()
+                    .anyRequest().authenticated()
             );
 
     http

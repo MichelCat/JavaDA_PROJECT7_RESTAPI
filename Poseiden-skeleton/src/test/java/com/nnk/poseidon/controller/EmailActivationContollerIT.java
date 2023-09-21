@@ -1,6 +1,7 @@
 package com.nnk.poseidon.controller;
 
 import com.nnk.poseidon.Application;
+import com.nnk.poseidon.Retention.WithMockRoleUser;
 import com.nnk.poseidon.data.GlobalData;
 import com.nnk.poseidon.data.UserData;
 import com.nnk.poseidon.model.User;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -55,7 +55,7 @@ class EmailActivationContollerIT {
     // accountActivation method
     // -----------------------------------------------------------------------------------------------
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockRoleUser
     @Sql(scripts = GlobalData.scriptClearDataBase)
     void accountActivation_userNotExist_return302() throws Exception {
         // GIVEN

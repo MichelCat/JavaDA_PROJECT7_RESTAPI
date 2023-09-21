@@ -39,13 +39,13 @@
 <th:block th:fragment="menu-admin (currentPage)">
 
     <!-- Home page -->
-    <th:block th:if="${currentPage == '/admin/home'}">
+    <th:block th:if="${currentPage == '/home/admin'}">
         <li class="breadcrumb-item active" aria-current="page" th:text="#{label.menu.adminHome}"></li>
     </th:block>
 
     <!-- User List page -->
     <th:block th:if="${currentPage == '/user/list'}">
-        <li class="breadcrumb-item"><a th:href="@{/admin/home}" th:text="#{label.menu.adminHome}"></a></li>
+        <li class="breadcrumb-item"><a th:href="@{/home/admin}" th:text="#{label.menu.adminHome}"></a></li>
         <li class="breadcrumb-item active" aria-current="page" th:text="#{label.menu.user}"></li>
     </th:block>
 
