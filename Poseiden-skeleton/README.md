@@ -1,4 +1,4 @@
-![Image](src\main\resources\static\img\ImagePoseidon.png "Poseidon")
+![Image](src/main/resources/static/img/ImagePoseidon.png "Poseidon")
 # Poseidon Capital Solutions
 
 Poseidon is an application for generating financial transactions.
